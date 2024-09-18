@@ -1,0 +1,110 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider      = "postgresql"
+  url           = env("DATABASE_URL")
+  // directUrl     = env("DIRECT_URL")
+}
+
+model Status {
+  id            Int               @unique @default(autoincrement())
+  delay         Int               @default(1000)
+  text          String
+}
+
+model User {
+  id            Int               @unique @id @default(autoincrement())
+  discordId     String            @unique
+  username      String?
+  status        String            @default("tutorial")
+  createdAt     DateTime          @default(now())
+  
+  config        Config?
+  items         Inventory[]
+  cards         CardInstance[]
+
+  logs          Log[]
+}
+
+model Config {
+  isMobile      Boolean           @default(false)
+  locale        String            @default("en-US")
+  
+  userId        Int               @unique
+  user          User              @relation(fields: [userId], references: [id])
+}
+
+model Log {
+  id            Int               @unique @id @default(autoincrement())
+  userId        Int      
+  action        String
+  description   String?
+  createdAt     DateTime          @default(now())
+
+  user          User              @relation(fields: [userId], references: [id])
+}
+
+model Character {
+  id            Int               @unique @id @default(autoincrement())
+  mal           Int?
+  name          String?
+  nicknames     String[] 
+  series        Int?
+
+  cards         CardCatalog[]
+}
+
+model CardCatalog {
+  id            Int               @unique @id @default(autoincrement()) 
+  type          Int
+  
+  characterId   Int
+  character     Character         @relation(fields: [characterId], references: [id])
+  instances     CardInstance[]
+}
+
+enum CardStatus {
+  WILD
+  IDLE
+  FIGHT
+}
+
+model CardInstance {
+  id            Int               @unique @id @default(autoincrement())
+  status        CardStatus        @default(WILD)
+  rarity        Int
+
+  cardId        Int
+  userId        Int
+
+  card          CardCatalog       @relation(fields: [cardId], references: [id])
+  user          User              @relation(fields: [userId], references: [id])
+}
+
+enum ItemType {
+  BALL
+}
+
+model Item {
+  id            Int               @unique @id @default(autoincrement())
+  name          String
+  type          ItemType
+  emoji         String?
+  properties    Json?
+
+  inventories   Inventory[]
+}
+
+model Inventory {
+  itemId        Int
+  userId        Int
+
+  count         Int               @default(1)
+
+  item          Item              @relation(fields: [itemId], references: [id])
+  user          User              @relation(fields: [userId], references: [id])
+
+  @@id([itemId, userId])
+}

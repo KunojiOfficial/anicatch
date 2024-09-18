@@ -1,0 +1,58 @@
+{
+    "1": {
+        "name": "Common",
+        "color": "#A8A77A",
+        "chance": 50,
+        "emoji": {
+            "full": "⭐"
+        }
+    },
+    "2": {
+        "name": "Uncommon",
+        "color": "#7AC74C",
+        "chance": 35,
+        "emoji": {
+            "full": "⭐⭐"
+        }
+    },
+    "3": {
+        "name": "Rare",
+        "color": "#6390F0",
+        "chance": 10,
+        "emoji": {
+            "full": "⭐⭐⭐"
+        }
+    },
+    "4": {
+        "name": "Super Rare",
+        "color": "#A33EA1",
+        "chance": 3,
+        "emoji": {
+            "full": "⭐⭐⭐⭐"
+        }
+    },
+    "5": {
+        "name": "Ultra Rare",
+        "color": "#FF0000",
+        "chance": 1.94,
+        "emoji": {
+            "full": "⭐⭐⭐⭐⭐"
+        }
+    },
+    "6": {
+        "name": "Legendary",
+        "color": "#F7D02C",
+        "chance": 0.05,
+        "emoji": {
+            "full": "⭐⭐⭐⭐⭐⭐"
+        }
+    },
+    "7": {
+        "name": "Mythical",
+        "color": "#FA5586",
+        "chance": 0.01,
+        "emoji": {
+            "full": "⭐⭐⭐⭐⭐⭐⭐"
+        }
+    }
+}

@@ -1,0 +1,9 @@
+{
+    "0": {
+        "title": "Add Sticker",
+        "inputs": [{
+            "label": "Sticker ID",
+            "placeholder": "Input the Sticker ID, example: (A-52)."
+        }]
+    }
+}
