@@ -39,7 +39,7 @@ export default async function(interaction: DiscordInteraction, card: CardInstanc
         const roll = Math.random();
         
         if (roll < chance) { //success
-            await tx.cardInstance.update({ where: { id: card.id }, data: { status: "IDLE" } });
+            await tx.cardInstance.update({ where: { id: card.id }, data: { status: "IDLE", ballId: ball.itemId } });
             return true;
         } else {
             await tx.cardInstance.deleteMany({ where: { id: card.id } });

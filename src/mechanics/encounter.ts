@@ -21,6 +21,7 @@ export default async function(interaction: DiscordInteraction) {
     const [result] = await client.db.cardCatalog.findMany({ skip: randomOffset, take: 1, include: { character: true } });
 
     const rarity = getRandomRarity(client.data.rarities);
+    // const rarity = "5";
 
     const card = await client.db.cardInstance.create({ data: {
         userId: player.data.id,

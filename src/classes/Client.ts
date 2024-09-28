@@ -18,6 +18,7 @@ import emoji from "../config/emoji.json";
 import Logger from "./Logger";
 
 import rarities from "../data/rarities.json";
+import types from "../data/types.json";
 
 async function loadFiles(collection: Collection<string, any>, directory: string) {
     const filePath: string = path.resolve(__dirname, directory);
@@ -53,7 +54,7 @@ class Client extends DiscordClient {
     db: PrismaClient;
     config: any;
     logger: Logger;
-    data: { rarities: typeof rarities }
+    data: { rarities: typeof rarities, types: typeof types }
 
     constructor(options: ClientOptions) {
         super(options)
@@ -69,7 +70,7 @@ class Client extends DiscordClient {
 
         this.config = config;
 
-        this.data = { rarities: rarities  };
+        this.data = { rarities: rarities, types: types };
 
         this.logger = new Logger(this);
 

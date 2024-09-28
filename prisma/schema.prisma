@@ -78,6 +78,7 @@ model CardInstance {
 
   cardId        Int
   userId        Int
+  ballId        Int?
 
   card          CardCatalog       @relation(fields: [cardId], references: [id])
   user          User              @relation(fields: [userId], references: [id])

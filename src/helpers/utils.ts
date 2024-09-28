@@ -28,34 +28,5 @@ function addHours(date: Date, hours: number) {
     return now;
 }
 
-function getTargetDate() {
-    let now = new Date();
-    let inGameTime = new Date(now.getTime() * 2);
 
-    const hours = inGameTime.getUTCHours();
-    const nextHourDate = new Date(inGameTime);
-
-    nextHourDate.setUTCMinutes(0);
-    nextHourDate.setUTCSeconds(0);
-    nextHourDate.setUTCMilliseconds(0);
-
-    if (hours >= 21 || hours < 9) {
-        //noc
-        if (nextHourDate.getUTCHours() >= 21) {
-            nextHourDate.setUTCDate(nextHourDate.getDate() + 1);
-        }
-        
-        nextHourDate.setUTCHours(9);
-    } else {
-        //dzien
-        nextHourDate.setUTCHours(21);
-    }
-
-    const realTime = new Date();
-    realTime.setTime(realTime.getTime() + ((nextHourDate.getTime()-inGameTime.getTime())/2))
-
-    return realTime;
-}
-
-
-export { toUpperCamelCase, getTextBetweenTwoStrings, deepValue, numberWithCommas, randomElement, addHours, getTargetDate };
+export { toUpperCamelCase, getTextBetweenTwoStrings, deepValue, numberWithCommas, randomElement, addHours };
