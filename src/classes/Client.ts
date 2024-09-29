@@ -81,7 +81,7 @@ class Client extends DiscordClient {
         loadFiles(this.commands, "../commands");
         loadFiles(this.buttons, "../buttons");
         loadFiles(this.menus, "../menus");
-        // loadFiles(this.panels, "../panels");
+        loadFiles(this.panels, "../panels");
     
         //initalize locales
         let localeDir = path.resolve(__dirname, "../locale");

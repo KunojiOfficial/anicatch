@@ -69,6 +69,7 @@ enum CardStatus {
   WILD
   IDLE
   FIGHT
+  FLED
 }
 
 model CardInstance {
