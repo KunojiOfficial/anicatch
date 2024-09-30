@@ -15,6 +15,20 @@ client.cluster.on('message', async message => {
         case "deploy":
             await client.deployCommands();
             break;
+        case "directMessage":
+            const msg = message as any;
+            
+            try {
+                const user = await client.users.fetch(msg.user);
+                if (!user) return await msg.reply({ found: false });
+
+                const sent = await user.send(msg.content);
+                if (sent) return await msg.reply({ found: true });
+            } catch (err) {
+                return await msg.reply({ found: false });
+            }
+            
+            break;
     }
 });
 

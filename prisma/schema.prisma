@@ -17,15 +17,34 @@ model Status {
 model User {
   id            Int               @unique @id @default(autoincrement())
   discordId     String            @unique
+  roleId        Int               @default(1)
+
   username      String?
   status        String            @default("tutorial")
-  createdAt     DateTime          @default(now())
+  
+  encounters    Int               @default(15)
   
   config        Config?
+  role          Role              @relation(fields: [roleId], references: [id])
   items         Inventory[]
   cards         CardInstance[]
 
   logs          Log[]
+
+  lastReset     DateTime          @default(now())
+  nextNotify    DateTime?
+  
+  createdAt     DateTime          @default(now())
+}
+
+model Role {
+  id            Int               @unique @id @default(autoincrement())
+  name          String
+
+  maxEncounters Int
+  rechargeTime  Int
+
+  users         User[]
 }
 
 model Config {
@@ -49,7 +68,7 @@ model Log {
 model Character {
   id            Int               @unique @id @default(autoincrement())
   mal           Int?
-  name          String?
+  name          String
   nicknames     String[] 
   series        Int?
 
@@ -59,8 +78,10 @@ model Character {
 model CardCatalog {
   id            Int               @unique @id @default(autoincrement()) 
   type          Int
+  count         Int               @default(0)
   
   characterId   Int
+
   character     Character         @relation(fields: [characterId], references: [id])
   instances     CardInstance[]
 }
@@ -74,15 +95,23 @@ enum CardStatus {
 
 model CardInstance {
   id            Int               @unique @id @default(autoincrement())
+  userId        Int
+  cardId        Int
+
   status        CardStatus        @default(WILD)
   rarity        Int
+  print         Int               @default(0)
 
-  cardId        Int
-  userId        Int
-  ballId        Int?
+  ballId        Int?              //the id of the ball item
+  fatherId      Int?              //the id of the first owner
 
   card          CardCatalog       @relation(fields: [cardId], references: [id])
   user          User              @relation(fields: [userId], references: [id])
+  ball          Item?             @relation(fields: [ballId], references: [id])
+
+  createdAt     DateTime          @default(now())
+
+  @@unique([cardId, print])
 }
 
 enum ItemType {
@@ -97,6 +126,7 @@ model Item {
   properties    Json?
 
   inventories   Inventory[]
+  cards         CardInstance[]
 }
 
 model Inventory {

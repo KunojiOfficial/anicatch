@@ -15,28 +15,40 @@ function getRandomRarity(rarities: any) {
 export default async function(interaction: DiscordInteraction) {
     const { client, player } = interaction;
 
-    const rowCount = await client.db.cardCatalog.count();
-    const randomOffset = Math.floor(Math.random() * rowCount);
+    return await client.db.$transaction(async tx => {
 
-    const [result] = await client.db.cardCatalog.findMany({ skip: randomOffset, take: 1, include: { character: true } });
+        if (player.data.encounters < 1) throw 6;
 
-    const rarity = getRandomRarity(client.data.rarities);
-    // const rarity = "5";
+        await tx.user.updateMany({ where: { id: player.data.id }, data: { encounters: { decrement: 1 } } });
+        
+        const rowCount = await tx.cardCatalog.count();
+        const randomOffset = Math.floor(Math.random() * rowCount);
 
-    const card = await client.db.cardInstance.create({ data: {
-        userId: player.data.id,
-        cardId: result.id,
-        rarity: parseInt(rarity!)
-    } });
+        const [result] = await tx.cardCatalog.findMany({ skip: randomOffset, take: 1, include: { character: true } });
 
-    const timeoutId = setTimeout(async () => {
-        await client.db.cardInstance.deleteMany({ where: { id: card.id, status: "WILD" } }) 
-    }, 11 * 1000);
+        const rarity = getRandomRarity(client.data.rarities);
+        // const rarity = "5";
 
-    return {
-        rarity: client.data.rarities[rarity as keyof typeof client.data.rarities],
-        result: result,
-        insert: card,
-        timeout: timeoutId
-    };
+        await tx.cardCatalog.updateMany({ where: { id: result.id }, data: { count: { increment: 1 } } });
+
+        const card = await tx.cardInstance.create({ data: {
+            userId: player.data.id,
+            fatherId: player.data.id,
+            cardId: result.id,
+            rarity: parseInt(rarity!),
+            print: result.count+1
+        } });
+
+        const timeoutId = setTimeout(async () => {
+            await client.db.cardInstance.deleteMany({ where: { id: card.id, status: "WILD" } }) 
+        }, 11 * 1000);
+
+        return {
+            rarity: client.data.rarities[rarity as keyof typeof client.data.rarities],
+            result: result,
+            insert: card,
+            timeout: timeoutId
+        };
+
+    });
 }

@@ -1,14 +1,11 @@
 import { APIEmbed, ActionRowBuilder, ButtonBuilder, ModalBuilder, StringSelectMenuBuilder, TextInputBuilder, TextInputStyle, User } from "discord.js";
 import { DiscordClient } from "../types";
-import { deepValue } from "../helpers/utils";
+import { deepValue, parseColor } from "../helpers/utils";
 import emoji from '../config/emoji.json';
 
 let emojis: any = emoji;
 
-function parseColor(color: string) {
-    color = color.replace("#", "");
-    return parseInt(color, 16);
-}
+
 
 const BUTTON_COLORS: any = {
     blurple: 1,
@@ -51,13 +48,15 @@ export default class Components {
     embed(object: {
         title?: string,
         description?: string,
-        fields?: Array<{ name?: string, value?: string, inline?: boolean }>,
+        fields?: Array<{ name?: string, value?: string, inline?: boolean } | null>,
         author?: { name?: string, iconUrl?: string  },
         footer?: { text?: string, iconUrl?: string  },
         color?: string,
         thumbnail?: string,
         image?: string,
     }, replace?: object) {
+        if (object.fields) object.fields = object.fields.filter(o => o !== null);
+
         if (!object.color) object.color = this.client.config.defaults.embed.color;
         let embedColor = parseColor(object.color!);
 
@@ -68,6 +67,8 @@ export default class Components {
         if (object.description) object.description = this.client.formatText(object.description, this.locale, replace);
         if (object.fields) {
             for (let field of object.fields) {
+                if (!field) continue;
+
                 if (field.name) field.name = this.client.formatText(field.name, this.locale, replace);
                 if (field.value) field.value = this.client.formatText(field.value, this.locale, replace);
             }

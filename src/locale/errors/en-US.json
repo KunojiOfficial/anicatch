@@ -1,6 +1,9 @@
 {
-    "note": "If you need help, join our [Support Server]({config:urls.support}).",
+    "note": "If you need help, join our [Support Server]({config_urls_support}).",
     "3": "Unknown error.",
     "4": "no_item",
-    "5": "no_card"
+    "5": "no_card",
+    "6": "**You have run out of available Animon encounters.**\nYour next encounter will be available {custom_timestamp}.\n\nIf you don't want to wait, visit /store to **buy additional encounters** using your coins. You can also **vote for {custom_bot}** and earn free encounters – check /vote.\n\nNeed more encounters? **Become our Patron** to enjoy much higher daily encounter limits, lower recharge time and other benefits - /patreon!",
+    "7": "no_user",
+    "8": "wrong id input"
 }

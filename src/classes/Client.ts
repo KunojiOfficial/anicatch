@@ -4,8 +4,8 @@ import { PrismaClient } from "@prisma/client";
 import { readdirSync } from "fs";
 import path from "path";
 
-import { DiscordInteraction } from "../types";
-import { deepValue, getTextBetweenTwoStrings, numberWithCommas } from "../helpers/utils";
+import { DiscordInteraction, UserRole } from "../types";
+import { deepValue, getTextBetweenTwoStrings, numberWithCommas, base10ToBase26, base26ToBase10 } from "../helpers/utils";
 import Event from "./Event";
 import Panel from "./Panel";
 import Command from "./Command";
@@ -217,13 +217,38 @@ class Client extends DiscordClient {
         const locale : any = this.locales['errors'][lang];
         const message = {
             embeds: [ interaction.components.embed({
-                title: `Error #${err}`,
-                description: `*${locale.note}*\n\n${locale[err]} `,
+                description: `-# Code **#${err}**\n${locale[err]}\n\n-# *${locale.note}*`,
+                color: "#ff0000"
             }) ]
         }
 
         if (interaction.deferred) await interaction.followUp(message).catch(console.error);
         else await interaction.reply(message).catch(console.error);
+    }
+
+    getId(cardId: number, printId: number) {
+        return `${base10ToBase26(cardId)}-${printId}`;
+    }
+
+    getIdReverse(cardId: string) {
+        return base26ToBase10(cardId);
+    }
+
+    getEmojiUrl(emojiName?: string, hardEmoji?: string) {
+        const value = emoji[emojiName as keyof typeof emoji];
+        if (!value && !hardEmoji) return "";
+
+        const match = emojiName ? emojiName.match(/:(\w+)>/) : hardEmoji ? hardEmoji.match(/:(\w+)>/) : [];
+        if (!match?.length) return "";
+
+        return `https://cdn.discordapp.com/emojis/${match[1]}.webp?quality=lossless`
+    }
+
+    getNextEncounterDate(user: UserRole) {
+        const now = user.lastReset;
+        const newDate = new Date(now.getTime() + user.role.rechargeTime*1000);
+
+        return this.unixDate(newDate);
     }
 }
 

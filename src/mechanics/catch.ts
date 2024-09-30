@@ -42,7 +42,7 @@ export default async function(interaction: DiscordInteraction, card: CardInstanc
             await tx.cardInstance.update({ where: { id: card.id }, data: { status: "IDLE", ballId: ball.itemId } });
             return true;
         } else {
-            await tx.cardInstance.deleteMany({ where: { id: card.id } });
+            await tx.cardInstance.update({ where: { id: card.id }, data: { status: "FLED", ballId: ball.itemId } });
             return false;
         }   
     });

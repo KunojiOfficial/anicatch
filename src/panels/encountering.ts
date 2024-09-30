@@ -9,6 +9,32 @@ export default new Panel({
     async execute(interaction: DiscordInteraction): Promise<InteractionReplyOptions> {
         const { user, player, client } = interaction;
 
+        if (player.data.encounters < 1) {
+            const notice = {
+                embeds: [ interaction.components.embed({
+                    description: `-# Code #**6**\n{locale_errors_6}`,
+                    color: "#ff0000"
+                }, {
+                    timestamp: [ client.getNextEncounterDate(player.data) ],
+                    bot: [`${client.user}`]
+                }) ],
+                components: [ interaction.components.buttons([{
+                    label: "Visit Store"
+                }, {
+                    label: "Vote"
+                }, {
+                    label: "Become a Patron"
+                }]) ]
+            };
+
+            if (interaction.isButton()) {
+                await interaction.followUp(notice);
+                return {}
+            } else {
+                return notice;
+            }
+        }
+
         const data = await encounter(interaction);
 
         //get image
@@ -20,7 +46,7 @@ export default new Panel({
         escapeTime.setSeconds(escapeTime.getSeconds() + 10);
 
         const embed = {
-            description: `🍃 A wild **${data.result.character.name}** has appeared!\nIt's a **${type.emoji} ${type.name}** type!\n\n**${data.rarity.name}** (${data.rarity.chance}%)\n${data.rarity.emoji.full}\n\n-# Escapes ${client.unixDate(escapeTime)}...`,
+            description: `-# ${client.getId(data.insert.cardId, data.insert.print)}\n\n🍃 A wild **${data.result.character.name}** has appeared!\nIt's a **${type.emoji} ${type.name}** type!\n\n**${data.rarity.name}** (${data.rarity.chance}%)\n${data.rarity.emoji.full}\n\n-# Escapes ${client.unixDate(escapeTime)}...`,
             image: "attachment://card.jpg",
             color: data.rarity.color
         };
@@ -33,7 +59,7 @@ export default new Panel({
                 embeds: [ 
                     {
                         ...followUp.embeds[0].data,
-                        description: followUp.embeds[0].data.description?.substring(0, followUp.embeds[0].description?.indexOf("-#")), 
+                        description: followUp.embeds[0].data.description?.substring(0, followUp.embeds[0].description?.indexOf("-#", 3)), 
                         image: { url: "attachment://card.jpg" },
                     },
                     interaction.components.embed({
@@ -43,7 +69,6 @@ export default new Panel({
                 ]
             });
         }, 1000 * 10);
-
         //get user balls :)
         const balls = await client.db.inventory.findMany({ where: { userId: player.data.id, item: { type: "BALL" } }, include: { item: true } });
         balls.sort((a,b) => a.itemId-b.itemId);
@@ -63,7 +88,7 @@ export default new Panel({
 
         components.push(interaction.components.buttons([{
             id: '2',
-            label: "Next",
+            label: `Next (${player.data.encounters-1})`,
             emoji: "next",
             cooldown: { id: "next", time: 2 },
             args: { id: timeOutId },

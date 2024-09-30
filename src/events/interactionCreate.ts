@@ -1,10 +1,11 @@
-import { DiscordInteraction } from "../types";
+import { DiscordInteraction, UserRole } from "../types";
 import Event from "../classes/Event";
 import Player from "../classes/Player";
 import Components from "../classes/Components";
-import { Config } from "@prisma/client";
+import { Config, Prisma, User } from "@prisma/client";
 // import tutorial from "../mechanics/tutorial";
 import { Collection } from "discord.js";
+import Client from "../classes/Client";
 
 const cooldowns = new Collection();
 
@@ -45,13 +46,50 @@ function cdMessage(interaction: DiscordInteraction, expireTime: number) {
     }
 }
 
+async function refreshEncounters(client: Client, player: UserRole) {
+    if (player.encounters >= player.role.maxEncounters) return player;
+
+    const now = new Date();
+    const lastReset = player.lastReset;
+    
+    const secondsSinceReset = (now.getTime() - lastReset.getTime()) / 1000;
+    const encountersToAdd = Math.floor(secondsSinceReset / player.role.rechargeTime);
+    
+    if (encountersToAdd > 0) {
+        const newEncounters = Math.min(player.encounters + encountersToAdd, player.role.maxEncounters);
+        
+        let data: any = { 
+            encounters: newEncounters, 
+            lastReset: new Date()
+        };
+
+        if (newEncounters < player.role.maxEncounters) {
+            const nextNotify = new Date(now.getTime() + (player.role.rechargeTime * (player.role.maxEncounters-newEncounters) * 1000));
+            data.nextNotify = nextNotify;
+        }
+
+        return await client.db.user.update({ 
+            where: { id: player.id }, 
+            data: data, 
+            include: { config: true, role: true } 
+        });
+    }
+
+    if (!player.nextNotify && player.encounters < player.role.maxEncounters) {
+        const nextNotify = new Date(now.getTime() + (player.role.rechargeTime * (player.role.maxEncounters-player.encounters) * 1000));
+        await client.db.user.update({ where: { id: player.id }, data: { nextNotify: nextNotify } });
+    }
+
+    return player;
+}
+
 export default new Event({
     async execute(interaction: DiscordInteraction): Promise<void> {
 
         const { client, user } = interaction;
 
         try {
-            const player = await client.db.user.upsert({
+            let player = await client.db.user.upsert({
                 where: { discordId: user.id },
                 update: { },
                 create: { 
@@ -59,8 +97,11 @@ export default new Event({
                     username: user.username,
                     config: { create: { locale: interaction.locale } },
                 },
-                include: { config: true }
+                include: { config: true, role: true }
             });
+
+            //encounter refresh logic
+            player = await refreshEncounters(client, player) as UserRole;
 
             interaction.player = new Player(player, player.config as Config, interaction.user);
             interaction.components = new Components(client, interaction.locale, interaction.user);

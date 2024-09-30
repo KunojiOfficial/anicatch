@@ -2,6 +2,7 @@ import { ButtonInteraction, ChatInputCommandInteraction, Message, SelectMenuInte
 import Client from "./classes/Client";
 import Player from "./classes/Player";
 import Components from "./classes/Components";
+import { Prisma } from "@prisma/client";
 
 type DiscordClient = Client;
 type DiscordMessage = Message;
@@ -21,4 +22,7 @@ interface DiscordInteraction extends Omit<ChatInputCommandInteraction, 'client'>
     args: any
 }
 
-export { DiscordClient, DiscordMessage, DiscordInteraction };
+const UserWithIncludes = Prisma.validator<Prisma.UserDefaultArgs>()({ include: { config: true, role: true } });
+type UserRole = Prisma.UserGetPayload<typeof UserWithIncludes>;
+
+export { DiscordClient, DiscordMessage, DiscordInteraction, UserRole };

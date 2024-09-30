@@ -41,7 +41,7 @@ export default new Interactable({
                 }
 
                 if (index === components.length-1) {
-                    if (captured) buttons.push({ type: 2, label: "View Details", emoji: client.formatText("{emoji_glass}"), style: 2, customId: "xD" })
+                    if (captured) buttons.push({ type: 2, label: "View Details", emoji: client.formatText("{emoji_glass}"), style: 2, customId: `0F;${player.user.id};0;0;animon;${card.id}` })
                     if (!captured) buttons.push({ type: 2, label: "Another Chance", emoji: client.formatText("{emoji_star}"), style: 2, customId: "xD" })
                 }
 
@@ -56,7 +56,7 @@ export default new Interactable({
             embeds: [ 
                 {
                     ...interaction.message.embeds[0].data,
-                    description: interaction.message.embeds[0].data.description?.substring(0, interaction.message.embeds[0].description?.indexOf("-#")), 
+                    description: interaction.message.embeds[0].data.description?.substring(0, interaction.message.embeds[0].description?.indexOf("-#", 3)), 
                     image: { url: "attachment://card.jpg" }
                 }, 
                 interaction.components.embed({

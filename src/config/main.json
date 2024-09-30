@@ -1,11 +1,12 @@
 {
     "bot": {
+        "name": "AniCatch",
         "id": "1285551523505639476",
         "dev_guild": "1285556921159389295"
     },
     "defaults": {
         "embed": {
-            "color": "#DB0770"
+            "color": "#A594F9"
         }
     },
     "urls": {

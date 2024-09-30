@@ -2,6 +2,6 @@
     "catchSuccess": "You have successfully captured {custom_name}!",
     "catchSuccess2": "They have been added to your {command_collection}.",
     "catchFailure": "Oh no! {custom_name} has broken free from the {custom_ball}!",
-    "catchFailure2": "If you want, buy another chance!",
+    "catchFailure2": "Buy another chance and try again!",
     "catchEscape": "Oh no! The wild Animon has escaped!"
 }

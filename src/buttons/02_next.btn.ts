@@ -14,7 +14,7 @@ export default new Interactable({
                 embeds: [ 
                     {
                         ...interaction.message.embeds[0].data,
-                        description: interaction.message.embeds[0].data.description?.substring(0, interaction.message.embeds[0].description?.indexOf("-#")), 
+                        description: interaction.message.embeds[0].data.description?.substring(0, interaction.message.embeds[0].description?.indexOf("-#", 3)), 
                         image: { url: "attachment://card.jpg" },
                     },
                     interaction.components.embed({
