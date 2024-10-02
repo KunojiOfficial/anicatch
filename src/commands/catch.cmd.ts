@@ -2,7 +2,7 @@ import { SlashCommandBuilder } from 'discord.js';
 import Command from '../classes/Command';
 
 export default new Command({
-    emoji: "🦄",
+    emoji: "💠",
     cooldown: 2,
     panel: "encountering",
     data: new SlashCommandBuilder()

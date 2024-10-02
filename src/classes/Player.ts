@@ -12,4 +12,8 @@ export default class Player {
         this.config = config;
         this.user = user;
     }
+
+    getBalance() {
+        return `**Balance:**\u2800{emoji_smallCoin} {number_${this.data.coins}}\u2800{emoji_smallGem} {number_${this.data.gems}}`
+    }
 }

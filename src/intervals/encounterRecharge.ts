@@ -21,5 +21,5 @@ export default function (db: PrismaClient, manager: ClusterManager) {
           }
         }
       
-    }, 5000);
+    }, 60000);
 }

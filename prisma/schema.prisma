@@ -19,6 +19,9 @@ model User {
   discordId     String            @unique
   roleId        Int               @default(1)
 
+  coins         Int               @default(0)
+  gems          Int               @default(0)
+
   username      String?
   status        String            @default("tutorial")
   
@@ -33,13 +36,14 @@ model User {
 
   lastReset     DateTime          @default(now())
   nextNotify    DateTime?
-  
+
   createdAt     DateTime          @default(now())
 }
 
 model Role {
   id            Int               @unique @id @default(autoincrement())
   name          String
+  emoji         String?
 
   maxEncounters Int
   rechargeTime  Int
@@ -121,9 +125,14 @@ enum ItemType {
 model Item {
   id            Int               @unique @id @default(autoincrement())
   name          String
+  description   String?
   type          ItemType
   emoji         String?
   properties    Json?
+
+  priceCoin     Int?
+  priceGem      Int?
+  discount      Float?
 
   inventories   Inventory[]
   cards         CardInstance[]

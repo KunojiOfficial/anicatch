@@ -18,8 +18,9 @@ export default new Panel({
                 cards: { 
                     where: { status: { notIn: ["FLED", "WILD"] } }, 
                     orderBy: { rarity: 'desc' }, 
-                    include: { card: { include: { character: true } } } 
-                } 
+                    include: { card: { include: { character: true } } }
+                },
+                role: true
             } 
         });
 
@@ -97,7 +98,7 @@ export default new Panel({
         return {
             embeds: [ interaction.components.embed({
                 author: { name: `${owner.displayName}'s Collection`, iconUrl: owner.displayAvatarURL() },
-                description: `### Developer <:bigthree:1172168626627948565>\n**Sort by:** rarity (desc.)\n-# View details of an Animon by using the {command_animon} command or the select menu below.\n` + "\u2800".repeat(47),
+                description: (userData.roleId>1?`### ${userData.role.name} ${userData.role.emoji||""}\n`:``) + `**Sort by:** rarity (desc.)\n-# View details of an Animon by using the {command_animon} command or the select menu below.\n` + "\u2800".repeat(47),
                 fields: fields
             }) ],
             components: components

@@ -37,8 +37,7 @@ export default new Panel({
                     { name: "\u2800", value: `-# Rarity\n**${rarity.name}** (${rarity.chance}%)\n${rarity.emoji.full}` },
                 ],
                 color: rarity.color,
-                image: "attachment://card.jpg",
-                // thumbnail: client.getEmojiUrl(undefined, animon.ball?.emoji || undefined)+"&size=44"
+                image: "attachment://card.jpg"
             }) ],
             files: [attachment]
         }

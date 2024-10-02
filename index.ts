@@ -8,7 +8,7 @@ import encounterRecharge from "./src/intervals/encounterRecharge";
 dotenv.config();
 
 const manager = new ClusterManager(`${__dirname}/src/bot.js`, {
-  totalShards: 4,
+  totalShards: 'auto',
   shardsPerClusters: 2,
   // totalClusters: 7,
   mode: 'process',

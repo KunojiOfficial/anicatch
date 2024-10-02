@@ -38,11 +38,14 @@ export default async function(interaction: DiscordInteraction, card: CardInstanc
         const chance = calculateCatchChance(ball.item, card);
         const roll = Math.random();
         
+        
         if (roll < chance) { //success
-            await tx.cardInstance.update({ where: { id: card.id }, data: { status: "IDLE", ballId: ball.itemId } });
+            const rarity = client.data.rarities[card.rarity.toString() as keyof typeof client.data.rarities];
+            await tx.user.updateMany({ where: { id: player.data.id }, data: { coins: { increment: rarity.catchReward } } });
+            await tx.cardInstance.updateMany({ where: { id: card.id }, data: { status: "IDLE", ballId: ball.itemId } });
             return true;
         } else {
-            await tx.cardInstance.update({ where: { id: card.id }, data: { status: "FLED", ballId: ball.itemId } });
+            await tx.cardInstance.updateMany({ where: { id: card.id }, data: { status: "FLED", ballId: ball.itemId } });
             return false;
         }   
     });
