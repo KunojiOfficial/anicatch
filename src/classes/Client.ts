@@ -172,7 +172,7 @@ class Client extends DiscordClient {
                         replacement = replacement.reverse();
                         replacement = replacement.pop();
                     } else if (replacement.length) {
-                        replacement = replacement[0];
+                        replacement = this.formatText(replacement[0], locale);
                     }
                 }
                 else replacement = deepValue(FORMATABLES[formatable], values[i].replaceAll("_", "."))
@@ -226,8 +226,8 @@ class Client extends DiscordClient {
         else await interaction.reply(message).catch(console.error);
     }
 
-    getId(cardId: number, printId: number) {
-        return `${base10ToBase26(cardId)}-${printId}`;
+    getId(cardId: number, printId?: number) {
+        return printId ? `${base10ToBase26(cardId)}-${printId}` : base10ToBase26(cardId);
     }
 
     getIdReverse(cardId: string) {

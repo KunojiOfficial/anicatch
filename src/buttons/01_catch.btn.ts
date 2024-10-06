@@ -62,7 +62,7 @@ export default new Interactable({
                     image: { url: "attachment://card.jpg" }
                 }, 
                 interaction.components.embed({
-                    description: captured ? `{emoji_yes}\u2800{locale_main_catchSuccess} (+${rarity.catchReward} {emoji_coin})\n-# \u2800\u2800\u2800{locale_main_catchSuccess2}\n` : `{emoji_no}\u2800{locale_main_catchFailure}\n-# \u2800\u2800\u2800{locale_main_catchFailure2}`,
+                    description: captured ? `{emoji_yes}\u2800{locale_main_catchSuccess} (+ {emoji_smallCoin} ${rarity.catchReward})\n-# \u2800\u2800\u2800{locale_main_catchSuccess2}\n` : `{emoji_no}\u2800{locale_main_catchFailure}\n-# \u2800\u2800\u2800{locale_main_catchFailure2}`,
                     color: captured ? "#00ff00" : "#ff0000"
                 }, {
                     name: [`**${card.card.character.name}**`],

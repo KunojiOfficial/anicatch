@@ -155,7 +155,7 @@ export default new Event({
                 if (!interaction.isButton() || id !== "3") await interaction.deferUpdate();
 
                 let interactable = collection?.get(!followUp ? id : id.replace("F", ""));
-                if (!interactable) throw 6;
+                if (!interactable) throw 13;
 
                 let message = await interactable.execute!(interaction);
                 if (followUp) await interaction.followUp(message);

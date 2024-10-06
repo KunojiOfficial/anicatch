@@ -32,4 +32,25 @@ client.cluster.on('message', async message => {
     }
 });
 
+
+// Handle the 'error' event from the client
+client.on('error', (error) => {
+    console.error('An error occurred in the Discord client:', error);
+});
+
+// Handle the 'warn' event from the client
+client.on('warn', (warning) => {
+    console.warn('Warning:', warning);
+});
+
+// Handle unhandled promise rejections globally
+process.on('unhandledRejection', (reason, promise) => {
+    console.error('Unhandled Promise Rejection:', reason);
+});
+
+// Handle uncaught exceptions globally
+process.on('uncaughtException', (error) => {
+    console.error('Uncaught Exception:', error);
+});
+
 client.login(process.env.BOT_TOKEN);

@@ -2,7 +2,7 @@ import { InteractionReplyOptions, User } from "discord.js";
 import { DiscordInteraction } from "../types";
 import Panel from "../classes/Panel";
 
-const PER_PAGE = 9;
+const PER_PAGE = 12;
 
 export default new Panel({
     name: "collection",

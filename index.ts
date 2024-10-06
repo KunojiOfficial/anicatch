@@ -26,6 +26,31 @@ manager.on('clusterCreate', cluster => {
   }
 });
 
+// Handle shard errors
+manager.on('shardError', (error, shardId) => {
+  console.error(`Shard ${shardId} encountered an error:`, error);
+});
+
+// Handle when a shard becomes ready
+manager.on('shardReady', (shardId) => {
+  console.log(`Shard ${shardId} is ready.`);
+});
+
+// Handle when a shard is disconnected
+manager.on('shardDisconnect', (event, shardId) => {
+  console.warn(`Shard ${shardId} disconnected:`, event);
+});
+
+// Handle when a shard attempts to reconnect
+manager.on('shardReconnecting', (shardId) => {
+  console.warn(`Shard ${shardId} is reconnecting...`);
+});
+
+// Handle general errors in the shard manager
+manager.on('error', (error) => {
+  console.error('Shard Manager Error:', error);
+});
+
 manager.spawn({ timeout: -1 });
 
 //start website interface

@@ -19,11 +19,40 @@ export default new Panel({
                     bot: [`${client.user}`]
                 }) ],
                 components: [ interaction.components.buttons([{
-                    label: "Visit Store"
+                    id: "0F",
+                    label: "Visit Store",
+                    emoji: "smallCoin",
+                    args: { path: "store" }
                 }, {
                     label: "Vote"
                 }, {
                     label: "Become a Patron"
+                }]) ]
+            };
+
+            if (interaction.isButton()) {
+                await interaction.followUp(notice);
+                return {}
+            } else {
+                return notice;
+            }
+        }
+
+        //get user balls :)
+        const balls = await client.db.inventory.findMany({ where: { userId: player.data.id, item: { type: "BALL" } }, include: { item: true } });
+        balls.sort((a,b) => a.itemId-b.itemId);
+
+        if (!balls.length) {
+            const notice = {
+                embeds: [ interaction.components.embed({
+                    description: `-# Code #**12**\n{locale_errors_12}`,
+                    color: "#ff0000"
+                }) ],
+                components: [ interaction.components.buttons([{
+                    id: "0F",
+                    label: "Visit Store",
+                    emoji: "smallCoin",
+                    args: { path: "store", page: "BALL" }
                 }]) ]
             };
 
@@ -54,24 +83,24 @@ export default new Panel({
         let followUp:any;
         //edit message after animon escapes
         const timeOutId = setTimeout(async () => {
-            await followUp.edit({
-                components: [],
-                embeds: [ 
-                    {
-                        ...followUp.embeds[0].data,
-                        description: followUp.embeds[0].data.description?.substring(0, followUp.embeds[0].description?.indexOf("-#", 3)), 
-                        image: { url: "attachment://card.jpg" },
-                    },
-                    interaction.components.embed({
-                        color: "#ffffff",
-                        description: "🏃\u2800{locale_main_catchEscape}"
-                    })
-                ]
-            });
+            try {
+                await followUp.edit({
+                    components: [],
+                    embeds: [ 
+                        {
+                            ...followUp.embeds[0].data,
+                            description: followUp.embeds[0].data.description?.substring(0, followUp.embeds[0].description?.indexOf("-#", 3)), 
+                            image: { url: "attachment://card.jpg" },
+                        },
+                        interaction.components.embed({
+                            color: "#ffffff",
+                            description: "🏃\u2800{locale_main_catchEscape}"
+                        })
+                    ]
+                });
+            } catch (err) {}
         }, 1000 * 10);
-        //get user balls :)
-        const balls = await client.db.inventory.findMany({ where: { userId: player.data.id, item: { type: "BALL" } }, include: { item: true } });
-        balls.sort((a,b) => a.itemId-b.itemId);
+
         const buttons = balls.map(b => ({ emoji: b.item.emoji, label: b.count.toString(), id: 1, args: { cardId: data.insert.id, ballId: b.itemId, timeoutId: data.timeout, embedTimeout: timeOutId } }));
 
         let k = -1, components = [];

@@ -47,8 +47,8 @@ async function category(interaction: DiscordInteraction, category: ItemType, ite
 
     const fields = [];
     for (const item of items) {
-        const coinPrice = item.priceCoin ? ((item.discount ? `~~` : ``) + `**{number_${item.priceCoin}}**` + (item.discount ? `~~ **{number_${Math.ceil(item.priceCoin!*(1-item.discount!))}}** (-${100*item.discount}%)` : ``)) : null;
-        const gemPrice = item.priceGem ? ((item.discount ? `~~` : ``) + `**{number_${item.priceGem}}**` + (item.discount ? `~~ **{number_${Math.ceil(item.priceGem!*(1-item.discount!))}}** (-${100*item.discount}%)` : ``)) : null;
+        const coinPrice = item.priceCoin ? ((item.discount ? `~~` : `**`) + `{number_${item.priceCoin}}` + (item.discount ? `~~ **{number_${Math.ceil(item.priceCoin!*(1-item.discount!))}}** (-${100*item.discount}%)` : `**`)) : null;
+        const gemPrice = item.priceGem ? ((item.discount ? `~~` : `**`) + `{number_${item.priceGem}}` + (item.discount ? `~~ **{number_${Math.ceil(item.priceGem!*(1-item.discount!))}}** (-${100*item.discount}%)` : `**`)) : null;
     
         let desc = [item.description || "\u2800"];
 
@@ -109,14 +109,20 @@ async function category(interaction: DiscordInteraction, category: ItemType, ite
             emoji: "smallCoin",
             label: player.data.coins >= costCoin ? `Buy (-{number_${costCoin}})` : `Too expensive! ({number_${costCoin}})`,
             style: player.data.coins >= costCoin ? "green" : "red",
-            disabled: player.data.coins < costCoin
+            disabled: player.data.coins < costCoin,
+            id: '4',
+            args: { itemId: itemId, count: count, with: 'coins' },
+            cooldown: { id: "buy", time: 2 }
         });
 
         if (item.priceGem) buttons.push({
             emoji: "smallGem",
             label: player.data.gems >= costGem ? `Buy (-{number_${costGem}})` : `Too expensive! ({number_${costGem}})`,
-            style: player.data.gems >= costGem ? "green" : "red",
-            disabled: player.data.gems < costGem
+            style: player.data.gems >= costGem ? "blurple" : "red",
+            disabled: player.data.gems < costGem,
+            id: '4',
+            args: { itemId: itemId, count: count, with: 'gems' },
+            cooldown: { id: "buy", time: 2 }
         })
 
         components = [...components, interaction.components.buttons(buttons)];
@@ -129,8 +135,10 @@ async function category(interaction: DiscordInteraction, category: ItemType, ite
             fields: fields
         }) ],
         components: [...components, interaction.components.buttons([{
+            id: '0',
             label: "Back",
-            emoji: "back"
+            emoji: "back",
+            args: { path: 'store', page: 'main' }
         }, {
             label: "Get more Gems",
             emoji: "getGems"

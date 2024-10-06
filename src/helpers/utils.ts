@@ -28,34 +28,21 @@ function addHours(date: Date, hours: number) {
     return now;
 }
 
-function base10ToBase26(num: number) {
-    if (num < 0) {
-        return ''; // Handle negative numbers
-    }
-
-    let result = '';
-    const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-
-    while (num >= 0) {
-        const remainder = num % 26;
-        result = alphabet[remainder] + result; // Prepend the corresponding letter
-        num = Math.floor(num / 26) - 1; // Decrease num and handle the 0-indexing
-    }
-
-    return result;
+function base10ToBase26(num: number): any {
+    var mod = num % 26,
+        pow = num / 26 | 0,
+        out = mod ? String.fromCharCode(64 + mod) : (--pow, 'Z');
+    
+    return pow ? base10ToBase26(pow) + out : out;
 }
 
-function base26ToBase10(base26Str: string) {
+function base26ToBase10(str: string) {
     let result = 0;
-    const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-
-    for (let i = 0; i < base26Str.length; i++) {
-        const char = base26Str[i];
-        const value = alphabet.indexOf(char);
-        result = result * 26 + (value + 1); // +1 since A = 1, B = 2, ..., Z = 26
+    for (let i = 0; i < str.length; i++) {
+        let charValue = str.charCodeAt(i) - 64;  // A = 1, B = 2, ..., Z = 26
+        result = result * 26 + charValue;
     }
-
-    return result - 1; // Adjust for the offset
+    return result;
 }
 
 function parseColor(color: string) {

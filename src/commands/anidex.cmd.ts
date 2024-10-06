@@ -5,21 +5,25 @@ export default new Command({
     emoji: "🃏",
     cooldown: 2,
     data: new SlashCommandBuilder()
-        .setName("animon")
-        .setDescription("View the details of the selected Animon!")
+        .setName("anidex")
+        .setDescription("all cards!")
         .addStringOption(option =>
             option.setName("id")
             .setDescription("The ID(s) of the selected Animon(s). Max 5, separated by commas.")
-            .setRequired(true)
         ) as SlashCommandBuilder,
     async execute(interaction) {
         const { options } = interaction;
-        const ids = options.getString("id")?.toUpperCase().split(",");
-        if (!ids?.length) return;
+        const ids = options.getString("id")?.toUpperCase()?.split(",");
+
+        if (!ids?.length) {
+            await interaction.editReply(await interaction.client.panels.get("anidex")!.execute!(interaction, 1));
+            return;
+        }
 
         for (const [i, id] of ids.entries()) {
             if (i > 4) break;
-            const message = await interaction.client.panels.get("animon")?.execute!(interaction, id, true);
+
+            const message = await interaction.client.panels.get("anidex")?.execute!(interaction, id.replace(/[^a-zA-Z]/g, ''));
             if (!message) continue;
 
             if (i === 0) await interaction.editReply(message);
