@@ -1,4 +1,4 @@
-import { ButtonInteraction, ChatInputCommandInteraction, Message, SelectMenuInteraction } from "discord.js";
+import { ButtonInteraction, ChatInputCommandInteraction, Message, ModalSubmitFields, ModalSubmitInteraction, SelectMenuInteraction } from "discord.js";
 import Client from "./classes/Client";
 import Player from "./classes/Player";
 import Components from "./classes/Components";
@@ -19,7 +19,8 @@ interface DiscordInteraction extends Omit<ChatInputCommandInteraction, 'client'>
     components: Components,
     targetId: Number,
     owner: String,
-    args: any
+    args: any,
+    fields: ModalSubmitFields
 }
 
 const UserWithIncludes = Prisma.validator<Prisma.UserDefaultArgs>()({ include: { config: true, role: true } });

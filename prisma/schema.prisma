@@ -103,6 +103,8 @@ model CardInstance {
   cardId        Int
 
   status        CardStatus        @default(WILD)
+  favorite      Boolean           @default(false)
+
   rarity        Int
   print         Int               @default(0)
 

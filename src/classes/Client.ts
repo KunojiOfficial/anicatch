@@ -47,7 +47,8 @@ const FORMATABLES: any = {
 class Client extends DiscordClient {
     commands: Collection<string, Command>;
     buttons: Collection<string, Interactable>; 
-    menus: Collection<string, Interactable>; 
+    menus: Collection<string, Interactable>;
+    modals: Collection<string, Interactable>;
     panels: Collection<string, Panel>;
     locales: any;
     cluster: ClusterClient<DiscordClient> | undefined;
@@ -65,6 +66,7 @@ class Client extends DiscordClient {
         this.commands = new Collection();
         this.buttons = new Collection();
         this.menus = new Collection();
+        this.modals = new Collection();
         this.panels = new Collection();
         this.locales = {};
 
@@ -78,9 +80,10 @@ class Client extends DiscordClient {
         this.loadEvents();
         this.loadCommandsData();
 
-        loadFiles(this.commands, "../commands");
-        loadFiles(this.buttons, "../buttons");
-        loadFiles(this.menus, "../menus");
+        loadFiles(this.commands, "../interactions/commands");
+        loadFiles(this.buttons, "../interactions/buttons");
+        loadFiles(this.menus, "../interactions/menus");
+        loadFiles(this.modals, "../interactions/modals");
         loadFiles(this.panels, "../panels");
     
         //initalize locales
@@ -120,7 +123,7 @@ class Client extends DiscordClient {
      */
     async deployCommands() {
         const rest = new REST({ version: '10' }).setToken(process.env.BOT_TOKEN);
-        let route = Routes.applicationGuildCommands(config.bot.id, config.bot.dev_guild);
+        let route = Routes.applicationCommands(config.bot.id);
     
         let jsonCommands: Array<{data: any, emoji: any}> = this.commands.map(cmd => ({data: cmd.data.toJSON(), emoji: cmd.emoji}));
         for (let command of jsonCommands) {
@@ -214,7 +217,9 @@ class Client extends DiscordClient {
             err = 3;
         }
 
-        const locale : any = this.locales['errors'][lang];
+        let locale : any = this.locales['errors'][lang];
+        if (!locale) locale = this.locales['errors']['en-US'];
+
         const message = {
             embeds: [ interaction.components.embed({
                 description: `-# Code **#${err}**\n${locale[err]}\n\n-# *${locale.note}*`,
@@ -238,7 +243,8 @@ class Client extends DiscordClient {
         const value = emoji[emojiName as keyof typeof emoji];
         if (!value && !hardEmoji) return "";
 
-        const match = emojiName ? emojiName.match(/:(\w+)>/) : hardEmoji ? hardEmoji.match(/:(\w+)>/) : [];
+        const match = emojiName ? (value as string).match(/:(\w+)>/) : hardEmoji ? hardEmoji.match(/:(\w+)>/) : [];
+
         if (!match?.length) return "";
 
         return `https://cdn.discordapp.com/emojis/${match[1]}.webp?quality=lossless`

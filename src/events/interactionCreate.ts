@@ -39,9 +39,11 @@ function cooldown(id: string, name: string, type: string, cooldown?: number) {
 function cdMessage(interaction: DiscordInteraction, expireTime: number) {
     return {
         embeds: [ interaction.components.embed({
-            title: "Cooldown",
-            description: `This interaction will be available again <t:${Math.round(expireTime/1000)}:R>.`
-        }, interaction.player) ],
+            description: `-# Code **#14**\n{locale_errors_14}\n\n-# *{locale_errors_note}*`,
+            color: "#ff0000"
+        }, {
+            time: [`<t:${Math.round(expireTime/1000)}:R>`]
+        }) ],
         ephemeral: true
     }
 }
@@ -134,6 +136,7 @@ export default new Event({
                 let collection;
                 if (interaction.isStringSelectMenu()) collection = client.menus;
                 else if (interaction.isButton()) collection = client.buttons;
+                else if (interaction.isModalSubmit()) collection = client.modals;
 
                 const [ id, owner, cdId, cdTime, ...args ] = interaction.customId.split(';');
                 let followUp = false;
@@ -143,6 +146,8 @@ export default new Event({
                 interaction.owner = owner;
                 interaction.args = args;
                 
+                if (owner !== user.id && owner !== "0") throw 20;
+
                 //get cooldown
                 if (cdId && cdTime) {
                     const cd = cooldown(user.id, cdId, "int", parseInt(cdTime));
@@ -151,11 +156,11 @@ export default new Event({
                         return;
                     }
                 }
-
-                if (!interaction.isButton() || id !== "3") await interaction.deferUpdate();
-
+                
                 let interactable = collection?.get(!followUp ? id : id.replace("F", ""));
                 if (!interactable) throw 13;
+
+                if (!interactable?.dontReply) await interaction.deferUpdate();
 
                 let message = await interactable.execute!(interaction);
                 if (followUp) await interaction.followUp(message);

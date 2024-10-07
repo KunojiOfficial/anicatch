@@ -97,7 +97,9 @@ async function category(interaction: DiscordInteraction, category: ItemType, ite
             args: { ...defaults.args, count: count-1 },
             disabled: count === 1
         }, {
-            label: count?.toString()
+            id: '5',
+            label: count?.toString(),
+            args: { min: 1, max: 50, index: 3, customId: Object.values(defaults.args).join(':') }
         }, {
             ...defaults,
             emoji: "plus",

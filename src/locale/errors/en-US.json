@@ -10,5 +10,14 @@
     "10": "no enough gems to buy",
     "11": "item no for sale anymore",
     "12": "no balls, buy first",
-    "13": "no interaction"
+    "13": "no interaction",
+    "14": "This interaction will be available again {custom_time}.",
+    "15": "not a number",
+    "16": "invalid number",
+    "17": "not your card",
+    "18": "to perform action animon has to be idle",
+    "19": "cant sell fav cards",
+    "20": "cant use buttons that are not yours",
+    "21": "status not fled",
+    "22": "not enough coins for second chance, buy [here]({config_urls_buyGems})"
 }

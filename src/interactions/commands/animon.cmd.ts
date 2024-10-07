@@ -1,12 +1,14 @@
-import { SlashCommandBuilder } from 'discord.js';
-import Command from '../classes/Command';
+import { ApplicationIntegrationType, InteractionContextType, SlashCommandBuilder } from 'discord.js';
+import Command from '../../classes/Command';
 
 export default new Command({
     emoji: "🃏",
     cooldown: 2,
     data: new SlashCommandBuilder()
         .setName("animon")
-        .setDescription("View the details of the selected Animon!")
+        .setDescription("View the details of the selected Animon(s)!")
+        .setContexts(InteractionContextType.BotDM, InteractionContextType.Guild, InteractionContextType.PrivateChannel)
+        .setIntegrationTypes(ApplicationIntegrationType.UserInstall, ApplicationIntegrationType.GuildInstall)
         .addStringOption(option =>
             option.setName("id")
             .setDescription("The ID(s) of the selected Animon(s). Max 5, separated by commas.")

@@ -1,12 +1,14 @@
-import { SlashCommandBuilder } from 'discord.js';
-import Command from '../classes/Command';
+import { ApplicationIntegrationType, InteractionContextType, SlashCommandBuilder } from 'discord.js';
+import Command from '../../classes/Command';
 
 export default new Command({
     emoji: "🏓",
     dontReply: true,
     data: new SlashCommandBuilder()
         .setName("ping")
-        .setDescription("Pong!"),
+        .setDescription("Pong!")
+        .setContexts(InteractionContextType.BotDM, InteractionContextType.Guild, InteractionContextType.PrivateChannel)
+        .setIntegrationTypes(ApplicationIntegrationType.UserInstall, ApplicationIntegrationType.GuildInstall),
     async execute(interaction): Promise<void> {
         const message = await interaction.deferReply({ fetchReply: true });
 

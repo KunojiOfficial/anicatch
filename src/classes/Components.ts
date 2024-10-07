@@ -36,7 +36,7 @@ export default class Components {
 
     constructor(client: DiscordClient, locale: string, user: User) {
         this.client = client;
-        this.locale = locale;
+        this.locale = client.locales[locale] ? locale : "en-US";
         this.user = user;
     }
 
@@ -197,6 +197,7 @@ export default class Components {
         title: string,
         args?: object,
         customId?: string,
+        cooldown?: { id: string, time: number },
         inputs: Array<{
             customId: string,
             label: string,
@@ -207,17 +208,27 @@ export default class Components {
             value?: string,
             required?: boolean
         }>
-    }) {
+    }, replace?: object) {
         const modalObj = new ModalBuilder();
         const customId = [];
 
         if (object.id !== undefined) customId.push(object.id); 
         else customId.push("0");
+        
+        customId.push("0");
+
+        if (object.cooldown) {
+            customId.push(object.cooldown.id);
+            customId.push(object.cooldown.time);
+        } else {
+            customId.push(0);
+            customId.push(0);
+        }
 
         if (object.args) for (const arg of Object.values(object.args)) customId.push(arg); 
         if (object.customId) customId.push(object.customId);
 
-        modalObj.setTitle(object.title);
+        modalObj.setTitle(this.client.formatText(object.title, this.locale, replace));
         modalObj.setCustomId(customId.join(';'));
         
         const rows: ActionRowBuilder[] = [];
@@ -226,12 +237,12 @@ export default class Components {
             const inp = new TextInputBuilder();
             
             inp.setCustomId(input.customId);
-            inp.setLabel(input.label);
+            inp.setLabel(this.client.formatText(input.label, this.locale, replace));
             inp.setStyle(TextInputStyle[input.style]);
 
             if (input.minLength) inp.setMinLength(input.minLength);
             if (input.maxLength) inp.setMinLength(input.maxLength);
-            if (input.placeholder) inp.setPlaceholder(input.placeholder);
+            if (input.placeholder) inp.setPlaceholder(this.client.formatText(input.placeholder, this.locale, replace));
             if (input.value) inp.setValue(input.value);
             if (input.required) inp.setRequired(true);
             

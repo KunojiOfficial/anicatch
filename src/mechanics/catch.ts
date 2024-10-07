@@ -40,8 +40,8 @@ export default async function(interaction: DiscordInteraction, card: CardInstanc
         
         
         if (roll < chance) { //success
-            const rarity = client.data.rarities[card.rarity.toString() as keyof typeof client.data.rarities];
-            await tx.user.updateMany({ where: { id: player.data.id }, data: { coins: { increment: rarity.catchReward } } });
+            // const rarity = client.data.rarities[card.rarity.toString() as keyof typeof client.data.rarities];
+            // await tx.user.updateMany({ where: { id: player.data.id }, data: { coins: { increment: rarity.catchReward } } });
             await tx.cardInstance.updateMany({ where: { id: card.id }, data: { status: "IDLE", ballId: ball.itemId } });
             return true;
         } else {

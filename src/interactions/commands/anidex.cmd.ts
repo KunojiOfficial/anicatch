@@ -1,12 +1,14 @@
-import { SlashCommandBuilder } from 'discord.js';
-import Command from '../classes/Command';
+import { ApplicationIntegrationType, InteractionContextType, SlashCommandBuilder } from 'discord.js';
+import Command from '../../classes/Command';
 
 export default new Command({
-    emoji: "🃏",
+    emoji: "🔍",
     cooldown: 2,
     data: new SlashCommandBuilder()
         .setName("anidex")
-        .setDescription("all cards!")
+        .setDescription("Explore the details of a specific Animon type or browse through all available Animons!")
+        .setContexts(InteractionContextType.BotDM, InteractionContextType.Guild, InteractionContextType.PrivateChannel)
+        .setIntegrationTypes(ApplicationIntegrationType.UserInstall, ApplicationIntegrationType.GuildInstall)
         .addStringOption(option =>
             option.setName("id")
             .setDescription("The ID(s) of the selected Animon(s). Max 5, separated by commas.")

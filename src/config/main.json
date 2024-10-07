@@ -10,7 +10,8 @@
         }
     },
     "urls": {
-        "support": "https://google.com"
+        "support": "https://google.com",
+        "buyGems": "https://google.com"
     },
     "webhooks": {
         "error": "https://discord.com/api/webhooks/1285557612758437958/J2VIVBfP7rC8aqPryBGEicWqLAaPI56f6gU0KIGaHfQ6sSoXW39PLI-Uma9pnL-YEknR"

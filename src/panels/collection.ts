@@ -17,7 +17,7 @@ export default new Panel({
             include: { 
                 cards: { 
                     where: { status: { notIn: ["FLED", "WILD"] } }, 
-                    orderBy: { rarity: 'desc' }, 
+                    orderBy: [ { favorite: 'desc' }, { rarity: 'desc' } ], 
                     include: { card: { include: { character: true } } }
                 },
                 role: true
@@ -46,7 +46,7 @@ export default new Panel({
 
             fields.push({
                 name: `${(ball?.emoji + " ") || "{emoji_empty}"}${c.card.character.name}`,
-                value: `\`${id.padEnd(7, " ")}\`${type.emoji}\n${rarity.emoji.full}\n\u2800`,
+                value: `\`${id.padEnd(7, " ")}\`${type.emoji}${c.favorite ? "{emoji_favorite}":""}\n${rarity.emoji.full}\n\u2800`,
                 inline: true
             });
 
@@ -73,8 +73,10 @@ export default new Panel({
             args: { ...defaults.args, page: page - 1 },
             disabled: pageCount <= 1
         }, {
+            id: '5',
             label: `\u2800` + `Page ${page} / ${pageCount}` + `\u2800`,
-            disabled: pageCount <= 1
+            disabled: pageCount <= 1,
+            args: { min: 1, max: pageCount, index: 1, customId: Object.values(defaults.args).join(':') }
         }, {
             ...defaults,
             emoji: "chevron.single.right",

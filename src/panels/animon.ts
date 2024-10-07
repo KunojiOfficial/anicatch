@@ -5,7 +5,7 @@ import Panel from "../classes/Panel";
 export default new Panel({
     name: "animon",
     async execute(interaction: DiscordInteraction, id: string | number, userAccess: boolean = false): Promise<InteractionReplyOptions> {
-        const { client } = interaction;
+        const { client, player } = interaction;
 
         if (typeof id !== 'number' && !userAccess) id = parseInt(id);
         
@@ -28,6 +28,7 @@ export default new Panel({
         const attachment = new AttachmentBuilder(filePath, { name: "card.jpg" });
 
         const owner = await client.users.fetch(animon.user.discordId);
+        const isOwner = owner.id === player.user.id;
 
         return { 
             embeds: [ interaction.components.embed({
@@ -39,7 +40,21 @@ export default new Panel({
                 color: rarity.color,
                 image: "attachment://card.jpg"
             }) ],
-            files: [attachment]
+            files: [attachment],
+            components: isOwner ? [ interaction.components.buttons([{
+                id: '6',
+                label: animon.favorite ? "\u2800Un-Favorite" : "\u2800Favorite",
+                emoji: animon.favorite ? "favorite2" : "unfavorite",
+                args: { cardId: animon.id },
+                cooldown: { id: "fav", time: 2 }
+            }, {
+                id: '7',
+                label: `\u2800Sell (+${rarity.sellPrice})`,
+                emoji: "smallCoin",
+                disabled: animon.favorite,
+                args: { cardId: animon.id },
+                cooldown: { id: "sell", time: 5 }
+            }]) ] : []
         }
     }
 });

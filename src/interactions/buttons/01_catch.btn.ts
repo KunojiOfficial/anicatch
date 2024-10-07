@@ -1,6 +1,6 @@
 import { InteractionReplyOptions } from "discord.js";
-import Interactable from "../classes/Interactable";
-import _catch from "../mechanics/catch";
+import Interactable from "../../classes/Interactable";
+import _catch from "../../mechanics/catch";
 
 export default new Interactable({
     id: 1,
@@ -23,6 +23,7 @@ export default new Interactable({
 
         const components = interaction.message?.components;
         const newComponents = [];
+        const rarity = client.data.rarities[card.rarity.toString() as keyof typeof client.data.rarities];
         
         if (components.length) {
             for (const [index, component] of components.entries()) {
@@ -41,8 +42,11 @@ export default new Interactable({
                 }
 
                 if (index === components.length-1) {
-                    if (captured) buttons.push({ type: 2, label: "View Details", emoji: client.formatText("{emoji_glass}"), style: 2, customId: `0F;${player.user.id};0;0;animon;${card.id}` })
-                    if (!captured) buttons.push({ type: 2, label: "Another Chance", emoji: client.formatText("{emoji_star}"), style: 2, customId: "xD" })
+                    if (captured) {
+                        buttons.push({ type: 2, label: "View Details", emoji: client.formatText("{emoji_glass}"), style: 2, customId: `0F;${player.user.id};0;0;animon;${card.id}` })
+                        buttons.push({ type: 2, label: `Sell (+${rarity.sellPrice})`, emoji: client.formatText("{emoji_smallCoin}"), style: 2, customId: `7;${player.user.id};sell;5;${card.id}` })
+                    }
+                    if (!captured) buttons.push({ type: 2, label: "Another Chance (-20)", emoji: client.formatText("{emoji_smallGem}"), style: 2, customId: `8;${player.user.id};chance;5;${card.id}` })
                 }
 
                 newComponents.push({
@@ -52,17 +56,16 @@ export default new Interactable({
             }
         }
 
-        const rarity = client.data.rarities[card.rarity.toString() as keyof typeof client.data.rarities];
 
         return {
             embeds: [ 
                 {
                     ...interaction.message.embeds[0].data,
-                    description: interaction.message.embeds[0].data.description?.substring(0, interaction.message.embeds[0].description?.indexOf("-#", 3)), 
+                    description: interaction.message.embeds[0].data.footer?.text ? interaction.message.embeds[0].data.description : interaction.message.embeds[0].data.description?.substring(0, interaction.message.embeds[0].description?.indexOf("-#", 3)), 
                     image: { url: "attachment://card.jpg" }
                 }, 
                 interaction.components.embed({
-                    description: captured ? `{emoji_yes}\u2800{locale_main_catchSuccess} (+ {emoji_smallCoin} ${rarity.catchReward})\n-# \u2800\u2800\u2800{locale_main_catchSuccess2}\n` : `{emoji_no}\u2800{locale_main_catchFailure}\n-# \u2800\u2800\u2800{locale_main_catchFailure2}`,
+                    description: captured ? `{emoji_yes}\u2800{locale_main_catchSuccess}\n-# \u2800\u2800\u2800{locale_main_catchSuccess2}` : `{emoji_no}\u2800{locale_main_catchFailure}\n-# \u2800\u2800\u2800{locale_main_catchFailure2}`,
                     color: captured ? "#00ff00" : "#ff0000"
                 }, {
                     name: [`**${card.card.character.name}**`],

@@ -45,7 +45,9 @@ export default new Panel({
                 emoji: "chevron.single.left",
                 args: { ...defaults.args, page: page-1 }
             }, {
-                label: `${page} / ${count}`
+                id: '5',
+                label: `${page} / ${count}`,
+                args: { min: 1, max: count, index: 1, customId: Object.values(defaults.args).join(':') }
             }, {
                 ...defaults,
                 emoji: "chevron.single.right",
