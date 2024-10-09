@@ -3,6 +3,10 @@
         "BALL": {
             "name": "AniBalls",
             "description": "Essential for trainers, AniBalls enhance your chances of capturing all Animons, from basic to legendary, helping you build an epic collection!"
+        },
+        "ENCOUNTER": {
+            "name": "Encounter Tokens",
+            "description": "Unlock the thrill of discovery! These tokens grant you additional chances to encounter wild Animons."
         }
     }
 }

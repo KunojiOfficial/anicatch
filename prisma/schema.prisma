@@ -122,6 +122,7 @@ model CardInstance {
 
 enum ItemType {
   BALL
+  ENCOUNTER
 }
 
 model Item {
@@ -130,6 +131,7 @@ model Item {
   description   String?
   type          ItemType
   emoji         String?
+  usable        Boolean           @default(false)
   properties    Json?
 
   priceCoin     Int?

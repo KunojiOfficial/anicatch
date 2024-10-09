@@ -123,7 +123,7 @@ class Client extends DiscordClient {
      */
     async deployCommands() {
         const rest = new REST({ version: '10' }).setToken(process.env.BOT_TOKEN);
-        let route = Routes.applicationCommands(config.bot.id);
+        let route = Routes.applicationGuildCommands(config.bot.id, config.bot.dev_guild);
     
         let jsonCommands: Array<{data: any, emoji: any}> = this.commands.map(cmd => ({data: cmd.data.toJSON(), emoji: cmd.emoji}));
         for (let command of jsonCommands) {

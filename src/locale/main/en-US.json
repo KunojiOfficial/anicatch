@@ -6,5 +6,6 @@
     "catchEscape": "Oh no! The wild Animon has escaped!",
     "buySuccess": "You have successfully bought {custom_item} for {custom_cost}.",
     "buySuccess2": "The item(s) have been added to your {command_inventory}.",
-    "sellSuccess": "You have successfully sold {custom_name} for {custom_price}."
+    "sellSuccess": "You have successfully sold {custom_name} for {custom_price}.",
+    "useSuccess": "You have successfully used {custom_name} x{custom_count}."
 }

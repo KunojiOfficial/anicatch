@@ -14,7 +14,7 @@
     "chevron": {
         "single": {
             "left": "<:chLeft:1263100161807220880>",
-            "right": "<:chRight:1263100163338014814>"
+            "right": "<:chRight:1293535291042172958>"
         },
         "double": {
             "left": "<:ch2Left:1263100927313707109>",
@@ -28,5 +28,6 @@
     "favorite": "<:fav:1292487793053798491>",
     "favorite2": "<:fav2:1292835265303281736>",
     "unfavorite": "<:unfav:1292835251973918781>",
-    "whSmallCoin": "<:whsmallCoin:1292836693925171240>"
+    "whSmallCoin": "<:whsmallCoin:1292836693925171240>",
+    "wyes": "<:yes:1293537096564342784>"
 }
