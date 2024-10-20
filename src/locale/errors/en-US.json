@@ -22,5 +22,6 @@
     "22": "not enough coins for second chance, buy [here]({config_urls_buyGems})",
     "23": "you have no items to show",
     "24": "no items to use",
-    "25": "no enough items"
+    "25": "no enough items",
+    "26": "no available vouchers"
 }

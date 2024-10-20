@@ -2,12 +2,11 @@ import { ApplicationIntegrationType, InteractionContextType, SlashCommandBuilder
 import Command from '../../classes/Command';
 
 export default new Command({
-    emoji: "💠",
-    cooldown: 2,
-    panel: "encountering",
+    emoji: "🎟️",
     data: new SlashCommandBuilder()
-        .setName("catch")
-        .setDescription("Catch Waifus/Husbandos (Animons) to add them to your collection!")
+        .setName("vouchers")
+        .setDescription("Redeem your vouchers!")
         .setContexts(InteractionContextType.BotDM, InteractionContextType.Guild, InteractionContextType.PrivateChannel)
-        .setIntegrationTypes(ApplicationIntegrationType.UserInstall, ApplicationIntegrationType.GuildInstall)
-})
+        .setIntegrationTypes(ApplicationIntegrationType.UserInstall, ApplicationIntegrationType.GuildInstall),
+    panel: "vouchers"
+});

@@ -59,7 +59,7 @@ class Client extends DiscordClient {
 
     constructor(options: ClientOptions) {
         super(options)
-        
+    
         //initialize database connection
         this.db = new PrismaClient();
 

@@ -1,0 +1,44 @@
+{
+    "1293561210876334161": {
+        "name": "10-gems",
+        "emoji": "smallGem",
+        "type": "gems",
+        "gems": 10
+    },
+    "1297143579822657618": {
+        "name": "20-gems",
+        "emoji": "smallGem",
+        "type": "gems",
+        "gems": 20
+    },
+    "1297143905728462848": {
+        "name": "50-gems",
+        "emoji": "smallGem",
+        "type": "gems",
+        "gems": 60
+    },
+    "1297144084414332958": {
+        "name": "100-gems",
+        "emoji": "smallGem",
+        "type": "gems",
+        "gems": 125
+    },
+    "1297144295114936392": {
+        "name": "300-gems",
+        "emoji": "smallGem",
+        "type": "gems",
+        "gems": 380
+    },
+    "1297144406591279115": {
+        "name": "500-gems",
+        "emoji": "smallGem",
+        "type": "gems",
+        "gems": 640
+    },
+    "1297145134604881952": {
+        "name": "1000-gems",
+        "emoji": "smallGem",
+        "type": "gems",
+        "gems": 1350
+    }
+}

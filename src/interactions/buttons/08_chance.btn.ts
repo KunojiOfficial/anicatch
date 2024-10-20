@@ -21,8 +21,10 @@ export default new Interactable({
                     color: "#ff0000"
                 }) ],
                 components: [ interaction.components.buttons([{
+                    id: "0F",
                     label: "Get more Gems",
-                    emoji: "getGems"
+                    emoji: "getGems",
+                    args: { path: "gems" }
                 }]) ]
             });
             return {};
@@ -33,26 +35,30 @@ export default new Interactable({
             await tx.cardInstance.updateMany({ where: { id: animon.id }, data: { status: "WILD" } });
         });
 
-        const components = interaction.message?.components;
-        const newComponents = [];
+        //get user balls :)
+        const balls = await client.db.inventory.findMany({ where: { userId: player.data.id, item: { type: "BALL" } }, include: { item: true } });
+        balls.sort((a,b) => a.itemId-b.itemId);
+        const buttons = balls.map(b => ({ emoji: b.item.emoji, label: b.count.toString(), id: 1, args: { cardId: animon.id, ballId: b.itemId, timeoutId: -1, embedTimeout: -1 } }));
 
-        if (components.length) {
-            for (const [index, component] of components.entries()) {
-                const buttons = [];  
-                
-                for (const button of component.components) {
-                    if (button.customId?.startsWith("8")) continue;
-
-                    let data = { ...button.data, disabled: false, style: 2 } as any;
-                    buttons.push(data);
-                }
-
-                newComponents.push({
-                    ...component.data,
-                    components: buttons
-                });
+        let k = -1, components = [];
+        for (const [index, button] of buttons.entries()) {
+            if (index % 5 === 0) {
+                components.push([]);
+                k++;
             }
+
+            components[k].push(button as never);
         }
+
+        if (components.length) components = components.map(c => interaction.components.buttons(c));
+
+        components.push(interaction.components.buttons([{
+            id: '2',
+            label: `Next (${player.data.encounters-1})`,
+            emoji: "next",
+            cooldown: { id: "next", time: 2 },
+            args: { id: -1 },
+        }]))
         
         return {
             embeds: [ 
@@ -62,7 +68,7 @@ export default new Interactable({
                     footer: { icon_url: client.getEmojiUrl("gem"), text: "Second Chance" }
                 }
             ],
-            components: newComponents
+            components: components
         }
     }
 })

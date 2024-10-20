@@ -31,6 +31,7 @@ model User {
   role          Role              @relation(fields: [roleId], references: [id])
   items         Inventory[]
   cards         CardInstance[]
+  vouchers      Voucher[]
 
   logs          Log[]
 
@@ -56,7 +57,7 @@ model Config {
   locale        String            @default("en-US")
   
   userId        Int               @unique
-  user          User              @relation(fields: [userId], references: [id])
+  user          User              @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Log {
@@ -79,12 +80,27 @@ model Character {
   cards         CardCatalog[]
 }
 
+enum Class {
+  TANK
+  ATTACKER
+  CASTER
+  BALANCED  
+}
+
 model CardCatalog {
   id            Int               @unique @id @default(autoincrement()) 
   type          Int
   count         Int               @default(0)
   
   characterId   Int
+
+  class         Class
+  vit           Int          
+  pow           Int
+  def           Int
+  agi           Int
+  spi           Int
+  res           Int
 
   character     Character         @relation(fields: [characterId], references: [id])
   instances     CardInstance[]
@@ -107,10 +123,12 @@ model CardInstance {
 
   rarity        Int
   print         Int               @default(0)
+  exp           Int               @default(0)
 
   ballId        Int?              //the id of the ball item
   fatherId      Int?              //the id of the first owner
 
+  stat          Stat?
   card          CardCatalog       @relation(fields: [cardId], references: [id])
   user          User              @relation(fields: [userId], references: [id])
   ball          Item?             @relation(fields: [ballId], references: [id])
@@ -118,6 +136,19 @@ model CardInstance {
   createdAt     DateTime          @default(now())
 
   @@unique([cardId, print])
+}
+
+model Stat {
+  cardId        Int               @unique @id
+
+  vit           Int
+  pow           Int
+  def           Int
+  agi           Int
+  spi           Int
+  res           Int
+
+  card          CardInstance      @relation(fields: [cardId], references: [id], onDelete: Cascade)
 }
 
 enum ItemType {
@@ -152,4 +183,14 @@ model Inventory {
   user          User              @relation(fields: [userId], references: [id])
 
   @@id([itemId, userId])
+}
+
+model Voucher {
+  id            Int               @unique @id @default(autoincrement())
+  userId        Int
+  skuId         String
+  consumed      Boolean           @default(false)
+  createdAt     DateTime          @default(now())
+
+  user          User              @relation(fields: [userId], references: [id])
 }

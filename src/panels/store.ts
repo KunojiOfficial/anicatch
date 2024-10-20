@@ -142,8 +142,10 @@ async function category(interaction: DiscordInteraction, category: ItemType, ite
             emoji: "back",
             args: { path: 'store', page: 'main' }
         }, {
+            id: "0F",
             label: "Get more Gems",
-            emoji: "getGems"
+            emoji: "getGems",
+            args: { path: "gems" }
         }])]
     };
 }

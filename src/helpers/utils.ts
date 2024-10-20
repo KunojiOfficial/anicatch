@@ -50,4 +50,8 @@ function parseColor(color: string) {
     return parseInt(color, 16);
 }
 
-export { toUpperCamelCase, getTextBetweenTwoStrings, deepValue, numberWithCommas, randomElement, addHours, base10ToBase26, base26ToBase10, parseColor };
+function getRandomNumber(x: number, y: number) {
+    return Math.floor(Math.random() * (y - x + 1)) + x;
+}
+
+export { getRandomNumber, toUpperCamelCase, getTextBetweenTwoStrings, deepValue, numberWithCommas, randomElement, addHours, base10ToBase26, base26ToBase10, parseColor };

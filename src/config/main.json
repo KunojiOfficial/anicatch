@@ -11,7 +11,11 @@
     },
     "urls": {
         "support": "https://google.com",
-        "buyGems": "https://google.com"
+        "buyGems": "https://google.com",
+        "website": "https://anicatch.gg",
+        "privacyPolicy": "https://anicatch.gg/privacypolicy",
+        "tos": "https://anicatch.gg/tos",
+        "store": "https://discord.com/application-directory/1285551523505639476/store"
     },
     "webhooks": {
         "error": "https://discord.com/api/webhooks/1285557612758437958/J2VIVBfP7rC8aqPryBGEicWqLAaPI56f6gU0KIGaHfQ6sSoXW39PLI-Uma9pnL-YEknR"

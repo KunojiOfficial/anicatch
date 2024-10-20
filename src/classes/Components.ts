@@ -12,7 +12,8 @@ const BUTTON_COLORS: any = {
     gray: 2,
     green: 3,
     red: 4,
-    link: 5
+    link: 5,
+    premium: 6
 }
 
 interface Button {
@@ -23,9 +24,10 @@ interface Button {
     emoji?: keyof typeof emoji | string
     hardEmoji?: string,
     args?: Object
-    url?: String
-    disabled?: Boolean
-    style?: "blurple" | "gray" | "green" | "red" | "link"
+    url?: string
+    disabled?: Boolean,
+    skuId?: string,
+    style?: "blurple" | "gray" | "green" | "red" | "link" | "premium"
 }
 
 
@@ -53,7 +55,7 @@ export default class Components {
         footer?: { text?: string, iconUrl?: string  },
         color?: string,
         thumbnail?: string,
-        image?: string,
+        image?: string
     }, replace?: object) {
         if (object.fields) object.fields = object.fields.filter(o => o !== null);
 
@@ -114,16 +116,20 @@ export default class Components {
             }
             
             let color = 2;
-            if (button.url) color = 5;
+            if (button.url) {
+                color = 5;
+                buttonRow.setURL(this.client.formatText(button.url, this.locale))
+            }
             else if (button.style) color = BUTTON_COLORS[button.style];
            
             if (button.hardEmoji) buttonRow.setEmoji(button.hardEmoji);
             if (button.emoji) buttonRow.setEmoji(deepValue(emojis, button.emoji) || button.emoji);
             if (button.label) buttonRow.setLabel(this.client.formatText(button.label, this.locale));
             if (button.disabled) buttonRow.setDisabled(true);
+            if (button.skuId) buttonRow.setSKUId(button.skuId);
 
             buttonRow.setStyle(color);
-            buttonRow.setCustomId(customId.join(';'))
+            if (!button.url && !button.skuId) buttonRow.setCustomId(customId.join(';'))
 
             buttonsArray.push(buttonRow);
         }

@@ -6,7 +6,7 @@ export default new Command({
     cooldown: 2,
     data: new SlashCommandBuilder()
         .setName("anidex")
-        .setDescription("Explore the details of a specific Animon type or browse through all available Animons!")
+        .setDescription("View the details of a specific Animon or browse through all of them!")
         .setContexts(InteractionContextType.BotDM, InteractionContextType.Guild, InteractionContextType.PrivateChannel)
         .setIntegrationTypes(ApplicationIntegrationType.UserInstall, ApplicationIntegrationType.GuildInstall)
         .addStringOption(option =>

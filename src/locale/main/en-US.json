@@ -7,5 +7,15 @@
     "buySuccess": "You have successfully bought {custom_item} for {custom_cost}.",
     "buySuccess2": "The item(s) have been added to your {command_inventory}.",
     "sellSuccess": "You have successfully sold {custom_name} for {custom_price}.",
-    "useSuccess": "You have successfully used {custom_name} x{custom_count}."
+    "useSuccess": "You have successfully used {custom_name} x{custom_count}.",
+    "gems": "Gems",
+    "voucher": "Voucher",
+    "stats": {
+        "vit": "Vitality",
+        "def": "Defense",
+        "pow": "Power",
+        "agi": "Agility",
+        "spi": "Spirit",
+        "res": "Resilience"
+    }
 }

@@ -1,12 +1,70 @@
 import { AttachmentBuilder, InteractionReplyOptions } from "discord.js";
 import { DiscordInteraction } from "../types";
 import Panel from "../classes/Panel";
+import Card from "../classes/Card";
+import { CardInstance } from "@prisma/client";
+
+async function main(interaction: DiscordInteraction, where: any) {
+    const { client, player } = interaction;
+
+    const animon = await client.db.cardInstance.findFirst({ where: where, include: { card: { include: { character: true } }, ball: true, user: true } });
+    if (!animon) throw 5;
+
+    const card = new Card(animon, animon.card, undefined, client);
+    const attachment = card.getImage()!;
+    const rarity = card.getRarity()!;
+    const type = card.getType()!;
+
+    return [{ 
+        embeds: [ interaction.components.embed({
+            fields: [
+                { name: "\u2800", value: `-# Name\n${animon.card.character.name}\u2800\u2800\n-# Type\n${type.name} ${type.emoji}\n-# Caught\n${client.unixDate(animon.createdAt)}`, inline: true },
+                { name: "\u2800", value: `-# ID\n\`${client.getId(animon.cardId, animon.print).padEnd(7, " ")}\`\n-# Ball\n${animon.ball?.name} ${animon.ball?.emoji}`, inline: true },
+                { name: "\u2800", value: `-# Rarity\n**${rarity.name}** (${rarity.chance}%)\n${rarity.emoji.full}` },
+            ],
+            color: rarity.color,
+            image: "attachment://card.jpg"
+        }) ],
+        files: [attachment]
+    }, animon];
+}
+
+async function stats(interaction: DiscordInteraction, where: any) {
+    const { client, player } = interaction;
+
+    const animon = await client.db.cardInstance.findFirst({ where: where, include: { card: { include: { character: true } }, stat: true, user: true } });
+    if (!animon || !animon.stat) throw 5;
+
+    const card = new Card(animon, animon.card, animon.stat, client);
+    const stats = card.getStats();
+    const rarity = card.getRarity()!;
+    const attachment = card.getImage()!;
+
+    const fields = [];
+    for (const key of Object.keys(stats)) {
+        fields.push({ 
+            name: `{locale_main_stats_${key}}`,
+            value: `${stats[key as keyof typeof stats]}\n-# ${animon.stat[key as keyof typeof animon.stat]}/20`,
+            inline: true
+        });
+    }
+
+    return [{
+        embeds: [ interaction.components.embed({
+            fields: fields,
+            image: `attachment://${attachment?.name}`,
+            color: rarity.color
+        }) ],
+        files: [attachment]
+    }, animon];
+}
 
 export default new Panel({
     name: "animon",
-    async execute(interaction: DiscordInteraction, id: string | number, userAccess: boolean = false): Promise<InteractionReplyOptions> {
+    async execute(interaction: DiscordInteraction, id: string | number, userAccess: boolean = false, page: string = "main"): Promise<InteractionReplyOptions> {
         const { client, player } = interaction;
 
+        if (typeof userAccess !== 'boolean') userAccess = false;
         if (typeof id !== 'number' && !userAccess) id = parseInt(id);
         
         let where = { id: id } as any;
@@ -18,30 +76,35 @@ export default new Panel({
             where = { cardId: client.getIdReverse(cardId), print: parseInt(print) };
         }
 
-        const animon = await client.db.cardInstance.findFirst({ where: where, include: { card: { include: { character: true } }, ball: true, user: true } });
-        if (!animon) throw 5;
+        let [data, animon]: [any, any] = [{}, {}];
+        if (page === "main") [data, animon] = await main(interaction, where);
+        else if (page === "stats") [data, animon] = await stats(interaction, where);
+        
+        const isOwner = animon.userId === player.data.id;
 
-        const rarity = client.data.rarities[animon.rarity.toString() as keyof typeof client.data.rarities];
-        const type = client.data.types[animon.card.type.toString() as keyof typeof client.data.types];
+        const card = new Card(animon, undefined, undefined, client);
+        const rarity = card.getRarity()!;
 
-        const filePath = `./src/assets/cards/${animon.card.id-1}.jpg`;
-        const attachment = new AttachmentBuilder(filePath, { name: "card.jpg" });
-
-        const owner = await client.users.fetch(animon.user.discordId);
-        const isOwner = owner.id === player.user.id;
-
-        return { 
-            embeds: [ interaction.components.embed({
-                fields: [
-                    { name: "\u2800", value: `-# Name\n${animon.card.character.name}\u2800\u2800\n-# Type\n${type.name} ${type.emoji}\n-# Caught\n${client.unixDate(animon.createdAt)}`, inline: true },
-                    { name: "\u2800", value: `-# ID\n\`${client.getId(animon.cardId, animon.print).padEnd(7, " ")}\`\n-# Ball\n${animon.ball?.name} ${animon.ball?.emoji}`, inline: true },
-                    { name: "\u2800", value: `-# Rarity\n**${rarity.name}** (${rarity.chance}%)\n${rarity.emoji.full}` },
-                ],
-                color: rarity.color,
-                image: "attachment://card.jpg"
-            }) ],
-            files: [attachment],
+        return {
+            ...data,
             components: isOwner ? [ interaction.components.buttons([{
+                id: "0",
+                label: "Info",
+                emoji: "info",
+                style: page === "main" ? "blurple" : "gray",
+                disabled: page === "main",
+                args: { path: "animon", id: animon.id, userAccess: false, page: "main" }
+            }, {
+                id: "0",
+                label: "Stats",
+                style: page === "stats" ? "blurple" : "gray",
+                emoji: "stats",
+                disabled: page === "stats",
+                args: { path: "animon", id: animon.id, userAccess: false, page: "stats" }
+            }, {
+                label: "Evolution",
+                emoji: "evolve"
+            }]), interaction.components.buttons([{
                 id: '6',
                 label: animon.favorite ? "\u2800Un-Favorite" : "\u2800Favorite",
                 emoji: animon.favorite ? "favorite2" : "unfavorite",

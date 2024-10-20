@@ -1,3 +1,4 @@
+import { getRandomNumber } from "../helpers/utils";
 import { DiscordInteraction } from "../types";
 
 function getRandomRarity(rarities: any) {
@@ -36,11 +37,21 @@ export default async function(interaction: DiscordInteraction) {
             fatherId: player.data.id,
             cardId: result.id,
             rarity: parseInt(rarity!),
-            print: result.count+1
+            print: result.count+1,
+        } });
+
+        await tx.stat.create({ data: {
+            cardId: card.id,
+            vit: getRandomNumber(1, 20),
+            def: getRandomNumber(1, 20),
+            pow: getRandomNumber(1, 20),
+            agi: getRandomNumber(1, 20),
+            spi: getRandomNumber(1, 20),
+            res: getRandomNumber(1, 20)
         } });
 
         const timeoutId = setTimeout(async () => {
-            await client.db.cardInstance.deleteMany({ where: { id: card.id, status: "WILD" } }) 
+            await client.db.cardInstance.deleteMany({ where: { id: card.id, status: "WILD" } })
         }, 11 * 1000);
 
         return {
