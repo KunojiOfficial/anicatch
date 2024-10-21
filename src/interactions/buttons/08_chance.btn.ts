@@ -58,6 +58,7 @@ export default new Interactable({
             emoji: "next",
             cooldown: { id: "next", time: 2 },
             args: { id: -1 },
+            disabled: true
         }]))
         
         return {

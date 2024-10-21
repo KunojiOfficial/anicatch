@@ -1,22 +1,32 @@
 {
     "0": {
-        "name": "Tsundere",
-        "emoji": "<:tsundere:1292863950790201379>"
+        "name": "Infernal",
+        "emoji": "<:tsundere:1292863950790201379>",
+        "strong": [1],
+        "weak": [2]
     },
     "1": {
-        "name": "Yandere",
-        "emoji": "<:yandere:1292863959874928721>"
+        "name": "Frigid",
+        "emoji": "<:yandere:1292863959874928721>",
+        "strong": [2],
+        "weak": [0]
     },
     "2": {
-        "name": "Deredere",
-        "emoji": "<:deredere:1292863932767277109>"
+        "name": "Verdant",
+        "emoji": "<:deredere:1292863932767277109>",
+        "strong": [0],
+        "weak": [1]
     },
     "3": {
-        "name": "Kuudere",
-        "emoji": "<:kuudere:1292863942292668466>"
+        "name": "Ethereal",
+        "emoji": "<:kuudere:1292863942292668466>",
+        "strong": [4],
+        "weak": [4]
     },
     "4": {
-        "name": "Dandere",
-        "emoji": "<:dandere:1292863921836785775>"
+        "name": "Void",
+        "emoji": "<:dandere:1292863921836785775>",
+        "strong": [3],
+        "weak": [3]
     }
 }

@@ -1,29 +1,33 @@
-import { CardCatalog, CardInstance, Stat } from "@prisma/client";
+import { CardCatalog, CardInstance, Character, Stat } from "@prisma/client";
+import { AttachmentBuilder } from "discord.js";
+import { createCanvas, loadImage } from "canvas";
+
 import { DiscordClient } from "../types";
 
 import levels from "../data/levels.json";
-import { AttachmentBuilder } from "discord.js";
 
 const statKeys = ["vit", "def", "pow", "agi", "spi", "res"];
 
 export default class Card {
     card: CardInstance
     parent?: CardCatalog
+    character?: Character
     stats?: Stat
     
     client?: DiscordClient
     rarity?: any
     type?: any
 
-    constructor(card: CardInstance, parent?: CardCatalog, stats?: Stat, client?: DiscordClient) {
-        this.card = card;
-        if (parent) this.parent = parent;
-        if (stats) this.stats = stats;
+    constructor(object: {card: CardInstance, parent?: CardCatalog, character?: Character, stats?: Stat, client?: DiscordClient}) {
+        this.card = object.card;
+        if (object.parent) this.parent = object.parent;
+        if (object.stats) this.stats = object.stats;
+        if (object.character) this.character = object.character;
 
-        if (client) {
-            this.client = client;
-            this.rarity = client.data.rarities[card.rarity.toString() as keyof typeof client.data.rarities];
-            if (parent) this.type = client.data.types[parent.type.toString() as keyof typeof client.data.types];
+        if (object.client) {
+            this.client = object.client;
+            this.rarity = object.client.data.rarities[object.card.rarity.toString() as keyof typeof object.client.data.rarities];
+            if (object.parent) this.type = object.client.data.types[object.parent.type.toString() as keyof typeof object.client.data.types];
         }
     }
 
@@ -62,15 +66,6 @@ export default class Card {
         return result;
     }
 
-    getImage() {
-        if (!this.parent) return;
-        
-        const filePath = `./src/assets/cards/${this.parent.id-1}.jpg`;
-        const attachment = new AttachmentBuilder(filePath, { name: "card.jpg" });
-
-        return attachment;
-    }
-
     getRarity() {
         if (!this.client) return;
 
@@ -81,5 +76,42 @@ export default class Card {
         if (!this.client || !this.parent) return;
 
         return this.type as typeof this.client.data.types[1];
+    }
+
+    getPercentage(forceLevel?: number, forceExp?: number) {
+        let level = forceLevel ? forceLevel : this.getLevel();
+        let requiredExp = 0;
+
+        let thisLevel = levels[(level).toString() as keyof typeof levels];
+        let nextLevel = levels[(level+1).toString() as keyof typeof levels];
+
+        if (nextLevel) requiredExp = nextLevel-thisLevel;
+
+        let percentage = 0;
+        if (requiredExp == 0) percentage = 100;
+        else percentage = (((forceExp ? forceExp : this.card.exp)-thisLevel)/requiredExp)*100;
+        
+        return isNaN(percentage) ? 0 : Math.floor(percentage);
+    }
+
+    async generateImage() {
+        if (!this.parent) return;
+
+        const canvas = createCanvas(270, 340);
+        const ctx = canvas.getContext('2d');
+
+        const cardImage = await loadImage(`./src/assets/cards/${this.parent.id-1}.jpg`); 
+        
+        ctx.save();
+        ctx.beginPath();
+        ctx.roundRect(0, 0, 215, 340, 20);
+        ctx.clip();
+        ctx.drawImage(cardImage, -5, -5, 225, 350);
+        ctx.restore();
+
+        const starImage = await loadImage(`./src/assets/rarities/${this.card.rarity}.png`);
+        for (let i = 0; i < this.card.rarity; i++) ctx.drawImage(starImage, 230, /*70+*/(i*40), 40, 40);
+
+        return new AttachmentBuilder(canvas.toBuffer(), { name: "card.jpg" });
     }
 }

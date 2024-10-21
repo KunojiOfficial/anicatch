@@ -3,6 +3,7 @@ import { DiscordInteraction } from "../types";
 import Panel from "../classes/Panel";
 
 import encounter from '../mechanics/encounter';
+import Card from "../classes/Card";
 
 export default new Panel({
     name: "encountering",
@@ -65,17 +66,18 @@ export default new Panel({
         }
 
         const data = await encounter(interaction);
+        
+        const card = new Card({card: data.insert, parent: data.result});
 
         //get image
-        const filePath = `./src/assets/cards/${data.result.id-1}.jpg`;
-        const attachment = new AttachmentBuilder(filePath, { name: "card.jpg" });
+        const attachment = await card.generateImage();
 
         const type = client.data.types[data.result.type.toString() as keyof typeof client.data.types];
         const escapeTime = new Date();
         escapeTime.setSeconds(escapeTime.getSeconds() + 10);
 
         const embed = {
-            description: `-# ${client.getId(data.insert.cardId, data.insert.print)}\n\n🍃 A wild **${data.result.character.name}** has appeared!\nIt's a **${type.emoji} ${type.name}** type!\n\n**${data.rarity.name}** (${data.rarity.chance}%)\n${data.rarity.emoji.full}\n\n-# Escapes ${client.unixDate(escapeTime)}...`,
+            description: `-# ${client.getId(data.insert.cardId, data.insert.print)}\n\n🍃 A wild **${data.result.character.name}** has appeared!\nIt's a **${type.emoji} ${type.name}** type!\n\nYou got the **${data.rarity.emoji.short} ${data.rarity.name}** rarity\nwith a **${data.rarity.chance}%** encounter rate!\n\n-# Escapes ${client.unixDate(escapeTime)}...`,
             image: "attachment://card.jpg",
             color: data.rarity.color
         };
@@ -127,7 +129,7 @@ export default new Panel({
         followUp = await interaction.followUp({
             content: `${user}`,
             embeds: [interaction.components.embed(embed)],
-            files: [attachment],
+            files: [attachment!],
             components: components.length ? components as any : []
         });
 

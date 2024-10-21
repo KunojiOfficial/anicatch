@@ -5,22 +5,22 @@ import Card from "../classes/Card";
 import { CardInstance } from "@prisma/client";
 
 async function main(interaction: DiscordInteraction, where: any) {
-    const { client, player } = interaction;
+    const { client } = interaction;
 
     const animon = await client.db.cardInstance.findFirst({ where: where, include: { card: { include: { character: true } }, ball: true, user: true } });
     if (!animon) throw 5;
 
-    const card = new Card(animon, animon.card, undefined, client);
-    const attachment = card.getImage()!;
+    const card = new Card({card: animon, parent: animon.card, client: client});
+    const attachment = await card.generateImage()!;
     const rarity = card.getRarity()!;
     const type = card.getType()!;
 
     return [{ 
         embeds: [ interaction.components.embed({
             fields: [
-                { name: "\u2800", value: `-# Name\n${animon.card.character.name}\u2800\u2800\n-# Type\n${type.name} ${type.emoji}\n-# Caught\n${client.unixDate(animon.createdAt)}`, inline: true },
+                { name: "\u2800", value: `-# Name\n${animon.card.character.name}\u2800\u2800\n-# Type\n${type.name} ${type.emoji}\n-# Caught\n${client.unixDate(animon.createdAt)}\n\u2800`, inline: true },
                 { name: "\u2800", value: `-# ID\n\`${client.getId(animon.cardId, animon.print).padEnd(7, " ")}\`\n-# Ball\n${animon.ball?.name} ${animon.ball?.emoji}`, inline: true },
-                { name: "\u2800", value: `-# Rarity\n**${rarity.name}** (${rarity.chance}%)\n${rarity.emoji.full}` },
+                // { name: "\u2800", value: `-# Rarity\n**${rarity.name}** (${rarity.chance}%)\n${rarity.emoji.full}` },
             ],
             color: rarity.color,
             image: "attachment://card.jpg"
@@ -35,12 +35,17 @@ async function stats(interaction: DiscordInteraction, where: any) {
     const animon = await client.db.cardInstance.findFirst({ where: where, include: { card: { include: { character: true } }, stat: true, user: true } });
     if (!animon || !animon.stat) throw 5;
 
-    const card = new Card(animon, animon.card, animon.stat, client);
+    const card = new Card({card: animon, parent: animon.card, stats: animon.stat, client: client});
     const stats = card.getStats();
     const rarity = card.getRarity()!;
-    const attachment = card.getImage()!;
+    const attachment = await card.generateImage()!;
 
-    const fields = [];
+    const fields = [{
+        name: "\u2800",
+        value: `**Level ${card.getLevel()}** (${card.getPercentage()}%)\n-# The maximum level for this rarity is **${card.getRarity()?.maxLevel||0}**.\n\u2800`,
+        inline: false
+    }];
+
     for (const key of Object.keys(stats)) {
         fields.push({ 
             name: `{locale_main_stats_${key}}`,
@@ -82,7 +87,7 @@ export default new Panel({
         
         const isOwner = animon.userId === player.data.id;
 
-        const card = new Card(animon, undefined, undefined, client);
+        const card = new Card({card: animon, client: client});
         const rarity = card.getRarity()!;
 
         return {
@@ -102,7 +107,7 @@ export default new Panel({
                 disabled: page === "stats",
                 args: { path: "animon", id: animon.id, userAccess: false, page: "stats" }
             }, {
-                label: "Evolution",
+                label: "Evolve",
                 emoji: "evolve"
             }]), interaction.components.buttons([{
                 id: '6',
