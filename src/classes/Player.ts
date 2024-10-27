@@ -1,16 +1,19 @@
 import { User as DiscordUser } from "discord.js";
-import { Config } from "@prisma/client";
+import { Config, Role, User } from "@prisma/client";
 import { UserRole } from "../types";
 
 export default class Player {
-    data: UserRole
-    config: Config
+    data: User
+    role?: Role
+    config?: Config
     user: DiscordUser
     
-    constructor(data: UserRole, config: Config, user: DiscordUser) {
+    constructor(user: DiscordUser, data: User, role?: Role, config?: Config) {
         this.data = data;
-        this.config = config;
         this.user = user;
+
+        if (config) this.config = config;
+        if (role) this.role = role;
     }
 
     getBalance() {

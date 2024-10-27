@@ -16,7 +16,7 @@ export default new Panel({
                     description: `-# Code #**6**\n{locale_errors_6}`,
                     color: "#ff0000"
                 }, {
-                    timestamp: [ client.getNextEncounterDate(player.data) ],
+                    timestamp: [ client.getNextEncounterDate(player.data, player.role!) ],
                     bot: [`${client.user}`]
                 }) ],
                 components: [ interaction.components.buttons([{
@@ -74,7 +74,7 @@ export default new Panel({
 
         const type = client.data.types[data.result.type.toString() as keyof typeof client.data.types];
         const escapeTime = new Date();
-        escapeTime.setSeconds(escapeTime.getSeconds() + 10);
+        escapeTime.setSeconds(escapeTime.getSeconds() + 15);
 
         const embed = {
             description: `-# ${client.getId(data.insert.cardId, data.insert.print)}\n\n🍃 A wild **${data.result.character.name}** has appeared!\nIt's a **${type.emoji} ${type.name}** type!\n\nYou got the **${data.rarity.emoji.short} ${data.rarity.name}** rarity\nwith a **${data.rarity.chance}%** encounter rate!\n\n-# Escapes ${client.unixDate(escapeTime)}...`,
@@ -101,7 +101,7 @@ export default new Panel({
                     ]
                 });
             } catch (err) {}
-        }, 1000 * 10);
+        }, 1000 * 15);
 
         const buttons = balls.map(b => ({ emoji: b.item.emoji, label: b.count.toString(), id: 1, args: { cardId: data.insert.id, ballId: b.itemId, timeoutId: data.timeout, embedTimeout: timeOutId } }));
 
@@ -118,12 +118,21 @@ export default new Panel({
         if (components.length) components = components.map(c => interaction.components.buttons(c));
 
         components.push(interaction.components.buttons([{
+            id: "11",
+            emoji: "plus",
+            args: { id: card.card.id }
+        },{
+            id: "10",
+            label: `Battle!`,
+            emoji: "fight",
+            args: { id: timeOutId, id2: data.timeout, cardId: card.card.id },
+        }, {
             id: '2',
             label: `Next (${player.data.encounters-1})`,
             emoji: "next",
             cooldown: { id: "next", time: 2 },
             args: { id: timeOutId },
-        }]))
+        }]));
 
         //send message
         followUp = await interaction.followUp({

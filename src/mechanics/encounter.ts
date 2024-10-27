@@ -52,7 +52,7 @@ export default async function(interaction: DiscordInteraction) {
 
         const timeoutId = setTimeout(async () => {
             await client.db.cardInstance.deleteMany({ where: { id: card.id, status: "WILD" } })
-        }, 11 * 1000);
+        }, 1000 * 16);
 
         return {
             rarity: client.data.rarities[rarity as keyof typeof client.data.rarities],

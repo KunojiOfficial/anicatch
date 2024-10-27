@@ -103,9 +103,9 @@ export default new Event({
             });
 
             //encounter refresh logic
-            player = await refreshEncounters(client, player) as UserRole;
+            player = await refreshEncounters(client, player);
 
-            interaction.player = new Player(player, player.config as Config, interaction.user);
+            interaction.player = new Player(interaction.user, player, player.role, player.config || undefined);
             interaction.components = new Components(client, interaction.locale, interaction.user);
 
             // if (player.status === "tutorial") return await tutorial(interaction);

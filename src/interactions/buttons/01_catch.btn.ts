@@ -36,17 +36,9 @@ export default new Interactable({
                         data.label = parseInt(data.label)-1;
                     }
 
-                    if (index === components.length-1) data = button.data;
+                    else if (button.customId?.includes("next")) data = button.data;
 
                     buttons.push(data);
-                }
-
-                if (index === components.length-1) {
-                    if (captured) {
-                        buttons.push({ type: 2, label: "View Details", emoji: client.formatText("{emoji_glass}"), style: 2, customId: `0F;${player.user.id};0;0;animon;${card.id}` })
-                        buttons.push({ type: 2, label: `Sell (+${rarity.sellPrice})`, emoji: client.formatText("{emoji_smallCoin}"), style: 2, customId: `7;${player.user.id};sell;5;${card.id}` })
-                    }
-                    if (!captured) buttons.push({ type: 2, label: "Another Chance (-20)", emoji: client.formatText("{emoji_smallGem}"), style: 2, customId: `8;${player.user.id};chance;5;${card.id}` })
                 }
 
                 newComponents.push({
@@ -56,6 +48,28 @@ export default new Interactable({
             }
         }
 
+        if (captured) {
+            newComponents.push(interaction.components.buttons([{
+                id: "0F",
+                label: "View Details",
+                emoji: "glass",
+                args: { path: "animon", cardId: card.id }
+            }, {
+                id: "7",
+                label: `Sell (+${rarity.sellPrice})`,
+                emoji: "smallCoin",
+                cooldown: { id: "sell", time: 5 },
+                args: { cardId: card.id }
+            }]))
+        } else {
+            newComponents.push(interaction.components.buttons([{
+                id: "8",
+                label: "Another Chance (-20)",
+                emoji: "smallGem",
+                cooldown: { id: "chance", time: 5 },
+                args: { cardId: card.id }
+            }]))
+        }
 
         return {
             embeds: [ 

@@ -1,10 +1,12 @@
 import { AttachmentBuilder, InteractionReplyOptions } from "discord.js";
 import { DiscordInteraction } from "../types";
 import Panel from "../classes/Panel";
+import Card from "../classes/Card";
+import { CardInstance } from "@prisma/client";
 
 export default new Panel({
     name: "anidex",
-    async execute(interaction: DiscordInteraction, page: number | string = 1): Promise<InteractionReplyOptions> {
+    async execute(interaction: DiscordInteraction, page: number | string = 1, rarity = 1): Promise<InteractionReplyOptions> {
         const { client } = interaction;        
         
         let mode = "page";
@@ -25,10 +27,21 @@ export default new Panel({
 
         const type = client.data.types[card.type.toString() as keyof typeof client.data.types];
 
-        const filePath = `./src/assets/cards/${card.id-1}.jpg`;
-        const attachment = new AttachmentBuilder(filePath, { name: "card.jpg" });
+        const cardC = new Card({ card: { rarity: rarity } as CardInstance, parent: card, client: client });
+        const attachment = await cardC.generateImage();
 
-        const defaults = { id: '0', args: { path: "anidex", page: page } };
+        const defaults = { id: '0', args: { path: "anidex", page: page, rarity: rarity } };
+
+        const rarities = [];
+        for (const key of Object.keys(client.data.rarities)) {
+            let data = client.data.rarities[key as keyof typeof client.data.rarities];
+            rarities.push({
+                label: data.name,
+                hardEmoji: data.emoji.short,
+                value: `2:${key}`,
+                default: rarity == key
+            });
+        }
 
         return {
             embeds: [ interaction.components.embed({
@@ -37,10 +50,16 @@ export default new Panel({
                     { name: "\u2800", value: `-# ID\n\`${client.getId(card.id).padEnd(3, " ")}\``, inline: true },
                     { name: "\u2800", value: `-# Total Caught: **${card.instances.length}**\n-# ` + [...new Set(card.instances.map(c => c.rarity))].map(r => `${client.data.rarities[r.toString() as keyof typeof client.data.rarities].emoji.short} **${card.instances.filter((c:any) => c.rarity === r).length}**`).join(" ") + "\u2800" }
                 ],
-                image: "attachment://card.jpg"
+                image: "attachment://card.jpg",
+                color: cardC.getRarity()?.color
             }) ],
-            files: [attachment],
-            components: [ interaction.components.buttons([{
+            files: [attachment!],
+            components: [ interaction.components.selectMenu({
+                ...defaults,
+                id: 0,
+                placeholder: "⭐\u2800Select a rarity...",
+                options: rarities
+            }), interaction.components.buttons([{
                 ...defaults,
                 emoji: "chevron.single.left",
                 args: { ...defaults.args, page: page-1 }

@@ -26,4 +26,8 @@ interface DiscordInteraction extends Omit<ChatInputCommandInteraction, 'client'>
 const UserWithIncludes = Prisma.validator<Prisma.UserDefaultArgs>()({ include: { config: true, role: true } });
 type UserRole = Prisma.UserGetPayload<typeof UserWithIncludes>;
 
-export { DiscordClient, DiscordMessage, DiscordInteraction, UserRole };
+const CardWithIncludes = Prisma.validator<Prisma.CardInstanceDefaultArgs>()({ include: { card: true, stat: true } });
+type CardIncluded = Prisma.CardInstanceGetPayload<typeof CardWithIncludes>;
+
+
+export { DiscordClient, DiscordMessage, DiscordInteraction, UserRole, CardIncluded };

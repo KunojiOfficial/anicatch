@@ -1,6 +1,6 @@
 import { ClientOptions, REST, Routes, Client as DiscordClient, Collection } from "discord.js";
 import { ClusterClient } from "discord-hybrid-sharding";
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient, User as PrismaUser, Role as PrismaRole } from "@prisma/client";
 import { readdirSync } from "fs";
 import path from "path";
 
@@ -250,9 +250,9 @@ class Client extends DiscordClient {
         return `https://cdn.discordapp.com/emojis/${match[1]}.webp?quality=lossless`
     }
 
-    getNextEncounterDate(user: UserRole) {
+    getNextEncounterDate(user: PrismaUser, role: PrismaRole) {
         const now = user.lastReset;
-        const newDate = new Date(now.getTime() + user.role.rechargeTime*1000);
+        const newDate = new Date(now.getTime() + role.rechargeTime*1000);
 
         return this.unixDate(newDate);
     }

@@ -1,12 +1,14 @@
 import { CardCatalog, CardInstance, Character, Stat } from "@prisma/client";
 import { AttachmentBuilder } from "discord.js";
-import { createCanvas, loadImage } from "canvas";
+import { createCanvas, loadImage, registerFont } from "canvas";
 
 import { DiscordClient } from "../types";
 
 import levels from "../data/levels.json";
 
 const statKeys = ["vit", "def", "pow", "agi", "spi", "res"];
+
+registerFont("./src/assets/fonts/SpaceMono-Regular.ttf", { family: "SpaceMono" });
 
 export default class Card {
     card: CardInstance
@@ -31,8 +33,8 @@ export default class Card {
         }
     }
 
-    getLevel() {
-        const exp = this.card.exp;
+    getLevel(forceExp?: number) {
+        const exp = forceExp || this.card.exp;
         if (exp === 0) return 1;
 
         let maxLevel = this.rarity.maxLevel;
@@ -63,7 +65,7 @@ export default class Card {
             );
         }
     
-        return result;
+        return result as Stat;
     }
 
     getRarity() {
@@ -76,6 +78,18 @@ export default class Card {
         if (!this.client || !this.parent) return;
 
         return this.type as typeof this.client.data.types[1];
+    }
+
+    getRequiredExp() {
+        let level = this.getLevel();
+        let requiredExp = 0;
+
+        let thisLevel = levels[(level).toString() as keyof typeof levels];
+        let nextLevel = levels[(level+1).toString() as keyof typeof levels];
+
+        if (nextLevel) requiredExp = nextLevel-thisLevel;
+
+        return requiredExp;
     }
 
     getPercentage(forceLevel?: number, forceExp?: number) {
@@ -94,7 +108,7 @@ export default class Card {
         return isNaN(percentage) ? 0 : Math.floor(percentage);
     }
 
-    async generateImage() {
+    async generateCanvas(noRarity: boolean = false) {
         if (!this.parent) return;
 
         const canvas = createCanvas(270, 340);
@@ -109,9 +123,22 @@ export default class Card {
         ctx.drawImage(cardImage, -5, -5, 225, 350);
         ctx.restore();
 
-        const starImage = await loadImage(`./src/assets/rarities/${this.card.rarity}.png`);
-        for (let i = 0; i < this.card.rarity; i++) ctx.drawImage(starImage, 230, /*70+*/(i*40), 40, 40);
+        if (!noRarity) {
+            const starImage = await loadImage(`./src/assets/rarities/${this.card.rarity}.png`);
+            for (let i = 0; i < this.card.rarity; i++) ctx.drawImage(starImage, 230, /*70+*/(i*40), 40, 40);
+        }
 
-        return new AttachmentBuilder(canvas.toBuffer(), { name: "card.jpg" });
+        return canvas;
+    }
+
+    async generateImage(noRarity: boolean = false) {
+        if (!this.parent) return;
+
+        const canvas = await this.generateCanvas(noRarity);
+        return new AttachmentBuilder(canvas!.toBuffer(), { name: "card.jpg" });
+    }
+
+    getId() {
+        return this.client!.getId(this.card.cardId, this.card.print) as string;
     }
 }

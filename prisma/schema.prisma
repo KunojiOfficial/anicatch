@@ -27,6 +27,7 @@ model User {
   
   encounters    Int               @default(15)
   
+  team          Team?
   config        Config?
   role          Role              @relation(fields: [roleId], references: [id])
   items         Inventory[]
@@ -111,6 +112,8 @@ enum CardStatus {
   IDLE
   FIGHT
   FLED
+  WILD_FIGHT
+  DEAD
 }
 
 model CardInstance {
@@ -140,6 +143,8 @@ model CardInstance {
 
 model Stat {
   cardId        Int               @unique @id
+
+  hp            Int               @default(-1)
 
   vit           Int
   pow           Int
@@ -193,4 +198,17 @@ model Voucher {
   createdAt     DateTime          @default(now())
 
   user          User              @relation(fields: [userId], references: [id])
+}
+
+model Team {
+  userId        Int               @unique @id
+
+  slot1         Int?
+  slot2         Int?
+  slot3         Int?
+  slot4         Int?
+  slot5         Int?
+
+  user          User              @relation(fields: [userId], references: [id])
+
 }

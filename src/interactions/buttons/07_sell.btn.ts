@@ -47,7 +47,7 @@ export default new Interactable({
                     image: { url: "attachment://card.jpg" }
                 },
                 interaction.components.embed({
-                    description: `{locale_main_sellSuccess}`,
+                    description: `{emoji_yes}\u2800{locale_main_sellSuccess}\n-# \u2800\u2800\u2800{emoji_smallCoin} {number_${player.data.coins}} ➔ {emoji_smallCoin} {number_${player.data.coins+rarity.sellPrice}}`,
                     color: "#00ff00"
                 }, {
                     name: [`**${animon.card.character.name}**`],
