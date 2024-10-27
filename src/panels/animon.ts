@@ -90,8 +90,7 @@ export default new Panel({
         const card = new Card({card: animon, client: client});
         const rarity = card.getRarity()!;
 
-        let isTeam = false;
-        if (isOwner) isTeam = (await client.db.team.findFirst({where: { userId: player.data.id, OR: [{ slot1: card.card.id }, { slot2: card.card.id }, { slot3: card.card.id }, { slot4: card.card.id }, { slot5: card.card.id }] }})) ? true : false;
+        let isTeam = card.card.team>0;
 
         return {
             ...data,
@@ -119,8 +118,10 @@ export default new Panel({
                 args: { cardId: animon.id },
                 cooldown: { id: "fav", time: 2 }
             }, {
+                id: "12",
                 label: isTeam ? "\u2800Un-Team" : "\u2800Team",
                 emoji: isTeam ? "team" : "unteam",
+                args: isTeam ? { action: "clear", slot: card.card.team, where: "card", data: `${card.card.id}:${userAccess}:${page}` } : { action: "add", slot: card.card.id,  where: "card", data: `${card.card.id}:${userAccess}:${page}` }
             }]), interaction.components.buttons([{
                 label: "\u2800Use Items",
                 emoji: "bag"

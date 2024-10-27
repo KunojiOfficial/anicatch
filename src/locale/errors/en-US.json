@@ -26,5 +26,7 @@
     "26": "no available vouchers",
     "27": "no battle found",
     "28": "no team, go set it up",
-    "29": "all team animons are dead"
+    "29": "all team animons are dead",
+    "30": "team full",
+    "31": "slot already filled"
 }

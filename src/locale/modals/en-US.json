@@ -1,16 +1,16 @@
 {
-    "0": {
-        "title": "Add Sticker",
-        "inputs": [{
-            "label": "Sticker ID",
-            "placeholder": "Input the Sticker ID, example: (A-52)."
-        }]
-    },
     "1": {
         "title": "Input",
         "inputs": [{
             "label": "Input",
             "placeholder": "Input {custom_min} {custom_max}"
+        }]
+    },
+    "2": {
+        "title": "Input CARD ID",
+        "inputs": [{
+            "label": "CARD ID",
+            "placeholder": "CARD ID"
         }]
     }
 }

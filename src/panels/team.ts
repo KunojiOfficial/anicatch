@@ -8,24 +8,14 @@ export default new Panel({
     async execute(interaction: DiscordInteraction, slot?: string | number): Promise<InteractionReplyOptions> {
         const { player, client } = interaction;
 
-        const team = await client.db.team.upsert({
-            where: { userId: player.data.id },
-            update: { },
-            create: {
-                userId: player.data.id
-            }
+        const animons = await client.db.cardInstance.findMany({ 
+            where: { userId: player.data.id, team: { gt: 0 } }, 
+            include: { card: { include: { character: true } }, ball: true } 
         });
-
-        
-        let ids = []
-        for (let i = 1; i < 6; i++) ids.push(team[("slot" + i) as keyof typeof team]);
-        ids = ids.filter(i => i) as number[];
-        
-        const animons = await client.db.cardInstance.findMany({ where: { userId: player.data.id, id: { in: ids } }, include: { card: { include: { character: true } }, ball: true } });
         
         const fields = [], options = [];
         for (let i = 1; i < 6; i++) {
-            let animon = animons.find(a => a.id === team[("slot" + i) as keyof typeof team]);
+            let animon = animons.find(a => a.team === i);
             
             if (!animon) {
                 fields.push({ name: `{emoji_emptyBall} Empty Slot #${i}`, value: "-# *Empty slot for*\n-# *your Animon.*", inline: true });
@@ -49,11 +39,12 @@ export default new Panel({
         const components = [interaction.components.selectMenu({
             id: 0,
             options: options,
+            placeholder: `💿\u2800Select a slot...`,
             args: { path: "team" }
         })];
 
         if (slot) {
-            let animon = animons.find(a => a.id === team[("slot" + slot) as keyof typeof team]);
+            let animon = animons.find(a => a.team == slot);
 
             let buttons: any = [];
             if (animon) {
@@ -63,15 +54,19 @@ export default new Panel({
                     emoji: "glass",
                     args: { path: "animon", cardId: animon.id }
                 }, {
+                    id: "12",
                     label: "Clear Slot",
                     emoji: "wno",
-                    style: "red"
+                    style: "red",
+                    args: { action: "clear", slot: slot, where: "team", data: slot }
                 }]
             } else {
                 buttons = [{
+                    id: "3",
                     label: "Add Animon",
                     emoji: "plus",
-                    style: "green"
+                    style: "green",
+                    args: { modal: 2, slot: slot }
                 }]
             }
 
@@ -82,7 +77,7 @@ export default new Panel({
             embeds: [ interaction.components.embed({
                 author: { name: `${player.user.displayName} - Team`, iconUrl: player.user.displayAvatarURL() },
                 description: `Edit your team by using the menu below.\n-# The order of your slots determines which Animon will enter battle first.\n` + `\u2800`.repeat(40),
-                fields: fields
+                fields: fields,
             }) ],
             components: components
         }

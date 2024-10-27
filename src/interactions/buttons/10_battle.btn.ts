@@ -100,16 +100,21 @@ export default new Interactable({
         const encounter = await client.db.cardInstance.findFirst({ where: { id: cardId, status: "WILD" }, include: { card: { include: { character: true } }, stat: true } });
         if (!encounter) throw 5;
 
-        const team = await client.db.team.findFirst({ where: { userId: player.data.id } });
-        if (!team) throw 28;
+        const team = await client.db.cardInstance.findMany({ 
+            where: { 
+                userId: player.data.id, 
+                team: { gt: 0 }, 
+                status: { in: ["DEAD", "IDLE"] }  
+            }, 
+            include: { 
+                stat: true, 
+                card: { include: { character: true } } 
+            }
+        });
 
-        const ids: number[] = [team.slot1,team.slot2,team.slot3,team.slot4,team.slot5].filter(id => id) as number[];
-        if (!ids.length) throw 28;
+        if (!team.length) throw 28;
 
-        const teamCards = await client.db.cardInstance.findMany({ where: { id: { in: ids }, status: { in: ["DEAD", "IDLE"] } }, include: { stat: true, card: { include: { character: true } } } });
-        if (!teamCards.length) throw 28;
-
-        let firstCard = teamCards.find(c => c.status === "IDLE");
+        let firstCard = team.find(c => c.status === "IDLE");
         if (!firstCard) throw 29;
 
         const rarityDiff = encounter.rarity - firstCard.rarity;
