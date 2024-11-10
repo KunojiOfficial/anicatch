@@ -12,15 +12,20 @@ async function main(interaction: DiscordInteraction) {
 
 
     const categories = [...new Set(items.map(i => i.type))]
+    const fields = categories.map(c => ({ 
+        name: `${items.find(i => i.type === c)?.emoji} {locale_store_categories_${c}_name}`, 
+        value: `{locale_store_categories_${c}_description}\n-# ${items.filter(i => i.type === c).length} items`,
+        inline: true
+    }));
+
+    for (let i = 1; i < fields.length+1; i += 3) fields.splice(i, 0, { name: "\u2800", value: "\u2800", inline: true });
+    while (fields.length%3 !== 0) fields.push({ name: '\u2800', value: '\u2800', inline: true });
 
     return {
         embeds: [ interaction.components.embed({
             author: { name: `${player.user.displayName} - Store`, iconUrl: player.user.displayAvatarURL() },
             description: player.getBalance() + `\nSelect a category of the items you would like to buy.\n` + `\u2800`.repeat(36),
-            fields: categories.map(c => ({ 
-                name: `${items.find(i => i.type === c)?.emoji} {locale_store_categories_${c}_name}`, 
-                value: `{locale_store_categories_${c}_description}\n-# ${items.filter(i => i.type === c).length} items`
-            }))
+            fields: fields
         }) ],
         components: [ interaction.components.selectMenu({
             id: 0,

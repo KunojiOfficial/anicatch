@@ -7,7 +7,7 @@ async function main(interaction: DiscordInteraction) {
     const { client, player } = interaction;
 
     //get categories
-    const userData = await client.db.user.findFirst({ where: { id: player.data.id }, include: { items: { include: { item: true } } } });
+    const userData = await client.db.user.findFirst({ where: { id: player.data.id }, include: { items: { include: { item: true }, orderBy: { itemId: "asc" } } } });
     if (!userData) throw "no user";
     
     const items = userData.items;
@@ -20,14 +20,20 @@ async function main(interaction: DiscordInteraction) {
         counts[item.item.type] += item.count;
     }
 
+    const fields = categories.map(c => ({ 
+        name: `${items.find(i => i.item.type === c)?.item.emoji} {locale_store_categories_${c}_name}`, 
+        value: `{locale_store_categories_${c}_description}\n-# ${counts[c]} items`,
+        inline: true
+    }));
+
+    for (let i = 1; i < fields.length+1; i += 3) fields.splice(i, 0, { name: "\u2800", value: "\u2800", inline: true });
+    while (fields.length%3 !== 0) fields.push({ name: '\u2800', value: '\u2800', inline: true });
+
     return {
         embeds: [ interaction.components.embed({
             author: { name: `${player.user.displayName} - Inventory`, iconUrl: player.user.displayAvatarURL() },
             description: player.getBalance() + `\n${player.getEncounters()}\nSelect a category of the items you would like to view.\n` + `\u2800`.repeat(36),
-            fields: categories.map(c => ({ 
-                name: `${items.find(i => i.item.type === c)?.item.emoji} {locale_store_categories_${c}_name}`, 
-                value: `{locale_store_categories_${c}_description}\n-# ${counts[c]} items`
-            }))
+            fields: fields
         }) ],
         components: [ interaction.components.selectMenu({
             id: 0,
@@ -61,11 +67,12 @@ async function category(interaction: DiscordInteraction, category: ItemType, ite
 
         fields.push({
             name: (itemId === item.item.id ? `{emoji_chevron_single_right} ` : ``) + `${item.item.emoji} ${item.item.name}`,
-            value: `{emoji_empty} x${item.count}`,
+            value: `${item.item.description}\n-# x${item.count}\n\u2800`,
             inline: true
         })
     }
 
+    for (let i = 1; i < fields.length+1; i += 3) fields.splice(i, 0, { name: "\u2800", value: "\u2800", inline: true });
     while (fields.length%3 !== 0) fields.push({ name: '\u2800', value: '\u2800', inline: true });
     
     let components = [ interaction.components.selectMenu({

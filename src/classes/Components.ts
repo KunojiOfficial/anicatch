@@ -62,6 +62,8 @@ export default class Components {
         if (!object.color) object.color = this.client.config.defaults.embed.color;
         let embedColor = parseColor(object.color!);
 
+        if (object.footer?.text) object.footer.text = this.client.formatText(object.footer.text, this.locale, replace);
+
         if (!replace) replace = { user: [this.user.displayName] }
         else replace = { ...replace, user: [this.user.displayName] };
 

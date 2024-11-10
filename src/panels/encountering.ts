@@ -39,7 +39,7 @@ export default new Panel({
             }
         }
 
-        //get user balls :)
+        //get user balls :) 
         const balls = await client.db.inventory.findMany({ where: { userId: player.data.id, item: { type: "BALL" } }, include: { item: true } });
         balls.sort((a,b) => a.itemId-b.itemId);
 

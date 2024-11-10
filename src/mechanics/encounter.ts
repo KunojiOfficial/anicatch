@@ -28,7 +28,7 @@ export default async function(interaction: DiscordInteraction) {
         const [result] = await tx.cardCatalog.findMany({ skip: randomOffset, take: 1, include: { character: true } });
 
         const rarity = getRandomRarity(client.data.rarities);
-        // const rarity = "5";
+        // const rarity = "6";
 
         await tx.cardCatalog.updateMany({ where: { id: result.id }, data: { count: { increment: 1 } } });
 

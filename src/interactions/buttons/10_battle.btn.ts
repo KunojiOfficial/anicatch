@@ -109,7 +109,8 @@ export default new Interactable({
             include: { 
                 stat: true, 
                 card: { include: { character: true } } 
-            }
+            },
+            orderBy: { team: "asc" }
         });
 
         if (!team.length) throw 28;

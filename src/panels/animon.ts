@@ -124,7 +124,7 @@ export default new Panel({
                 args: isTeam ? { action: "clear", slot: card.card.team, where: "card", data: `${card.card.id}:${userAccess}:${page}` } : { action: "add", slot: card.card.id,  where: "card", data: `${card.card.id}:${userAccess}:${page}` }
             }]), interaction.components.buttons([{
                 label: "\u2800Use Items",
-                emoji: "bag"
+                emoji: "donut"
             },  {
                 id: '7',
                 label: `\u2800Sell (+${rarity.sellPrice})`,

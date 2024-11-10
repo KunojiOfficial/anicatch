@@ -159,6 +159,7 @@ model Stat {
 enum ItemType {
   BALL
   ENCOUNTER
+  CONSUMABLE
 }
 
 model Item {

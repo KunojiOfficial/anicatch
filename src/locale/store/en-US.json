@@ -2,11 +2,15 @@
     "categories": {
         "BALL": {
             "name": "AniBalls",
-            "description": "Essential for trainers, AniBalls enhance your chances of capturing all Animons, from basic to legendary, helping you build an epic collection!"
+            "description": "AniBalls boost your chances to capture any Animon, from basic to legendary!"
         },
         "ENCOUNTER": {
             "name": "Encounter Tokens",
-            "description": "Unlock the thrill of discovery! These tokens grant you additional chances to encounter wild Animons."
+            "description": "These tokens grant you additional chances to encounter wild Animons."
+        },
+        "CONSUMABLE": {
+            "name": "Sweets",
+            "description": "Give your Animon a treat! Use these items to boost their stats, heal them or unlock various effects!"
         }
     },
     "vouchers": {

@@ -14,6 +14,7 @@ export default new Interactable({
 
         if (!cardId || !print) throw 8;
         let where = { cardId: client.getIdReverse(cardId), print: parseInt(print) };
+        if (isNaN(where.print)) throw 8;
 
         const card = await client.db.cardInstance.findFirst({ where: { ...where, userId: player.data.id, team: 0 } });
         if (!card) throw 5;

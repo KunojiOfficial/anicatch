@@ -7,10 +7,10 @@ const PER_PAGE = 12;
 export default new Panel({
     name: "collection",
     async execute(interaction: DiscordInteraction, page: number | string = 1, owner: User): Promise<InteractionReplyOptions> {
-        const { user, client } = interaction;
+        const { player, client } = interaction;
         
         if (typeof page === 'string') page = parseInt(page);
-        if (!owner) owner = user;
+        if (!owner) owner = player.user;
 
         const userData = await client.db.user.findFirst({ 
             where: { discordId: owner.id }, 
@@ -100,8 +100,8 @@ export default new Panel({
         return {
             embeds: [ interaction.components.embed({
                 author: { name: `${owner.displayName}'s Collection`, iconUrl: owner.displayAvatarURL() },
-                description: (userData.roleId>1?`### ${userData.role.name} ${userData.role.emoji||""}\n`:``) + `**Sort by:** rarity (desc.)\n-# View details of an Animon by using the {command_animon} command or the select menu below.\n` + "\u2800".repeat(47),
-                fields: fields
+                description: (userData.roleId>1?`### ${userData.role.emoji||""}\u2800${userData.role.name}\u2800${userData.role.emoji||""}\n`:``) + `**Sort by:** rarity (desc.)\n-# View details of an Animon by using the {command_animon} command or the select menu below.\n` + "\u2800".repeat(47),
+                fields: fields,
             }) ],
             components: components
         }

@@ -1,0 +1,61 @@
+import { Stat } from "@prisma/client";
+import Card from "../classes/Card";
+import { DiscordInteraction } from "../types";
+
+interface Property {
+    effect: "HEAL" | "REVIVE" | "LEVELUP",
+    value: number
+}
+
+export default async function(interaction: DiscordInteraction, itemId: number, cardId: number, count: number) {
+    const { client, player } = interaction;
+
+    const [ item, card ] = await Promise.all([
+        client.db.inventory.findFirst({ where: { itemId: itemId, userId: player.data.id, count: { gt: 0 } }, include: { item: true } }),
+        client.db.cardInstance.findFirst({ where: { id: cardId, userId: player.data.id, status: { in: [ "IDLE", "DEAD" ] } }, include: { stat: true, card: true } })
+    ]);
+
+    if (!item) throw 24; if (!card) throw 5;
+
+    const properties = item.item.properties as any as Property;
+    const cardData = new Card({ card: card, client: client, stats: card.stat!, parent: card.card });
+    const stats: Stat = cardData.getStats() as Stat;
+
+    await client.db.$transaction(async tx => {
+        switch (properties.effect) {
+            case "LEVELUP":
+                if (cardData.getLevel()+(count*properties.value) > cardData.getRarity()!.maxLevel) throw 32;
+                
+                const requiredExp = cardData.getExpForExactLevelUps(count*properties.value);
+                await tx.cardInstance.updateMany({ where: { id: card.id }, data: { exp: requiredExp } });
+                break;
+            case "REVIVE":
+                if (card.status !== "DEAD") throw 33;
+                count = 1;
+
+                const hp = Math.floor((stats.vit*100)*properties.value);
+                await tx.cardInstance.update({ where: { id: card.id }, data: { status: "IDLE", stat: { update: { data: { hp: hp } } } }, include: { stat: true } });
+                break;
+            case "HEAL":
+                if (card.status === "DEAD") throw 34;
+
+                let currentHp = stats.hp;
+                let maxCount = 0;
+
+                while (currentHp < stats.vit*100) {
+                    maxCount++;
+                    currentHp += properties.value;
+                }
+
+                count = Math.min(maxCount, count);
+                let newHp = Math.floor(Math.min(stats.vit*100, stats.hp+(count*properties.value)));
+                await tx.cardInstance.update({ where: { id: card.id }, data: { stat: { update: { data: { hp: newHp } } } }, include: { stat: true } });
+
+                break;
+        }
+        
+        await tx.inventory.updateMany({ where: { itemId: itemId, userId: player.data.id }, data: { count: { decrement: count } } });
+    });
+
+    return item;
+}

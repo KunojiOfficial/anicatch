@@ -92,6 +92,12 @@ export default class Card {
         return requiredExp;
     }
 
+    getExpForExactLevelUps(levelUps: number) {
+        const level = this.getLevel()+levelUps;
+        
+        return levels[level.toString() as keyof typeof levels];
+    }
+
     getPercentage(forceLevel?: number, forceExp?: number) {
         let level = forceLevel ? forceLevel : this.getLevel();
         let requiredExp = 0;
