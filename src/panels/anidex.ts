@@ -1,4 +1,4 @@
-import { AttachmentBuilder, InteractionReplyOptions } from "discord.js";
+import { InteractionReplyOptions } from "discord.js";
 import { DiscordInteraction } from "../types";
 import Panel from "../classes/Panel";
 import Card from "../classes/Card";
@@ -17,11 +17,11 @@ export default new Panel({
         if (mode === "page" && typeof page === 'number') {
             if (page < 1) page = count;
             else if (page > count) page = 1;
-            
             card = await client.db.cardCatalog.findFirst({ skip: page-1, include: { character: true, instances: { where: { status: { in: ["IDLE", "FIGHT"] } } } } });
         } else if (typeof page === 'string') {
             card = await client.db.cardCatalog.findFirst({ where: { id: client.getIdReverse(page) }, include: { character: true, instances: { where: { status: { in: ["IDLE", "FIGHT"] } } } } });
         }
+
         if (!card) return await client.panels.get("anidex")!.execute!(interaction);
         if (typeof page === 'string') page = card.id;
 
@@ -42,7 +42,6 @@ export default new Panel({
                 default: rarity == key
             });
         }
-
         return {
             embeds: [ interaction.components.embed({
                 fields: [

@@ -167,7 +167,7 @@ model Item {
   name          String
   description   String?
   type          ItemType
-  emoji         String?
+  emoji         String
   usable        Boolean           @default(false)
   properties    Json?
 

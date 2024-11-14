@@ -188,12 +188,21 @@ export default class Components {
         menu.setCustomId(customId.join(';'));
         
         if (object.placeholder) menu.setPlaceholder(object.placeholder);
-        if (object.options) menu.addOptions(object.options.map(o => ({ ...o, 
-            label: this.client.formatText(o.label, this.locale)?.substring(0,100), 
-            description: o.description ? this.client.formatText(o.description || "", this.locale)?.substring(0,100) : undefined,
-            emoji: o.hardEmoji ? o.hardEmoji : o.emoji ? deepValue(emojis, o.emoji) : undefined
-        })));
+        if (object.options) {
+            const options = [];
+            for (const o of object.options) {
+                options.push({
+                    ...o,
+                    label: this.client.formatText(o.label, this.locale)?.substring(0,100), 
+                    description: o.description ? this.client.formatText(o.description || "", this.locale)?.substring(0,100) : undefined,
+                    emoji: o.hardEmoji ? o.hardEmoji : o.emoji ? deepValue(emojis, o.emoji) : undefined
+                })
+            }
+            
+            menu.addOptions(options);
+        }
         
+
         if (object.minValues) menu.setMinValues(object.minValues);
         if (object.maxValues) menu.setMaxValues(object.maxValues);
 

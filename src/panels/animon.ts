@@ -17,6 +17,7 @@ async function main(interaction: DiscordInteraction, where: any) {
 
     return [{ 
         embeds: [ interaction.components.embed({
+            description: card.card.status === "DEAD" ? "**This Animon is unconscious.**\n-# Revive it using items from {command_store}." : undefined,
             fields: [
                 { name: "\u2800", value: `-# Name\n${animon.card.character.name}\u2800\u2800\n-# Type\n${type.name} ${type.emoji}\n-# Caught\n${client.unixDate(animon.createdAt)}\n\u2800`, inline: true },
                 { name: "\u2800", value: `-# ID\n\`${client.getId(animon.cardId, animon.print).padEnd(7, " ")}\`\n-# Ball\n${animon.ball?.name} ${animon.ball?.emoji}`, inline: true },
@@ -123,8 +124,10 @@ export default new Panel({
                 emoji: isTeam ? "team" : "unteam",
                 args: isTeam ? { action: "clear", slot: card.card.team, where: "card", data: `${card.card.id}:${userAccess}:${page}` } : { action: "add", slot: card.card.id,  where: "card", data: `${card.card.id}:${userAccess}:${page}` }
             }]), interaction.components.buttons([{
+                id: "0",
                 label: "\u2800Use Items",
-                emoji: "donut"
+                emoji: "donut",
+                args: { path: "fastUse", cardId: card.card.id }
             },  {
                 id: '7',
                 label: `\u2800Sell (+${rarity.sellPrice})`,
