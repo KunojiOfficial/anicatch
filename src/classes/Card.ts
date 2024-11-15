@@ -114,6 +114,36 @@ export default class Card {
         return isNaN(percentage) ? 0 : Math.floor(percentage);
     }
 
+    getCurrentHealth() {
+        if (this.stats?.hp === -1) return this.getMaxHealth();
+        return this.stats?.hp;
+    }
+
+    getMaxHealth() {
+        let stats: Stat = this.getStats() as Stat;
+        return stats.vit * 100;
+    }
+
+    getHealthBar() {
+        return this.getBar(this.getMaxHealth(), this.getCurrentHealth()!);
+    }
+
+    getExpBar() {
+        return this.getBar(this.getRequiredExp(), this.card.exp, "exp");
+    }
+
+    getBar(max:number, current:number, variant:string="", length:number = 12) {
+        let part = max/length;
+
+        let bar = "";
+        for (let i = 0; i < length; i++) {
+            if (current > part*i) bar += "{emoji_line_1"+variant+"}";
+            else bar += "{emoji_line_0}";
+        }
+
+        return bar;
+    }
+
     async generateCanvas(noRarity: boolean = false) {
         if (!this.parent) return;
 

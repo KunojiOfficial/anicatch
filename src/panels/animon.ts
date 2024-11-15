@@ -43,8 +43,11 @@ async function stats(interaction: DiscordInteraction, where: any) {
 
     const fields = [{
         name: "\u2800",
-        value: `**Level ${card.getLevel()}** (${card.getPercentage()}%)\n-# The maximum level for this rarity is **${card.getRarity()?.maxLevel||0}**.\n\u2800`,
+        value: `**Level ${card.getLevel()}** (${card.getPercentage()}%)\n${card.getExpBar()}\n-# The maximum level for this rarity is **${card.getRarity()?.maxLevel||0}**.`,
         inline: false
+    }, {
+        name: "Current Health",
+        value: `${card.getHealthBar()}\n-# {number_${card.getCurrentHealth()}}/{number_${card.getMaxHealth()}} (${Math.floor(card.getCurrentHealth()!/card.getMaxHealth()*100)}%)\n\u2800`
     }];
 
     for (const key of Object.keys(stats)) {

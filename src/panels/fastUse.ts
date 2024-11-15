@@ -70,8 +70,8 @@ export default new Panel({
         if (activeItem) {
             let property = activeItem.item.properties as any;
             if (property.effect === "LEVELUP") page = "stats";
-            else if (property.effect === "REVIVE") page = "main";
-            else if (property.effect === "HEAL") page = "main";
+            else if (property.effect === "REVIVE") page = "stats";
+            else if (property.effect === "HEAL") page = "stats";
         }
         
         const message = await client.panels.get("animon")!.execute!(interaction, cardId, false, page);
@@ -81,6 +81,7 @@ export default new Panel({
             components: [ interaction.components.selectMenu({
                 id: 0,
                 options: options,
+                placeholder: "🧸\u2800Select an item to use!",
                 args: { path: "fastUse", cardId: cardId, itemId: 0, count: 1 }
             }), interaction.components.buttons(buttons) ]
         };
