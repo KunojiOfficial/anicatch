@@ -30,7 +30,7 @@ export default new Interactable({
             embeds: [ ...message.embeds!, interaction.components.embed({
                 description: `{locale_main_useSuccess}`
             }, {
-                name: [`${item.item.emoji} **${item.item.name}**`],
+                name: [`${item.item.emoji} **${client.formatText(`{locale_items_${item.item.name}_name}`, interaction.locale)}**`],
                 count: [`**${count}**`]
             }) ]
         }

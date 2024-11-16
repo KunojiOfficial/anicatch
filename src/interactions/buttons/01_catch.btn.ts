@@ -83,7 +83,7 @@ export default new Interactable({
                     color: captured ? "#00ff00" : "#ff0000"
                 }, {
                     name: [`**${card.card.character.name}**`],
-                    ball: [`**${ball.item.emoji} ${ball.item.name}**`]
+                    ball: [`**${ball.item.emoji} ${client.formatText(`{locale_items_${ball.item.name}_name}`, interaction.locale)}**`]
                 })
             ],
             components: newComponents,

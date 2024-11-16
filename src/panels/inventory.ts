@@ -62,12 +62,18 @@ async function category(interaction: DiscordInteraction, category: ItemType, ite
     const items = userData.items.filter(i => i.item.type === category);
     if (!items.length) throw 23;
 
-    const fields = [];
+    const fields = [], data =[];
     for (const item of items) {
+        let itemData = {
+            ...item,
+            name: `{locale_items_${item.item.name}_name}`,
+            desc: client.formatText(`{locale_items_${item.item.name}_description}`, interaction.locale, item.item.properties as object)
+        };
+        data.push(itemData);
 
         fields.push({
-            name: (itemId === item.item.id ? `{emoji_chevron_single_right} ` : ``) + `${item.item.emoji} ${item.item.name}`,
-            value: `${item.item.name}\n-# x${item.count}\n\u2800`,
+            name: (itemId === item.item.id ? `{emoji_chevron_single_right} ` : ``) + `${item.item.emoji} ${itemData.name}`,
+            value: `${itemData.desc}\n-# x${item.count}\n\u2800`,
             inline: true
         })
     }
@@ -78,9 +84,9 @@ async function category(interaction: DiscordInteraction, category: ItemType, ite
     let components = [ interaction.components.selectMenu({
         id: 0,
         placeholder: "🛍️\u2800Select an item!",
-        options: items.map(i => ({ 
-            label: `${i.item.name}`, 
-            description: `${i.item.name}`, 
+        options: data.map(i => ({ 
+            label: i.name, 
+            description: i.desc, 
             value: `2:${i.item.id}`, 
             hardEmoji: i.item.emoji!,
             default: itemId === i.item.id

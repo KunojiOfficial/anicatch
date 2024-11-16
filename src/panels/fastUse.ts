@@ -25,7 +25,7 @@ export default new Panel({
         const options = []; let buttons = [];
         for (const item of items) {
             options.push({
-                label: `${item.item.name}`,
+                label: `{locale_items_${item.item.name}_name}`,
                 description: `x${item.count}`,
                 value: `2:${item.itemId}`,
                 hardEmoji: item.item.emoji!,

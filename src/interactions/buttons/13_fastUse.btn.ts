@@ -18,7 +18,7 @@ export default new Interactable({
                 ...message.embeds![0],
                 image: { url: "attachment://card.jpg" }
             }, interaction.components.embed({
-                description: `{emoji_yes}\u2800You have successfully used\u2800**${item.item.emoji} ${item.item.name}**!`,
+                description: `{emoji_yes}\u2800You have successfully used\u2800**${item.item.emoji} ${client.formatText(`{locale_items_${item.item.name}_name}`, interaction.locale)}**!`,
                 color: "#00ff00"
             }) ]
         }

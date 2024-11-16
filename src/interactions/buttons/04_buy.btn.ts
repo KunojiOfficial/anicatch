@@ -60,7 +60,7 @@ export default new Interactable({
                 color: "#00ff00",
                 description: `{emoji_yes}\u2800{locale_main_buySuccess}\n-# \u2800\u2800\u2800{locale_main_buySuccess2}`
             }, {
-                item: [`**${count}x ${item!.emoji} ${item!.name}**`],
+                item: [`**${count}x ${item!.emoji} ${client.formatText(`{locale_items_${item!.name}_name}`, interaction.locale)}**`],
                 cost: [((currency === "gems" ? `{emoji_smallGem}` : `{emoji_smallCoin}`) + ` **{number_${cost}}**`)]
             }) ]
         }

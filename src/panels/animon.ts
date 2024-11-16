@@ -20,7 +20,7 @@ async function main(interaction: DiscordInteraction, where: any) {
             description: card.card.status === "DEAD" ? "**This Animon is unconscious.**\n-# Revive it using items from {command_store}." : undefined,
             fields: [
                 { name: "\u2800", value: `-# Name\n${animon.card.character.name}\u2800\u2800\n-# Type\n${type.name} ${type.emoji}\n-# Caught\n${client.unixDate(animon.createdAt)}\n\u2800`, inline: true },
-                { name: "\u2800", value: `-# ID\n\`${client.getId(animon.cardId, animon.print).padEnd(7, " ")}\`\n-# Ball\n${animon.ball?.name} ${animon.ball?.emoji}`, inline: true },
+                { name: "\u2800", value: `-# ID\n\`${client.getId(animon.cardId, animon.print).padEnd(7, " ")}\`\n-# Ball\n{locale_items_${animon.ball?.name}_name} ${animon.ball?.emoji}`, inline: true },
                 // { name: "\u2800", value: `-# Rarity\n**${rarity.name}** (${rarity.chance}%)\n${rarity.emoji.full}` },
             ],
             color: rarity.color,
