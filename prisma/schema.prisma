@@ -23,7 +23,7 @@ model User {
   gems          Int               @default(0)
 
   username      String?
-  status        String            @default("tutorial")
+  status        String            @default("new")
   
   encounters    Int               @default(15)
   
@@ -35,6 +35,7 @@ model User {
 
   logs          Log[]
 
+  lastDaily     DateTime          @default(now())
   lastReset     DateTime          @default(now())
   nextNotify    DateTime?
 
@@ -48,6 +49,8 @@ model Role {
 
   maxEncounters Int
   rechargeTime  Int
+
+  daily         Json[]
 
   users         User[]
 }

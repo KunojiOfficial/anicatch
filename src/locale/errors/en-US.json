@@ -25,7 +25,7 @@
     "25": "Insufficient items in your inventory.",
     "26": "No vouchers are available at this time.",
     "27": "No active battle found.",
-    "28": "No team has been set up. Please set up your team first.",
+    "28": "No team has been set up. Please set up your {command_team} first.",
     "29": "All Animons in your team have been defeated.",
     "30": "Your team is already full.",
     "31": "This slot is already occupied.",
@@ -33,5 +33,6 @@
     "33": "Unable to revive; this Animon is already alive.",
     "34": "Cannot heal; this Animon is currently dead.",
     "35": "you dont have any items to use on this animon",
-    "36": "cant heal; already full health"
+    "36": "cant heal; already full health",
+    "37": "last daily was less than 24h ago"
 }

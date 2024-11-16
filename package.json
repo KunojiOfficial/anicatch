@@ -14,7 +14,7 @@
   "prisma.schema": "./src/prisma/schema.prisma",
   "dependencies": {
     "@aws-sdk/lib-storage": "^3.645.0",
-    "@prisma/client": "^5.12.1",
+    "@prisma/client": "^5.22.0",
     "body-parser": "^1.20.2",
     "canvas": "^2.11.2",
     "discord-hybrid-sharding": "github:meister03/discord-hybrid-sharding#ts-rewrite",
@@ -30,7 +30,7 @@
     "@types/shelljs": "^0.8.15",
     "copyfiles": "^2.4.1",
     "nodemon": "^3.1.0",
-    "prisma": "^5.13.0",
+    "prisma": "^5.22.0",
     "shelljs": "^0.8.5",
     "ts-node": "^10.9.2",
     "tsc-hooks": "^1.1.2",

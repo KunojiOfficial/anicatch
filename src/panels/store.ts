@@ -83,7 +83,7 @@ async function category(interaction: DiscordInteraction, category: ItemType, ite
         placeholder: "🛍️\u2800Select an item!",
         options: data.map(i => ({ 
             label: `${i.name}`, 
-            description: `${i.desc}`, 
+            description: `${i.desc[0]}`, 
             value: `2:${i.id}`, 
             hardEmoji: i.emoji!,
             default: itemId === i.id
