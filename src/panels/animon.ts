@@ -96,50 +96,54 @@ export default new Panel({
 
         let isTeam = card.card.team>0;
 
+        let components = [interaction.components.buttons([{
+            id: "0",
+            label: "Info",
+            emoji: "info",
+            style: page === "main" ? "blurple" : "gray",
+            disabled: page === "main",
+            args: { path: "animon", id: animon.id, userAccess: false, page: "main" }
+        }, {
+            id: "0",
+            label: "Stats",
+            style: page === "stats" ? "blurple" : "gray",
+            emoji: "stats",
+            disabled: page === "stats",
+            args: { path: "animon", id: animon.id, userAccess: false, page: "stats" }
+        }, {
+            label: "Evolve",
+            emoji: "evolve",
+            disabled: true
+        }])]
+
+        if (isOwner) components = [...components, interaction.components.buttons([{
+            id: '6',
+            label: animon.favorite ? "\u2800Un-Favorite" : "\u2800Favorite",
+            emoji: animon.favorite ? "favorite2" : "unfavorite",
+            args: { cardId: animon.id },
+            cooldown: { id: "fav", time: 2 }
+        }, {
+            id: "12",
+            label: isTeam ? "\u2800Un-Team" : "\u2800Team",
+            emoji: isTeam ? "team" : "unteam",
+            args: isTeam ? { action: "clear", slot: card.card.team, where: "card", data: `${card.card.id}:${userAccess}:${page}` } : { action: "add", slot: card.card.id,  where: "card", data: `${card.card.id}:${userAccess}:${page}` }
+        }]), interaction.components.buttons([{
+            id: "0",
+            label: "\u2800Use Items",
+            emoji: "donut",
+            args: { path: "fastUse", cardId: card.card.id }
+        },  {
+            id: '7',
+            label: `\u2800Sell (+${rarity.sellPrice})`,
+            emoji: "smallCoin",
+            disabled: animon.favorite,
+            args: { cardId: animon.id },
+            cooldown: { id: "sell", time: 5 }
+        }]) ];
+
         return {
             ...data,
-            components: isOwner ? [ interaction.components.buttons([{
-                id: "0",
-                label: "Info",
-                emoji: "info",
-                style: page === "main" ? "blurple" : "gray",
-                disabled: page === "main",
-                args: { path: "animon", id: animon.id, userAccess: false, page: "main" }
-            }, {
-                id: "0",
-                label: "Stats",
-                style: page === "stats" ? "blurple" : "gray",
-                emoji: "stats",
-                disabled: page === "stats",
-                args: { path: "animon", id: animon.id, userAccess: false, page: "stats" }
-            }, {
-                label: "Evolve",
-                emoji: "evolve",
-                disabled: true
-            }]), interaction.components.buttons([{
-                id: '6',
-                label: animon.favorite ? "\u2800Un-Favorite" : "\u2800Favorite",
-                emoji: animon.favorite ? "favorite2" : "unfavorite",
-                args: { cardId: animon.id },
-                cooldown: { id: "fav", time: 2 }
-            }, {
-                id: "12",
-                label: isTeam ? "\u2800Un-Team" : "\u2800Team",
-                emoji: isTeam ? "team" : "unteam",
-                args: isTeam ? { action: "clear", slot: card.card.team, where: "card", data: `${card.card.id}:${userAccess}:${page}` } : { action: "add", slot: card.card.id,  where: "card", data: `${card.card.id}:${userAccess}:${page}` }
-            }]), interaction.components.buttons([{
-                id: "0",
-                label: "\u2800Use Items",
-                emoji: "donut",
-                args: { path: "fastUse", cardId: card.card.id }
-            },  {
-                id: '7',
-                label: `\u2800Sell (+${rarity.sellPrice})`,
-                emoji: "smallCoin",
-                disabled: animon.favorite,
-                args: { cardId: animon.id },
-                cooldown: { id: "sell", time: 5 }
-            }]) ] : []
+            components: components
         }
     }
 });
