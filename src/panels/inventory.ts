@@ -67,7 +67,7 @@ async function category(interaction: DiscordInteraction, category: ItemType, ite
 
         fields.push({
             name: (itemId === item.item.id ? `{emoji_chevron_single_right} ` : ``) + `${item.item.emoji} ${item.item.name}`,
-            value: `${item.item.description}\n-# x${item.count}\n\u2800`,
+            value: `${item.item.name}\n-# x${item.count}\n\u2800`,
             inline: true
         })
     }
@@ -80,7 +80,7 @@ async function category(interaction: DiscordInteraction, category: ItemType, ite
         placeholder: "🛍️\u2800Select an item!",
         options: items.map(i => ({ 
             label: `${i.item.name}`, 
-            description: `${i.item.description}`, 
+            description: `${i.item.name}`, 
             value: `2:${i.item.id}`, 
             hardEmoji: i.item.emoji!,
             default: itemId === i.item.id

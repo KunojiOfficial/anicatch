@@ -19,7 +19,6 @@ export default async function(interaction: DiscordInteraction, itemId: number, c
 
     const properties = item.item.properties as any as Property;
     const cardData = new Card({ card: card, client: client, stats: card.stat!, parent: card.card });
-    const stats: Stat = cardData.getStats() as Stat;
 
     await client.db.$transaction(async tx => {
         switch (properties.effect) {
@@ -33,28 +32,32 @@ export default async function(interaction: DiscordInteraction, itemId: number, c
                 if (card.status !== "DEAD") throw 33;
                 count = 1;
 
-                const hp = Math.floor((stats.vit*100)*properties.value);
+                const hp = Math.floor((cardData.getMaxHealth())*properties.value);
                 await tx.cardInstance.update({ where: { id: card.id }, data: { status: "IDLE", stat: { update: { data: { hp: hp } } } }, include: { stat: true } });
                 break;
             case "HEAL":
                 if (card.status === "DEAD") throw 34;
-
-                let currentHp = stats.hp;
+                
+                let currentHp = cardData.getCurrentHealth()!;
+                if (currentHp === cardData.getMaxHealth()) throw 36;
+                
                 let maxCount = 0;
 
-                while (currentHp < stats.vit*100) {
+                while (currentHp < cardData.getMaxHealth()) {
                     maxCount++;
                     currentHp += properties.value;
                 }
-
+                
+                
                 count = Math.min(maxCount, count);
-                let newHp = Math.floor(Math.min(stats.vit*100, stats.hp+(count*properties.value)));
+                let newHp = Math.floor(Math.min(cardData.getMaxHealth(), cardData.getCurrentHealth()!+(count*properties.value)));
                 await tx.cardInstance.update({ where: { id: card.id }, data: { stat: { update: { data: { hp: newHp } } } }, include: { stat: true } });
 
                 break;
         }
         
         await tx.inventory.updateMany({ where: { itemId: itemId, userId: player.data.id }, data: { count: { decrement: count } } });
+        await tx.log.create({ data: { userId: player.data.id, action: "consumable", description: `uses ${item.itemId} x${count} on ${cardId}` } });
     });
 
     return item;

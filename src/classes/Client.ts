@@ -42,6 +42,7 @@ const FORMATABLES: any = {
     locale: {},
     custom: {},
     command: {},
+    item: {}
 }
 
 class Client extends DiscordClient {
@@ -177,6 +178,8 @@ class Client extends DiscordClient {
                     } else if (replacement.length) {
                         replacement = this.formatText(replacement[0], locale);
                     }
+                } else if (formatable === 'item') {
+                    replacement = deepValue(replace, values[0]);
                 }
                 else replacement = deepValue(FORMATABLES[formatable], values[i].replaceAll("_", "."))
                 

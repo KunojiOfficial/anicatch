@@ -32,5 +32,6 @@
     "32": "This card has reached its maximum level.",
     "33": "Unable to revive; this Animon is already alive.",
     "34": "Cannot heal; this Animon is currently dead.",
-    "35": "you dont have any items to use on this animon"
+    "35": "you dont have any items to use on this animon",
+    "36": "cant heal; already full health"
 }

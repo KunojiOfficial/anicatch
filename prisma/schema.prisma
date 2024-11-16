@@ -165,7 +165,6 @@ enum ItemType {
 model Item {
   id            Int               @unique @id @default(autoincrement())
   name          String
-  description   String?
   type          ItemType
   emoji         String
   usable        Boolean           @default(false)

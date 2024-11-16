@@ -1,0 +1,70 @@
+{
+    "aniball": {
+        "name": "AniBall",
+        "description": "Basic but reliable for common Animons."
+    },
+    "starball": {
+        "name": "StarBall",
+        "description" : "Shining with stellar power, great for bold and powerful Animons."
+    },
+    "megaball": {
+        "name": "MegaBall",
+        "description": "Powered up for tougher Animons that resist standard catches."
+    },
+    "prismball": {
+        "name": "PrismBall",
+        "description": "Crafted for rare Animons that are tricky to spot and catch."
+    },
+    "hyperball": {
+        "name": "HyperBall",
+        "description": "Supercharged to capture even the toughest Animons."
+    },
+    "abyssball": {
+        "name": "AbyssBall",
+        "description": "Forged from the void, it captures the hardest-to-catch Animons."
+    },
+    "omniball": {
+        "name": "OmniBall",
+        "description": "The ultimate AniBall—captures any Animon without fail, no exceptions."
+    },
+    "forestToken": {
+        "name": "Forest Token",
+        "description": "This token grants {item_encounters} extra chances to encounter wild Animons."
+    },
+    "adventureToken": {
+        "name": "Adventure Token",
+        "description": "This token offers {item_encounters} encounters to find hidden Animons."
+    },
+    "mysticToken": {
+        "name": "Mystic Token",
+        "description": "Infused with ancient magic, it allows {item_encounters} extra encounters."
+    },
+    "legendaryToken": {
+        "name": "Legendary Token",
+        "description": "This renowned token provides an impressive {item_encounters} encounters."
+    },
+    "cake": {
+        "name": "Cake",
+        "description": "So delicious, it makes any Animon instantly gain a level after a single bite!"
+    },
+    "cupcake": {
+        "name": "Cupcake",
+        "description": "So delightful, it brings any fainted Animon back to life with its sweetness!"
+    },
+    "snowdriftDonut": {
+        "name": "Snowdrift Donut",
+        "description": "Restores {item_value} HP with its delicate white icing."
+    },
+    "roseglowDonut": {
+        "name": "Roseglow Donut",
+        "description": "Heals {item_value} HP with its sweet pink charm."
+    },
+    "verdantDonut": {
+        "name": "Verdant Donut",
+        "description": "Revitalizes {item_value} HP with its refreshing green glaze."
+    },
+    "skyshadeDonut": {
+        "name": "Skyshade Donut",
+        "description": "Replenishes {item_value} HP with its serene blue icing."
+    }
+}

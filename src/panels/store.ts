@@ -50,18 +50,26 @@ async function category(interaction: DiscordInteraction, category: ItemType, ite
     const items = await client.db.item.findMany({ where: { OR: [{ priceCoin: { not: null } }, { priceGem: { not: null } }], type: category }, orderBy: { id: "asc" } });
     if (!items.length) throw "unknown category";
 
-    const fields = [];
+    const fields = [], data = [];
     for (const item of items) {
         const coinPrice = item.priceCoin ? ((item.discount ? `~~` : `**`) + `{number_${item.priceCoin}}` + (item.discount ? `~~ **{number_${Math.ceil(item.priceCoin!*(1-item.discount!))}}** (-${100*item.discount}%)` : `**`)) : null;
         const gemPrice = item.priceGem ? ((item.discount ? `~~` : `**`) + `{number_${item.priceGem}}` + (item.discount ? `~~ **{number_${Math.ceil(item.priceGem!*(1-item.discount!))}}** (-${100*item.discount}%)` : `**`)) : null;
     
-        let desc = [item.description || "\u2800"];
+        let desc = [client.formatText(`{locale_items_${item.name}_description}`, interaction.locale, item.properties as object) || "\u2800"];
 
         if (coinPrice) desc.push(`-# Coin Price: {emoji_smallCoin} ${coinPrice}`);
         if (gemPrice) desc.push(`-# Gem Price: {emoji_smallGem} ${gemPrice}`);
 
+        let itemData = {
+            ...item,
+            name: `{locale_items_${item.name}_name}`,
+            desc: desc
+        };
+
+        data.push(itemData);
+
         fields.push({
-            name: (itemId === item.id ? `{emoji_chevron_single_right} ` : ``) + `${item.emoji} ${item.name}`,
+            name: (itemId === item.id ? `{emoji_chevron_single_right} ` : ``) + `${item.emoji} ${itemData.name}`,
             value: desc.join('\n') + "\n\u2800",
             inline: true
         })
@@ -73,9 +81,9 @@ async function category(interaction: DiscordInteraction, category: ItemType, ite
     let components = [ interaction.components.selectMenu({
         id: 0,
         placeholder: "🛍️\u2800Select an item!",
-        options: items.map(i => ({ 
+        options: data.map(i => ({ 
             label: `${i.name}`, 
-            description: `${i.description}`, 
+            description: `${i.desc}`, 
             value: `2:${i.id}`, 
             hardEmoji: i.emoji!,
             default: itemId === i.id

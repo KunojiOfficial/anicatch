@@ -114,7 +114,8 @@ export default new Panel({
                 args: { path: "animon", id: animon.id, userAccess: false, page: "stats" }
             }, {
                 label: "Evolve",
-                emoji: "evolve"
+                emoji: "evolve",
+                disabled: true
             }]), interaction.components.buttons([{
                 id: '6',
                 label: animon.favorite ? "\u2800Un-Favorite" : "\u2800Favorite",
