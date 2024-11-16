@@ -94,7 +94,7 @@ async function category(interaction: DiscordInteraction, category: ItemType, ite
         args: { path: "inventory", page: category }
     }) ];
 
-    if (itemId) {
+    if (itemId && items.find(i => i.itemId === itemId)?.item.usable) {
         if (!count || typeof count !== 'number') count = 1;
         if (count < 1) count = 1;
         else if (count > 50) count = 50;

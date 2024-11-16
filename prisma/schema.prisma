@@ -28,6 +28,7 @@ model User {
   encounters    Int               @default(15)
   
   config        Config?
+  stats         UserStats?
   role          Role              @relation(fields: [roleId], references: [id])
   items         Inventory[]
   cards         CardInstance[]
@@ -199,6 +200,16 @@ model Voucher {
   skuId         String
   consumed      Boolean           @default(false)
   createdAt     DateTime          @default(now())
+
+  user          User              @relation(fields: [userId], references: [id])
+}
+
+model UserStats {
+  userId        Int               @unique @id
+
+  encountered   Int               @default(0)
+  captured      Int               @default(0)
+  coinsSpent    Int               @default(0)
 
   user          User              @relation(fields: [userId], references: [id])
 }

@@ -98,6 +98,7 @@ export default new Event({
                     discordId: user.id, 
                     username: user.username,
                     config: { create: { locale: interaction.locale } },
+                    stats: { create: {} },
                     items: { create: { itemId: 1, count: 15 } }
                 },
                 include: { config: true, role: true }
