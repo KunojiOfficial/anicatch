@@ -8,7 +8,7 @@ import { DiscordInteraction } from '../types'
  * Represents an Application Command
  */
 export default class Command {
-    emoji?: string
+    emoji?: string | object
     data: SlashCommandBuilder
     panel?: string
     execute?: (interaction: DiscordInteraction) => Promise<void> | void
@@ -24,7 +24,7 @@ export default class Command {
      *  }} options - The options for the slash command
      */
     constructor(options: {
-        emoji: string,
+        emoji: string | object,
         data: SlashCommandBuilder
         panel?: string
         execute?: (interaction: DiscordInteraction) => Promise<void> | void

@@ -17,5 +17,10 @@
         "agi": "Agility",
         "spi": "Spirit",
         "res": "Resilience"
-    }
+    },
+    "cards": "Animons",
+    "currencies": "Currencies",
+    "items": "Items",
+    "tradeCreatorDescription+offered": "In this section, you can add or remove the goods you wish to **offer**.",
+    "tradeCreatorDescription+requested": "In this section, you can add or remove the goods you wish to **receive**."
 }

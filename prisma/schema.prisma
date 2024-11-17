@@ -33,6 +33,7 @@ model User {
   items         Inventory[]
   cards         CardInstance[]
   vouchers      Voucher[]
+  trades        Trade[]
 
   logs          Log[]
 
@@ -212,4 +213,26 @@ model UserStats {
   coinsSpent    Int               @default(0)
 
   user          User              @relation(fields: [userId], references: [id])
+}
+
+enum TradeStatus {
+  CREATING
+  ACTIVE
+  ACCEPTED
+  REJECTED
+}
+
+model Trade {
+  id            Int               @unique @id @default(autoincrement())
+  status        TradeStatus       @default(CREATING)
+
+  offererId     Int
+  recipientId   Int
+
+  offered       Json[]
+  requested     Json[]
+
+  createdAt     DateTime          @default(now())
+
+  users         User[]
 }

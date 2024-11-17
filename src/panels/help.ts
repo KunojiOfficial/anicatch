@@ -11,7 +11,16 @@ export default new Panel({
         commands.sort((a,b) => b.data.description.length - a.data.description.length);
         let text = "";
         for (const cmd of commands) {
-            text += `\`${cmd.emoji}\` {command_${cmd.data.name}} - ${cmd.data.description}\n`;
+            if (typeof cmd.emoji === 'object') {
+                let options = (cmd.data.toJSON()).options;
+                if (!options) continue;
+
+                for (const sub of options.filter((o:any) => o.type === 1) as any) {
+                    text += `\`${(cmd.emoji as any)[sub.name]}\` {command_${cmd.data.name} ${sub.name}} - ${sub.description}\n`;
+                }
+            } else {
+                text += `\`${cmd.emoji}\` {command_${cmd.data.name}} - ${cmd.data.description}\n`;
+            }
         }        
 
         return { 

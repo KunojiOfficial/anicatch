@@ -1,4 +1,4 @@
-import { CardCatalog, CardInstance, Character, Stat } from "@prisma/client";
+import { CardCatalog, CardInstance, Character, Item, Stat } from "@prisma/client";
 import { AttachmentBuilder } from "discord.js";
 import { createCanvas, loadImage, registerFont } from "canvas";
 
@@ -8,23 +8,25 @@ import levels from "../data/levels.json";
 
 const statKeys = ["vit", "def", "pow", "agi", "spi", "res"];
 
-registerFont("./src/assets/fonts/SpaceMono-Regular.ttf", { family: "SpaceMono" });
+// registerFont("./src/assets/fonts/SpaceMono-Regular.ttf", { family: "SpaceMono" });
 
 export default class Card {
     card: CardInstance
     parent?: CardCatalog
     character?: Character
     stats?: Stat
+    ball?: Item
     
     client?: DiscordClient
     rarity?: any
     type?: any
 
-    constructor(object: {card: CardInstance, parent?: CardCatalog, character?: Character, stats?: Stat, client?: DiscordClient}) {
+    constructor(object: {card: CardInstance, parent?: CardCatalog, character?: Character, stats?: Stat, ball?: Item, client?: DiscordClient}) {
         this.card = object.card;
         if (object.parent) this.parent = object.parent;
         if (object.stats) this.stats = object.stats;
         if (object.character) this.character = object.character;
+        if (object.ball) this.ball = object.ball;
 
         if (object.client) {
             this.client = object.client;
@@ -176,5 +178,9 @@ export default class Card {
 
     getId() {
         return this.client!.getId(this.card.cardId, this.card.print) as string;
+    }
+
+    getLabel() {
+        return `${this.ball?.emoji} **${this.character?.name}** [Lv. ${this.getLevel()}]\n\`${this.getId().padEnd(7, " ")}\`${this.type.emoji}\n${this.rarity.emoji.full}`;
     }
 }

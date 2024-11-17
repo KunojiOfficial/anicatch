@@ -9,7 +9,7 @@
     "9": "You do not have enough coins to make this purchase.",
     "10": "You do not have enough gems to make this purchase.",
     "11": "This item is no longer available for sale.",
-    "12": "You have no AniBalls. Please purchase some first.",
+    "12": "You have no AniBalls. Please purchase some first.\n-# If you don't have coins, you can get free AniBalls with {command_daily}.",
     "13": "No active interactions available.",
     "14": "This interaction will be accessible again {custom_time}.",
     "15": "Input must be a number. Please try again.",
@@ -34,5 +34,9 @@
     "34": "Cannot heal; this Animon is currently dead.",
     "35": "you dont have any items to use on this animon",
     "36": "cant heal; already full health",
-    "37": "last daily was less than 24h ago"
+    "37": "last daily was less than 24h ago, next one available {custom_time}",
+    "38": "recipient has too many active trade offers",
+    "39": "you have too many active trade offers",
+    "40": "not creating any offer, use {command_trade new}",
+    "41": "cant trade with yourself"
 }

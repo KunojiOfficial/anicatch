@@ -4,9 +4,9 @@
   "description": "",
   "main": "./dist/index.js",
   "scripts": {
-    "prebuild": "ts-node scripts/copy-assets && npx prisma migrate dev",
     "start": "npx tsc-watch --outDir ./dist --onSuccess \"ts-node scripts/run\"",
-    "db": "npx prisma migrate dev --name dev && npx prisma studio"
+    "db": "npx prisma migrate dev --name dev && npx prisma studio",
+    "build": "tsc"
   },
   "keywords": [],
   "author": "",

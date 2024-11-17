@@ -1,5 +1,6 @@
 import { ApplicationIntegrationType, InteractionContextType, SlashCommandBuilder } from 'discord.js';
 import Command from '../../classes/Command';
+import { addHours } from '../../helpers/utils';
 
 function isMoreThan24HoursAgo(givenDate: Date) {
     const now = new Date();
@@ -19,7 +20,16 @@ export default new Command({
     async execute(interaction): Promise<void> {
         const { client, player } = interaction;
     
-        if (!isMoreThan24HoursAgo(player.data.lastDaily)) throw 37;
+        if (!isMoreThan24HoursAgo(player.data.lastDaily)) {
+            await interaction.editReply({ embeds: [interaction.components.embed({
+                description: `{emoji_no}\u2800{locale_errors_37}`,
+                color: "#ff0000"
+            }, {
+                time: [ client.unixDate(addHours(player.data.lastDaily, 24)) ]
+            })] });
+
+            return;
+        }
         
         const rewards: [{id: number, count: number}] = (player.role?.daily || []) as [{id: number, count: number}];
         if (!rewards.length) return;
@@ -46,4 +56,4 @@ export default new Command({
             }) ]
         });
     }
-})
+});

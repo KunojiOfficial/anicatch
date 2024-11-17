@@ -128,6 +128,12 @@ class Client extends DiscordClient {
     
         let jsonCommands: Array<{data: any, emoji: any}> = this.commands.map(cmd => ({data: cmd.data.toJSON(), emoji: cmd.emoji}));
         for (let command of jsonCommands) {
+            if (typeof command.emoji === "object") { //subcommands
+                for (const sub of command.data.options.filter((o:any) => o.type === 1)) {
+                    sub.description = command.emoji[sub.name] + " " + sub.description;
+                }
+            }
+
             command.data.description = command.emoji + " " + command.data.description;
             command = command.data as any;
         }
@@ -148,6 +154,12 @@ class Client extends DiscordClient {
         
         const object: any = {};
         for (const command of commandsData as any) {
+            if (command.options?.find((o:any) => o.type === 1)) { //subcommands
+                for (const sub of command.options?.filter((o:any) => o.type === 1)) {
+                    object[`${command.name} ${sub.name}`] = command.id;
+                }
+            }
+
             object[command.name] = command.id;
         }
 
