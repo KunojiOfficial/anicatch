@@ -209,7 +209,7 @@ class Client extends DiscordClient {
      * @param format 
      * @returns 
      */
-    unixDate(date: Date, format?: String) {
+    unixDate(date: Date, format?: 'long' | 'short' | 'hours') {
         let type = 'R';
         switch (format) {
             case 'long': type = 'f'; break;

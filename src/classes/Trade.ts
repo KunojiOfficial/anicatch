@@ -142,8 +142,8 @@ export default class Trade {
                     }
                 }
 
-                await tx.trade.update({ where: { id: this.offer.id }, data: { status: "ACTIVE" } });
             }
+            await tx.trade.update({ where: { id: this.offer.id }, data: { status: "ACTIVE" } });
         });
     }
 
@@ -151,7 +151,7 @@ export default class Trade {
      * Displays the offered or requested items in a nice way
      * @param side side of the items to display
      */
-    async getItems(side: Side) {
+    async getItems(side: Side): Promise<[string, any]> {
         const { client } = this.interaction;
 
         let text = "";
@@ -180,5 +180,111 @@ export default class Trade {
         }
 
         return [text, options];
+    }
+
+    /**
+     * Accepts the trade offer
+     */
+    async accept() {
+        if (!this.users) return;
+
+        const { client } = this.interaction;
+
+        const recipient = this.users.find(u => u.id === this.offer.recipientId), offerer = this.users.find(u => u.id === this.offer.offererId);
+        if (!recipient || !offerer) return;
+
+        await client.db.$transaction(async tx => {
+            for (const side of ["offered", "requested"] as Side[]) {
+                const owner = side === "offered" ? offerer : recipient, notOwner = side === "offered" ? recipient : offerer;
+                const items = this.offer[side] as any as Item[];
+    
+                for (const item of items) {
+                    //check availability of every item
+                    let found: any = true;
+                    if (item.type === "cards") found = await tx.cardInstance.findFirst({ where: { userId: owner.id, id: item.value, status: "TRADE"  } });
+    
+                    if (!found) { //something unavailable, cancel the trade
+                        await this.reject();
+                        throw 51;
+                    }
+                    
+                    //remove requested items and currencies (offered already removed when sending)
+                    if (side === "requested") {
+                        if (item.type === "items") await tx.inventory.update({ where: { itemId_userId: { itemId: item.value, userId: owner.id }, count: { gte: item.count } }, data: { count: { decrement: item.count } } });
+                        else if (item.type === "currencies") {
+                            let update: any = {};
+                            if (item.value === 1) update = { coins: { decrement: item.count } };
+                            else update = { gems: { decrement: item.count } };
+                            
+                            await tx.user.update({ where: { id: owner.id }, data: update });
+                        }
+                    }
+
+                    //transfer items
+                    if (item.type === "cards") await tx.cardInstance.update({ where: { userId: owner.id, id: item.value, status: "TRADE" }, data: { userId: notOwner.id, status: "IDLE" } })
+                    else if (item.type === "currencies") {
+                        if (item.value === 1) await tx.user.update({ where: { id: notOwner.id }, data: { coins: { increment: item.count } } });
+                        else await tx.user.update({ where: { id: notOwner.id }, data: { gems: { increment: item.count } } });
+                    } else {
+                        await tx.inventory.upsert({
+                            where: { itemId_userId: { itemId: item.value, userId: notOwner.id } },
+                            update: { count: { increment: item.count } },
+                            create: {
+                                itemId: item.value, 
+                                userId: notOwner.id,
+                                count: item.count,
+                            }
+                        });
+                    }
+                }
+
+            }
+
+            await tx.trade.update({ where: { id: this.offer.id }, data: { status: "ACCEPTED", updatedAt: new Date() } });
+        });
+
+    }
+
+    /**
+     * Rejects the trade offer
+     */
+    async reject() {
+        if (!this.users) return;
+
+        const { client } = this.interaction;
+
+        const recipient = this.users.find(u => u.id === this.offer.recipientId), offerer = this.users.find(u => u.id === this.offer.offererId);
+        if (!recipient || !offerer) return;
+
+        //return items to the offerer and update cards
+        await client.db.$transaction(async tx => {
+            for (const side of ["offered", "requested"] as Side[]) {
+                const owner = side === "offered" ? offerer : recipient;
+                const items = this.offer[side] as any as Item[];
+
+                for (const item of items) {
+                    if (item.type === "cards") await tx.cardInstance.update({ where: { userId: owner.id, id: item.value, status: "TRADE" }, data: { userId: owner.id, status: "IDLE" } });
+                    else if (side === "offered") {
+                        if (item.type === "currencies") {
+                            if (item.value === 1) await tx.user.update({ where: { id: owner.id }, data: { coins: { increment: item.count } } });
+                            else await tx.user.update({ where: { id: owner.id }, data: { gems: { increment: item.count } } });
+                        } else {
+                            await tx.inventory.upsert({
+                                where: { itemId_userId: { itemId: item.value, userId: owner.id } },
+                                update: { count: { increment: item.count } },
+                                create: {
+                                    itemId: item.value, 
+                                    userId: owner.id,
+                                    count: item.count,
+                                }
+                            });
+                        }
+                    }
+                }
+            
+            }
+            await tx.trade.update({ where: { id: this.offer.id }, data: { status: "REJECTED", updatedAt: new Date() } });
+        });
+
     }
 }

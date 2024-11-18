@@ -234,6 +234,7 @@ model Trade {
   requested     Json[]
 
   createdAt     DateTime          @default(now())
+  updatedAt     DateTime?
 
   users         User[]
 }
