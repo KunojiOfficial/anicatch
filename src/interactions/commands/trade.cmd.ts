@@ -3,7 +3,8 @@ import Command from '../../classes/Command';
 
 export default new Command({
     emoji: {
-        new: "🔃"
+        new: "🔃",
+        list: "📜"
     },
     data: new SlashCommandBuilder()
         .setName("trade")
@@ -18,6 +19,10 @@ export default new Command({
                 .setDescription("The person you want to trade with (they must be on this server).")
                 .setRequired(true)
             )
+        )
+        .addSubcommand(subcommand => subcommand
+            .setName("list")
+            .setDescription("Browse your active and old trade offers.")
         ) as SlashCommandBuilder,
 
     async execute(interaction) {
@@ -25,6 +30,7 @@ export default new Command({
         let message;
 
         if (subcommand === 'new') message = await interaction.client.panels.get("tradeCreator")?.execute!(interaction, undefined, interaction.options.getUser("user"));
+        else if (subcommand === 'list') message = await interaction.client.panels.get("tradeList")?.execute!(interaction);
 
         await interaction.editReply(message!)
     }

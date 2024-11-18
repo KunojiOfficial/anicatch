@@ -29,5 +29,7 @@ type UserRole = Prisma.UserGetPayload<typeof UserWithIncludes>;
 const CardWithIncludes = Prisma.validator<Prisma.CardInstanceDefaultArgs>()({ include: { card: true, stat: true } });
 type CardIncluded = Prisma.CardInstanceGetPayload<typeof CardWithIncludes>;
 
+const TradeWithIncludes = Prisma.validator<Prisma.TradeDefaultArgs>()({ include: { users: true } });
+type TradeIncluded = Prisma.TradeGetPayload<typeof TradeWithIncludes>;
 
-export { DiscordClient, DiscordMessage, DiscordInteraction, UserRole, CardIncluded };
+export { DiscordClient, DiscordMessage, DiscordInteraction, UserRole, CardIncluded, TradeIncluded };

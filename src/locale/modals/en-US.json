@@ -12,5 +12,32 @@
             "label": "CARD ID",
             "placeholder": "CARD ID"
         }]
+    },
+    "4": {
+        "title": "Add currencies to offer",
+        "inputs": [{
+            "label": "Coins",
+            "placeholder": "coins"
+        }, {
+            "label": "Gems",
+            "placeholder": "Gems"
+        }]
+    },
+    "4-1": {
+        "title": "Add card to offer",
+        "inputs": [{
+            "label": "Card Id",
+            "placeholder": "id"
+        }]
+    },
+    "4-2": {
+        "title": "Add items to offer",
+        "inputs": [{
+            "label": "Item Id",
+            "placeholder": "id"
+        }, {
+            "label": "Count",
+            "placeholder": "number"
+        }]
     }
 }

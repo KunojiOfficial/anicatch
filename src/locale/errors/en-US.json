@@ -38,5 +38,17 @@
     "38": "recipient has too many active trade offers",
     "39": "you have too many active trade offers",
     "40": "not creating any offer, use {command_trade new}",
-    "41": "cant trade with yourself"
+    "41": "cant trade with yourself",
+    "42": "offer not found",
+    "43": "not enough coins to add to trade offer",
+    "44": "not enough gems to add to trade offer",
+    "45": "reached limit of these items in offer",
+    "46": "cant trade favorite cards",
+    "47": "item already in trade",
+    "48": "cant trade cards in team",
+    "49": "no item to add to offer",
+    "50": "not enough items to add to offer",
+    "51": "during verification of items something unavailable, deleting trade offer",
+    "52": "you cant send without offering anything",
+    "53": "no trade offers to display"
 }

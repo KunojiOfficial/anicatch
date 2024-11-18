@@ -2,7 +2,16 @@ import { AttachmentBuilder, InteractionReplyOptions } from "discord.js";
 import { DiscordInteraction } from "../types";
 import Panel from "../classes/Panel";
 import Card from "../classes/Card";
-import { CardInstance } from "@prisma/client";
+import { CardInstance, CardStatus } from "@prisma/client";
+import Player from "../classes/Player";
+
+function getDesc(card: CardInstance, player: Player) {
+    if (card.userId !== player.data.id) return undefined;
+
+    if (card.status === "DEAD") return `-# This Animon is unconscious.\n-# Revive it using items from {command_store}.`;
+    else if (card.status === "TRADE") return `-# This Animon is present in active trade offer.\n-# To manage it, first reject the offer with {command_trade list}.`;
+    else return undefined;
+}
 
 async function main(interaction: DiscordInteraction, where: any) {
     const { client } = interaction;
@@ -17,7 +26,7 @@ async function main(interaction: DiscordInteraction, where: any) {
 
     return [{ 
         embeds: [ interaction.components.embed({
-            description: card.card.status === "DEAD" ? "**This Animon is unconscious.**\n-# Revive it using items from {command_store}." : undefined,
+            description: getDesc(animon, interaction.player),
             fields: [
                 { name: "\u2800", value: `-# Name\n${animon.card.character.name}\u2800\u2800\n-# Type\n${type.name} ${type.emoji}\n-# Caught\n${client.unixDate(animon.createdAt)}\n\u2800`, inline: true },
                 { name: "\u2800", value: `-# ID\n\`${client.getId(animon.cardId, animon.print).padEnd(7, " ")}\`\n-# Ball\n{locale_items_${animon.ball?.name}_name} ${animon.ball?.emoji}`, inline: true },
@@ -60,6 +69,7 @@ async function stats(interaction: DiscordInteraction, where: any) {
 
     return [{
         embeds: [ interaction.components.embed({
+            description: getDesc(animon, interaction.player),
             fields: fields,
             image: `attachment://${attachment?.name}`,
             color: rarity.color
@@ -116,7 +126,7 @@ export default new Panel({
             disabled: true
         }])]
 
-        if (isOwner) components = [...components, interaction.components.buttons([{
+        if (isOwner && animon.status !== "TRADE") components = [...components, interaction.components.buttons([{
             id: '6',
             label: animon.favorite ? "\u2800Un-Favorite" : "\u2800Favorite",
             emoji: animon.favorite ? "favorite2" : "unfavorite",

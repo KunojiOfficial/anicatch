@@ -118,6 +118,7 @@ enum CardStatus {
   FLED
   WILD_FIGHT
   DEAD
+  TRADE
 }
 
 model CardInstance {

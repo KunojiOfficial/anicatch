@@ -262,6 +262,7 @@ export default class Components {
             if (input.placeholder) inp.setPlaceholder(this.client.formatText(input.placeholder, this.locale, replace));
             if (input.value) inp.setValue(input.value);
             if (input.required) inp.setRequired(true);
+            if (input.required === false) inp.setRequired(false);
             
             rows.push(new ActionRowBuilder().addComponents(inp));
         }
