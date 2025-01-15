@@ -29,7 +29,7 @@ export default new Panel({
             id: 0,
             options: [
                 { label: `⬅️\u2800${offerer?.username}'s offer`, value: "2:offered", default: side === "offered" },
-                { label: `⬅️\u2800${recipient?.username}'s offer`, value: "2:requested", default: side === "requested" }
+                { label: `➡️\u2800${recipient?.username}'s offer`, value: "2:requested", default: side === "requested" }
             ],
             args: { path: "tradeOffer", offerId: offerId }
         }) ];

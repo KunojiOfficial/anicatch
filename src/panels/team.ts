@@ -50,7 +50,7 @@ export default new Panel({
             if (animon) {
                 buttons = [{
                     id: "0F",
-                    label: "View Details",
+                    label: "{locale_main_viewDetails}",
                     emoji: "glass",
                     args: { path: "animon", cardId: animon.id }
                 }, {

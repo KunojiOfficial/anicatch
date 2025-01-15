@@ -14,7 +14,7 @@ export default new Interactable({
         await trade.cancel();
 
         return { embeds: [ interaction.components.embed({
-            description: "{emoji_yes}\u2800You have successfully cancelled sending this trade offer!",
+            description: "{emoji_yes}\u2800{locale_main_tradeCancel}",
             color: "#00ff00"
         }) ], components: [] }
     }

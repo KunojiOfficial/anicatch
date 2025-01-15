@@ -16,10 +16,10 @@ export default new Interactable({
 
         let text;
         if (result === "accept") {
-            text = "You have successfully accepted this trade offer!"
+            text = "{locale_main_tradeAccept}"
             await trade.accept();
         } else {
-            text = "You have successfully rejected this trade offer!"
+            text = "{loacle_trade_tradeReject}"
             await trade.reject();
         }
 

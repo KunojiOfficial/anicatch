@@ -15,7 +15,7 @@ export default new Interactable({
         await trade.send();
 
         return { embeds: [ interaction.components.embed({
-            description: "{emoji_yes}\u2800You have successfully sent this trade offer!",
+            description: "{emoji_yes}\u2800{locale_main_tradeSent}",
             color: "#00ff00"
         }) ], components: [] }
     }

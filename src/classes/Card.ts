@@ -82,8 +82,8 @@ export default class Card {
         return this.type as typeof this.client.data.types[1];
     }
 
-    getRequiredExp() {
-        let level = this.getLevel();
+    getRequiredExp(forcedLevel?: number) {
+        let level = forcedLevel ? forcedLevel : this.getLevel();
         let requiredExp = 0;
 
         let thisLevel = levels[(level).toString() as keyof typeof levels];
@@ -131,12 +131,14 @@ export default class Card {
     }
 
     getExpBar() {
-        return this.getBar(this.getRequiredExp(), this.card.exp, "exp");
+        let requiredExp = levels[(this.getLevel()+1).toString() as keyof typeof levels];
+        let previousExp = levels[(this.getLevel()).toString() as keyof typeof levels];
+        return this.getBar(requiredExp-previousExp, this.card.exp-previousExp, "exp");
     }
 
     getBar(max:number, current:number, variant:string="", length:number = 12) {
         let part = max/length;
-
+        
         let bar = "";
         for (let i = 0; i < length; i++) {
             if (current > part*i) bar += "{emoji_line_1"+variant+"}";

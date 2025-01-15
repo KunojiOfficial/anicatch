@@ -51,12 +51,12 @@ export default new Interactable({
         if (captured) {
             newComponents.push(interaction.components.buttons([{
                 id: "0F",
-                label: "View Details",
+                label: "{locale_main_viewDetails}",
                 emoji: "glass",
                 args: { path: "animon", cardId: card.id }
             }, {
                 id: "7",
-                label: `Sell (+${rarity.sellPrice})`,
+                label: `{locale_main_sell} (+${rarity.sellPrice})`,
                 emoji: "smallCoin",
                 cooldown: { id: "sell", time: 5 },
                 args: { cardId: card.id }
@@ -64,7 +64,7 @@ export default new Interactable({
         } else {
             newComponents.push(interaction.components.buttons([{
                 id: "8",
-                label: "Another Chance (-20)",
+                label: "{locale_main_anotherChance} (-20)",
                 emoji: "smallGem",
                 cooldown: { id: "chance", time: 5 },
                 args: { cardId: card.id }

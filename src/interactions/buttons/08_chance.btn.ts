@@ -22,7 +22,7 @@ export default new Interactable({
                 }) ],
                 components: [ interaction.components.buttons([{
                     id: "0F",
-                    label: "Get more Gems",
+                    label: "{locale_main_getMoreGems}",
                     emoji: "getGems",
                     args: { path: "gems" }
                 }]) ]
@@ -54,7 +54,7 @@ export default new Interactable({
 
         components.push(interaction.components.buttons([{
             id: '2',
-            label: `Next (${player.data.encounters-1})`,
+            label: `{locale_main_next} (${player.data.encounters-1})`,
             emoji: "next",
             cooldown: { id: "next", time: 2 },
             args: { id: -1 },
@@ -66,7 +66,7 @@ export default new Interactable({
                 { 
                     ...interaction?.message?.embeds[0].data,
                     image: { url: "attachment://card.jpg" },
-                    footer: { icon_url: client.getEmojiUrl("gem"), text: "Second Chance" }
+                    footer: { icon_url: client.getEmojiUrl("gem"), text: "{locale_main_secondChance}" }
                 }
             ],
             components: components

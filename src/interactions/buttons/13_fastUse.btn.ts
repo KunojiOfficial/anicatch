@@ -18,8 +18,11 @@ export default new Interactable({
                 ...message.embeds![0],
                 image: { url: "attachment://card.jpg" }
             }, interaction.components.embed({
-                description: `{emoji_yes}\u2800You have successfully used\u2800**${item.item.emoji} ${client.formatText(`{locale_items_${item.item.name}_name}`, interaction.locale)}**!`,
+                description: `{emoji_yes}\u2800{locale_main_useSuccess}`,
                 color: "#00ff00"
+            }, {
+                name: [`**${item.item.emoji} ${client.formatText(`{locale_items_${item.item.name}_name}`, interaction.locale)}**`],
+                count: [`1`]
             }) ]
         }
     }

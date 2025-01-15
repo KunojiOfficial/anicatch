@@ -25,5 +25,16 @@
     "tradeCreatorDescription+requested": "In this section, you can add or remove the goods you wish to **receive**.",
     "ACTIVE": "Active",
     "ACCEPTED": "Accepted",
-    "REJECTED": "Rejected"
+    "REJECTED": "Rejected",
+    "viewDetails": "View Details",
+    "sell": "Sell",
+    "anotherChance": "Another Chance",
+    "getMoreGems": "Get More Gems",
+    "next": "Next",
+    "secondChance": "Second Chance",
+    "moreActions": "+{custom_count} more actions...",
+    "tradeCancel": "You have successfully cancelled sending this trade offer!",
+    "tradeSent": "You have successfully sent this trade offer!",
+    "tradeAccept": "You have successfully accepted this trade offer!",
+    "tradeReject": "You have successfully rejected this trade offer!"
 }
