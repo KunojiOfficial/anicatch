@@ -7,7 +7,10 @@ import { Prisma } from "@prisma/client";
 type DiscordClient = Client;
 type DiscordMessage = Message;
 
-interface DiscordInteraction extends Omit<ChatInputCommandInteraction, 'client'>, Omit<ButtonInteraction, 'client'>, Omit<SelectMenuInteraction, 'client'> {
+interface DiscordInteraction extends 
+  Omit<ChatInputCommandInteraction<CacheType>, 'client' | 'showModal'>, 
+  Omit<ButtonInteraction<CacheType>, 'client' | 'showModal'>, 
+  Omit<SelectMenuInteraction<CacheType>, 'client'> {
     type: any,
     inGuild: any,
     inRawGuild: any,
@@ -17,10 +20,11 @@ interface DiscordInteraction extends Omit<ChatInputCommandInteraction, 'client'>
     client: Client,
     player: Player,
     components: Components,
-    targetId: Number,
-    owner: String,
+    targetId: number,
+    owner: string,
     args: any,
-    fields: ModalSubmitFields
+    fields: ModalSubmitFields,
+    showModal: (modal: any) => void; // Custom method signature
 }
 
 const UserWithIncludes = Prisma.validator<Prisma.UserDefaultArgs>()({ include: { config: true, role: true } });
