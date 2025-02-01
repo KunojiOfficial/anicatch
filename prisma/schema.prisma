@@ -14,6 +14,12 @@ model Status {
   text          String
 }
 
+enum UserStatus {
+  NEW
+  ACTIVE
+  BANNED
+}
+
 model User {
   id            Int               @unique @id @default(autoincrement())
   discordId     String            @unique
@@ -23,7 +29,7 @@ model User {
   gems          Int               @default(0)
 
   username      String?
-  status        String            @default("new")
+  status        UserStatus        @default(NEW)
   
   encounters    Int               @default(15)
   
@@ -67,12 +73,12 @@ model Config {
 
 model Log {
   id            Int               @unique @id @default(autoincrement())
-  userId        Int      
+  userId        Int?      
   action        String
   description   String?
   createdAt     DateTime          @default(now())
 
-  user          User              @relation(fields: [userId], references: [id])
+  user          User?              @relation(fields: [userId], references: [id], onDelete: SetNull)
 }
 
 model Character {
@@ -139,7 +145,7 @@ model CardInstance {
 
   stat          Stat?
   card          CardCatalog       @relation(fields: [cardId], references: [id])
-  user          User              @relation(fields: [userId], references: [id])
+  user          User              @relation(fields: [userId], references: [id], onDelete: Cascade)
   ball          Item?             @relation(fields: [ballId], references: [id])
 
   createdAt     DateTime          @default(now())
@@ -191,7 +197,7 @@ model Inventory {
   count         Int               @default(1)
 
   item          Item              @relation(fields: [itemId], references: [id])
-  user          User              @relation(fields: [userId], references: [id])
+  user          User              @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@id([itemId, userId])
 }
@@ -203,7 +209,7 @@ model Voucher {
   consumed      Boolean           @default(false)
   createdAt     DateTime          @default(now())
 
-  user          User              @relation(fields: [userId], references: [id])
+  user          User              @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model UserStats {
@@ -213,7 +219,7 @@ model UserStats {
   captured      Int               @default(0)
   coinsSpent    Int               @default(0)
 
-  user          User              @relation(fields: [userId], references: [id])
+  user          User              @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 enum TradeStatus {

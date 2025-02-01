@@ -6,6 +6,7 @@ import { Config, Prisma, User } from "@prisma/client";
 // import tutorial from "../mechanics/tutorial";
 import { Collection } from "discord.js";
 import Client from "../classes/Client";
+import introduction from "../mechanics/introduction";
 
 const cooldowns = new Collection();
 
@@ -110,7 +111,11 @@ export default new Event({
             interaction.player = new Player(interaction.user, player, player.role, player.config || undefined);
             interaction.components = new Components(client, interaction.locale, interaction.user);
 
-            // if (player.status === "tutorial") return await tutorial(interaction);
+            //introduction
+            if (player.status === "NEW") {
+                await introduction(interaction);
+                return;
+            }
 
             //commands
             if (interaction.isChatInputCommand()) {
