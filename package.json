@@ -15,6 +15,7 @@
   "dependencies": {
     "@aws-sdk/lib-storage": "^3.645.0",
     "@prisma/client": "^5.22.0",
+    "axios": "^1.7.9",
     "body-parser": "^1.20.2",
     "canvas": "^2.11.2",
     "discord-hybrid-sharding": "github:meister03/discord-hybrid-sharding#ts-rewrite",
