@@ -1,0 +1,38 @@
+{
+    "INFERNO": {
+        "name": "Inferno",
+        "emoji": "<:infernal:1297984616912912495>",
+        "strong": ["FROST"],
+        "weak": ["NATURE"]
+    },
+    "FROST": {
+        "name": "Frost",
+        "emoji": "<:frigid:1297984636726677534>",
+        "strong": ["NATURE"],
+        "weak": ["INFERNO"]
+    },
+    "NATURE": {
+        "name": "Nature",
+        "emoji": "<:verdant:1297984602715062356>",
+        "strong": ["INFERNO"],
+        "weak": ["FROST"]
+    },
+    "LIGHT": {
+        "name": "Light",
+        "emoji": "<:ethereal:1297984566018965524>",
+        "strong": ["VOID"],
+        "weak": ["VOID"]
+    },
+    "VOID": {
+        "name": "Void",
+        "emoji": "<:void:1297984591734374491>",
+        "strong": ["LIGHT"],
+        "weak": ["LIGHT"]
+    },
+    "NONE": {
+        "name": "None",
+        "emoji": "<:void:1297984591734374491>",
+        "strong": [],
+        "weak": []
+    }
+}
