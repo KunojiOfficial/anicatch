@@ -171,7 +171,7 @@ export default new Event({
 
                 let message = await interactable.execute!(interaction);
                 if (followUp) await interaction.followUp(message);
-                else await interaction.editReply(message);
+                else if (!interactable.dontReply) await interaction.editReply(message);
             }
         } catch (err) {
             await client.error(err, interaction);

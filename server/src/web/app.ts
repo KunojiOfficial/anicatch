@@ -5,7 +5,6 @@ import bodyParser from 'body-parser';
 import path from 'path';
 
 import apiRouter from './api';
-import { setupWebSocket } from './websocket/serverWs';
 import { createServer } from 'http';
 
 export default (clusterManager: ClusterManager) => {
@@ -15,8 +14,9 @@ export default (clusterManager: ClusterManager) => {
     const port = process.env.PORT || 3000;
     
     app.set('view engine', 'ejs');
-    app.set('views', path.join(__dirname, '/views'))
+    app.set('views', path.join(process.cwd(), '/views'))
 
+    app.set('trust proxy', 1);
     app.use(bodyParser.json());
     app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -34,8 +34,6 @@ export default (clusterManager: ClusterManager) => {
                 break;
         }
     });
-
-    setupWebSocket(server);
 
     server.listen(port, () => {
         console.log("Web interface is live on port " + port + "!");

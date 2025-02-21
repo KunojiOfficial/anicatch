@@ -1,15 +1,17 @@
 import { readdirSync } from "fs";
 import path from "path";
+import { pathToFileURL } from "url";
 
 async function loadFiles(object: any, directory: string) {
-    const filePath: string = path.resolve(__dirname, directory);
+    const filePath: string = path.resolve(process.cwd(), directory);
     const files: string[] = readdirSync(filePath).filter(
         (file) => file.endsWith('.json')
     );
 
     for (const file of files) {
         let name = path.parse(file).name;
-        const language: any = (await import(`${filePath}/${file}`)).default as any
+        const eventUrl = pathToFileURL(`${filePath}/${file}`).href;
+        const language: any = (await import(eventUrl)).default as any
         
         object[name] = language;
     }

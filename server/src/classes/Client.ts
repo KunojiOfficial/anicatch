@@ -19,16 +19,18 @@ import Logger from "./Logger";
 
 import rarities from "../data/rarities.json";
 import types from "../data/types.json";
+import { pathToFileURL } from "url";
 
 async function loadFiles(collection: Collection<string, any>, directory: string) {
-    const filePath: string = path.resolve(__dirname, directory);
+    const filePath: string = path.resolve(process.cwd(), directory);
     const files: string[] = readdirSync(filePath).filter(
         (file) => file.endsWith('.js') || file.endsWith('.ts')
     );
 
     for (const file of files) {
         let name = path.parse(file).name.replace(/.cmd|.sel|.btn/, '');
-        const command: any = (await import(`${filePath}/${file}`)).default as any
+        const cmdUrl = pathToFileURL(`${filePath}/${file}`).href;
+        const command: any = (await import(cmdUrl)).default as any
         
         if (command.id !== undefined) name = command.id.toString();
         collection.set(name, command);
@@ -81,14 +83,14 @@ class Client extends DiscordClient {
         this.loadEvents();
         this.loadCommandsData();
 
-        loadFiles(this.commands, "../interactions/commands");
-        loadFiles(this.buttons, "../interactions/buttons");
-        loadFiles(this.menus, "../interactions/menus");
-        loadFiles(this.modals, "../interactions/modals");
-        loadFiles(this.panels, "../panels");
+        loadFiles(this.commands, "src/interactions/commands");
+        loadFiles(this.buttons, "src/interactions/buttons");
+        loadFiles(this.menus, "src/interactions/menus");
+        loadFiles(this.modals, "src/interactions/modals");
+        loadFiles(this.panels, "src/panels");
     
         //initalize locales
-        let localeDir = path.resolve(__dirname, "../locale");
+        let localeDir = path.resolve(process.cwd(), "src/locale");
         let directories = readdirSync(localeDir);
         for (let dir of directories) {
             let locale = new Locale();
@@ -103,14 +105,16 @@ class Client extends DiscordClient {
      * Loads all Discord events
      */
     async loadEvents() {
-        const eventPath: string = path.resolve(__dirname, "../events");
+        const eventPath: string = path.resolve(process.cwd(), "src/events");
         const eventFiles: string[] = readdirSync(eventPath).filter(
             (file) => file.endsWith('.js') || file.endsWith('.ts')
         );
 
         for (const file of eventFiles) {
             const name = path.parse(file).name;
-            const event: Event = (await import(`${eventPath}/${file}`)).default as Event
+            const eventUrl = pathToFileURL(`${eventPath}/${file}`).href;
+            const event: Event = (await import(eventUrl)).default as Event
+
             if (event.once) {
                 this.once(name, (...args: any[]) => event.execute(...args))
             } else {
@@ -273,4 +277,4 @@ class Client extends DiscordClient {
     }
 }
 
-export = Client;
+export default Client;

@@ -4,9 +4,9 @@ import tailwindcss from '@tailwindcss/vite'
 
 // https://vite.dev/config/
 export default defineConfig({
-  envDir: '../',
+  envDir: './',
   server: {
-    allowedHosts: ["kw-lift-memorial-folder.trycloudflare.com"],
+    allowedHosts: ["weblogs-minor-import-african.trycloudflare.com"],
     proxy: {
       '/api': {
         target: 'http://localhost:3000',

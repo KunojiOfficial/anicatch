@@ -7,12 +7,13 @@ import encounterRecharge from "./src/intervals/encounterRecharge";
 
 dotenv.config();
 
-const manager = new ClusterManager(`${__dirname}/src/bot.js`, {
+const manager = new ClusterManager(`${process.cwd()}/src/bot.${process.env.NODE_ENV === 'production' ? 'js' : 'ts'}`, {
   totalShards: 'auto',
   shardsPerClusters: 2,
   // totalClusters: 7,
   mode: 'process',
   token: process.env.BOT_TOKEN,
+  execArgv: [ ...process.execArgv ]
 });
 
 let spawnedClusters = 0; // To count the number of spawned clusters
@@ -61,3 +62,5 @@ const db = new PrismaClient();
 function startPrismaIntervals() {
   encounterRecharge(db, manager);  
 }
+
+export { manager, db };

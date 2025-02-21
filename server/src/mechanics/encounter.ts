@@ -32,12 +32,17 @@ export default async function(interaction: DiscordInteraction) {
 
         await tx.cardCatalog.updateMany({ where: { id: result.id }, data: { count: { increment: 1 } } });
 
+        // Find a move that matches the card's type and power
+        const move = await tx.move.findFirst({ where: { type: result.type }, orderBy: { power: "asc" } });
+        if (!move) throw 5;
+
         const card = await tx.cardInstance.create({ data: {
             userId: player.data.id,
             fatherId: player.data.id,
             cardId: result.id,
             rarity: parseInt(rarity!),
             print: result.count+1,
+            moves: { connect: [{ id: move?.id }, { id: 1 }] }
         } });
 
         await tx.stat.create({ data: {

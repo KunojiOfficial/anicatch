@@ -2,18 +2,27 @@ const colors = {
     red: "from-red-500 to-orange-500",
     green: "from-green-500 to-lime-500",
     blue: "from-blue-500 to-cyan-500",
+    yellow: "from-yellow-500 to-amber-500"
 };
-
 
 interface BarProps {
     text: string,
     val: number;
     max: number;
-    color: keyof typeof colors
+    color?: keyof typeof colors
 }
 
-export default function Bar({text, val, max, color} : BarProps) {
+export default function Bar({text, val, max} : BarProps) {
     const percentage = Math.floor((val/max)*100);
+    let color: keyof typeof colors;
+
+    if (percentage > 50) {
+        color = "green";
+    } else if (percentage < 20) {
+        color = "red";
+    } else {
+        color = "yellow";
+    }
 
     return (
         <div className="min-w-auto bg-gray-800 rounded-lg overflow-hidden relative">
@@ -25,6 +34,5 @@ export default function Bar({text, val, max, color} : BarProps) {
                 <span className="mr-2">{text}:</span> {val} / {max}
             </span>
         </div>
-
     )
 }

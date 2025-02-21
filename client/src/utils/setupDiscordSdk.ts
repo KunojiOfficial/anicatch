@@ -2,6 +2,8 @@ import { DiscordSDK } from "@discord/embedded-app-sdk";
 
 const discordSdk = new DiscordSDK(import.meta.env.VITE_DISCORD_CLIENT_ID);
 
+export { discordSdk }; // Export discordSdk
+
 export default async function setupDiscordSdk() {
     await discordSdk.ready();
     console.log("Discord SDK is ready");
@@ -19,6 +21,8 @@ export default async function setupDiscordSdk() {
         ],
     });
   
+    console.log("Code received:", code);
+
     const response = await fetch("/.proxy/api/auth/token", {
         method: "POST",
         headers: {
@@ -30,6 +34,8 @@ export default async function setupDiscordSdk() {
     });
 
     const { access_token } = await response.json();
+    console.log("Access token received:", access_token);
+    localStorage.setItem("accessToken", access_token); // Store the access token
   
     // Authenticate with Discord client (using the access_token)
     const auth = await discordSdk.commands.authenticate({

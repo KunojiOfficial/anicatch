@@ -1,4 +1,4 @@
-import { ButtonInteraction, ChatInputCommandInteraction, Message, ModalSubmitFields, ModalSubmitInteraction, SelectMenuInteraction } from "discord.js";
+import { ButtonInteraction, ChatInputCommandInteraction, InteractionReplyOptions, Message, MessagePayload, ModalSubmitFields, ModalSubmitInteraction, SelectMenuInteraction } from "discord.js";
 import Client from "./classes/Client";
 import Player from "./classes/Player";
 import Components from "./classes/Components";
@@ -8,9 +8,9 @@ type DiscordClient = Client;
 type DiscordMessage = Message;
 
 interface DiscordInteraction extends 
-    Omit<ChatInputCommandInteraction, 'client'>, 
-    Omit<ButtonInteraction, 'client'>, 
-    Omit<SelectMenuInteraction, 'client'> {
+    Omit<ChatInputCommandInteraction, 'client' | 'editReply'>, 
+    Omit<ButtonInteraction, 'client' | 'editReply'>, 
+    Omit<SelectMenuInteraction, 'client' | 'editReply'> {
         type: any,
         inGuild: any,
         inRawGuild: any,
@@ -24,7 +24,16 @@ interface DiscordInteraction extends
         owner: String,
         args: any,
         fields: ModalSubmitFields,
-        showModal: any
+        showModal: any,
+        editReply: (options: string | MessagePayload | InteractionReplyOptions) => Promise<void>
+}
+
+interface HistoryElement {
+    userId: number;
+    cardId: number;
+    type: string;
+    moveId?: number;
+    efectivness?: 0.5 | 1 | 2;
 }
 
 const UserWithIncludes = Prisma.validator<Prisma.UserDefaultArgs>()({ include: { config: true, role: true } });
@@ -36,4 +45,7 @@ type CardIncluded = Prisma.CardInstanceGetPayload<typeof CardWithIncludes>;
 const TradeWithIncludes = Prisma.validator<Prisma.TradeDefaultArgs>()({ include: { users: true } });
 type TradeIncluded = Prisma.TradeGetPayload<typeof TradeWithIncludes>;
 
-export { DiscordClient, DiscordMessage, DiscordInteraction, UserRole, CardIncluded, TradeIncluded };
+const BattleWithIncludes = Prisma.validator<Prisma.BattleDefaultArgs>()({ include: { cards: { include: { moves: true, stat: true, card: true } }, users: true } });
+type BattleIncluded = Prisma.BattleGetPayload<typeof BattleWithIncludes>;
+
+export { DiscordClient, DiscordMessage, DiscordInteraction, UserRole, HistoryElement, CardIncluded, TradeIncluded, BattleIncluded };

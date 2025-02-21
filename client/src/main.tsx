@@ -1,20 +1,23 @@
-
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
 import Battle from './pages/Battle.tsx'
 import setupDiscordSdk from './utils/setupDiscordSdk.ts';
 
-console.log("TEST")
+async function initializeApp() {
+  console.log("Starting Discord SDK...");
+  try {
+    await setupDiscordSdk();
+    console.log("Discord SDK is authenticated");
+  } catch (error) {
+    console.error("Failed to authenticate Discord SDK:", error);
+  }
 
-setupDiscordSdk().then(() => {
-console.log("TEST2")
-  console.log("Discord SDK is authenticated");
-});
-console.log("TEST3")
+  createRoot(document.getElementById('root')!).render(
+    <StrictMode>
+      <Battle />
+    </StrictMode>,
+  );
+}
 
-createRoot(document.getElementById('root')!).render(
-  <StrictMode>
-    <Battle />
-  </StrictMode>,
-)
+initializeApp();

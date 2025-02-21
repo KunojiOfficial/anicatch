@@ -1,15 +1,15 @@
-import { InteractionReplyOptions } from "discord.js";
-import { DiscordInteraction } from "../types"
+import { InteractionEditReplyOptions, InteractionReplyOptions, MessagePayload } from "discord.js";
+import { DiscordInteraction } from "../types";
 
 export default class Interactable {
-    id: Number
-    dontReply?: boolean
-    execute?: (interaction: DiscordInteraction) => Promise<InteractionReplyOptions> | Promise<string>
+    id: Number;
+    dontReply?: boolean;
+    execute?: (interaction: DiscordInteraction) => Promise<string | MessagePayload | InteractionReplyOptions>;
 
     constructor(object: {
         id: Number,
         dontReply?: boolean,
-        execute?: (interaction: DiscordInteraction) => Promise<InteractionReplyOptions> | Promise<string>
+        execute?: (interaction: DiscordInteraction) => Promise<string | MessagePayload | InteractionReplyOptions>
     }) {
         this.id = object.id;
         if (object.dontReply) this.dontReply = true;

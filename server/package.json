@@ -1,12 +1,14 @@
 {
   "name": "animon",
+  "type": "module",
   "version": "1.0.0",
   "description": "",
   "main": "./dist/index.js",
   "scripts": {
-    "start": "npx tsc-watch --outDir ./dist --onSuccess \"ts-node scripts/run\"",
+    "start": "npx tsc-watch --outDir ./dist --onSuccess \"ts-node ./scripts/run\"",
     "db": "npx prisma migrate dev --name dev && npx prisma studio",
-    "build": "tsc && cpy --cwd=src '*.json' '../dist/'"
+    "build": "tsc && cpy --cwd=src '*.json' '../dist/'",
+    "dev": "nodemon --exec tsx ./index.ts"
   },
   "keywords": [],
   "author": "",
@@ -19,7 +21,7 @@
     "body-parser": "^1.20.2",
     "canvas": "^2.11.2",
     "discord-hybrid-sharding": "github:meister03/discord-hybrid-sharding#ts-rewrite",
-    "discord.js": "^14.14.1",
+    "discord.js": "^14.18.0",
     "dotenv": "^16.4.5",
     "ejs": "^3.1.10",
     "express": "^4.19.2",
@@ -37,7 +39,9 @@
     "prisma": "^5.22.0",
     "shelljs": "^0.8.5",
     "ts-node": "^10.9.2",
+    "ts-node-dev": "^2.0.0",
     "tsc-hooks": "^1.1.2",
+    "tsx": "^4.19.3",
     "typescript": "^5.4.5"
   }
 }

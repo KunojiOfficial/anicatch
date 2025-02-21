@@ -17,13 +17,13 @@ export default new Panel({
         if (mode === "page" && typeof page === 'number') {
             if (page < 1) page = count;
             else if (page > count) page = 1;
-            card = await client.db.cardCatalog.findFirst({ skip: page-1, include: { character: true, instances: { where: { status: { in: ["IDLE", "FIGHT"] } } } } });
+            card = await client.db.cardCatalog.findFirst({ where: { id: page }, include: { character: true, instances: { where: { status: { in: ["IDLE", "FIGHT"] } } } } });
         } else if (typeof page === 'string') {
             card = await client.db.cardCatalog.findFirst({ where: { id: client.getIdReverse(page) }, include: { character: true, instances: { where: { status: { in: ["IDLE", "FIGHT"] } } } } });
         }
 
         if (!card) return await client.panels.get("anidex")!.execute!(interaction);
-        if (typeof page === 'string') page = card.id;
+        if (typeof page === 'string') page = card.id as number;
 
         const type = client.data.types[card.type.toString() as keyof typeof client.data.types];
 

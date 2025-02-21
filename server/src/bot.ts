@@ -1,5 +1,6 @@
 import { ClusterClient, IPCMessage, getInfo } from 'discord-hybrid-sharding'
-import { default as Client } from './classes/Client.js';
+import { default as Client } from './classes/Client';
+import { TextBasedChannel } from 'discord.js';
 
 const client = new Client({
     shards: getInfo().SHARD_LIST,
@@ -11,12 +12,13 @@ client.cluster = new ClusterClient(client);
 
 client.cluster.on('message', async message => {
     const action = (message as IPCMessage).action;
+    const msg = message as any;
+
     switch (action) {
         case "deploy":
             await client.deployCommands();
             break;
         case "directMessage":
-            const msg = message as any;
             
             try {
                 const user = await client.users.fetch(msg.user);
@@ -29,6 +31,19 @@ client.cluster.on('message', async message => {
             }
             
             break;
+        case "edit":
+            try {
+                let channel = await client.channels.cache.get(msg.channelId);
+                if (!channel || !channel.isTextBased()) return;
+                let txtChannel: TextBasedChannel = channel as TextBasedChannel;
+
+                const message = await txtChannel.messages.fetch(msg.messageId);
+                if (!message) return;
+
+                await message.edit(msg.content);
+            } catch (err) {
+                return;
+            }
     }
 });
 

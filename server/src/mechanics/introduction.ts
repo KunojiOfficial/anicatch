@@ -2,7 +2,7 @@ import { DiscordInteraction } from "../types";
 
 export default async function(interaction: DiscordInteraction) {
 
-    if (interaction.customId.startsWith("exit_intro")) {
+    if (interaction.isButton() && interaction.customId.startsWith("exit_intro:" + interaction.user.id)) {
         await interaction.client.db.user.update({ where: { discordId: interaction.user.id }, data: { status: "ACTIVE" } });
 
         await interaction.reply({
@@ -25,7 +25,7 @@ export default async function(interaction: DiscordInteraction) {
                 label: "I have read and accepted these terms",
                 style: "green",
                 emoji: "wyes",
-                id: "exit_intro"
+                id: "exit_intro:" + interaction.user.id
             }]) ]
         });
     }

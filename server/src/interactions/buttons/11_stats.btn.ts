@@ -17,6 +17,7 @@ export default new Interactable({
     
         const fields = [];
         for (const key of Object.keys(stats)) {
+            if (key === "hp") continue;
             fields.push({ 
                 name: client.formatText(`{locale_main_stats_${key}}`, interaction.locale),
                 value: `${stats[key as keyof typeof stats]}\n-# ${animon[key as keyof typeof animon]}/20`,

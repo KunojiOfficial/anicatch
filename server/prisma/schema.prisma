@@ -275,14 +275,25 @@ model Battle {
 
   cardId1       Int
   cardId2       Int
+
+  move1         Json?
+  move2         Json?
   
   type          BattleType
   status        BattleStatus    @default(ACTIVE)
   turn          Int             @default(0)
   history       Json[]
 
+  channelId     String
+  messageId     String
+
   users         User[]
   cards         CardInstance[]
+}
+
+enum MoveType {
+  ATTACK
+  DEFENSE
 }
 
 model Move {
@@ -290,8 +301,10 @@ model Move {
   name          String
   power         Int
   accuracy      Int
-  type          CardType
-  pp            Int             @default(0)
+  pp            Int            
 
+  moveType      MoveType        @default(ATTACK)
+
+  type          CardType
   cards         CardInstance[]
 }

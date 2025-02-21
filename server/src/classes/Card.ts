@@ -52,11 +52,11 @@ export default class Card {
         return maxLevel;
     }
 
-    getStats() {
-        if (!this.parent || !this.stats) return {};
+    getStats() : Stat {
+        if (!this.parent || !this.stats) return { cardId: 0, vit: 0, pow: 0, def: 0, agi: 0, spi: 0, res: 0, hp: 0 };
 
         const rarity = this.rarity;
-        const result: {vit: number, def: number, pow: number, agi: number, spi: number, res: number} = {vit:0,def:0,pow:0,agi:0,spi:0,res:0};
+        const result: {hp: number, vit: number, def: number, pow: number, agi: number, spi: number, res: number} = {hp:-1, vit:0,def:0,pow:0,agi:0,spi:0,res:0};
         
         for (const key of statKeys) {
             result[key as keyof typeof result] = Math.floor(
@@ -66,7 +66,10 @@ export default class Card {
                 ((100+(this.stats[key as keyof typeof this.stats] as number))/100) //encounter multipliers
             );
         }
-    
+
+        if (this.stats.hp === -1) result.hp = result.vit * 100;
+        else result.hp = this.stats.hp;
+
         return result as Stat;
     }
 

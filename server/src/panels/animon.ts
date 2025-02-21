@@ -60,6 +60,7 @@ async function stats(interaction: DiscordInteraction, where: any) {
     }];
 
     for (const key of Object.keys(stats)) {
+        if (key === "hp") continue;
         fields.push({ 
             name: `{locale_main_stats_${key}}`,
             value: `${stats[key as keyof typeof stats]}\n-# ${animon.stat[key as keyof typeof animon.stat]}/20`,
