@@ -10,6 +10,8 @@ export default new Panel({
         const { player, client } = interaction;
         
         if (typeof page === 'string') page = parseInt(page);
+        if (typeof owner === 'string' && owner !== '0') owner = await client.users.fetch(owner);
+
         if (!owner) owner = player.user;
 
         const userData = await client.db.user.findFirst({ 
@@ -58,7 +60,7 @@ export default new Panel({
             });
         }
 
-        const defaults = { id: '0', args: { path: "collection", page: page } };
+        const defaults = { id: '0', args: { path: "collection", page: page, owner: owner.id === player.user.id ? '0' : owner.id } };
 
         while (fields.length%3 !== 0) fields.push({ name: "\u2800", value: "\u2800", inline: true });
 

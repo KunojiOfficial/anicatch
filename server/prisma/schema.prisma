@@ -123,6 +123,8 @@ model CardCatalog {
   spi           Int
   res           Int
 
+  fledPrints    Json[]             @default([])
+
   character     Character         @relation(fields: [characterId], references: [id])
   instances     CardInstance[]
 }

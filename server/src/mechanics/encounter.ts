@@ -13,6 +13,8 @@ function getRandomRarity(rarities: any) {
     }
 }
 
+interface FledPrint { print: number, rarity: number };
+
 export default async function(interaction: DiscordInteraction) {
     const { client, player } = interaction;
 
@@ -27,10 +29,20 @@ export default async function(interaction: DiscordInteraction) {
 
         const [result] = await tx.cardCatalog.findMany({ skip: randomOffset, take: 1, include: { character: true } });
 
-        const rarity = getRandomRarity(client.data.rarities);
-        // const rarity = "6";
+        let print, rarity;
+        if (result.fledPrints.length) { // If there are fled prints, use them
+            const fledPrint: FledPrint = result.fledPrints.shift() as any;
+            rarity = fledPrint.rarity;
+            print = fledPrint.print;
 
-        await tx.cardCatalog.updateMany({ where: { id: result.id }, data: { count: { increment: 1 } } });
+            await tx.cardCatalog.update({ where: { id: result.id }, data: { fledPrints: { set: result.fledPrints } } });
+        } else { // Otherwise, generate a new card
+            rarity = getRandomRarity(client.data.rarities);
+            print = result.count + 1;
+
+            await tx.cardCatalog.updateMany({ where: { id: result.id }, data: { count: { increment: 1 } } });
+        }
+
 
         // Find a move that matches the card's type and power
         const move = await tx.move.findFirst({ where: { type: result.type }, orderBy: { power: "asc" } });
@@ -41,7 +53,7 @@ export default async function(interaction: DiscordInteraction) {
             fatherId: player.data.id,
             cardId: result.id,
             rarity: parseInt(rarity!),
-            print: result.count+1,
+            print: print,
             moves: { connect: [{ id: move?.id }, { id: 1 }] }
         } });
 

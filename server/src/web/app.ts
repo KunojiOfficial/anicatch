@@ -14,7 +14,7 @@ export default (clusterManager: ClusterManager) => {
     const port = process.env.PORT || 3000;
     
     app.set('view engine', 'ejs');
-    app.set('views', path.join(process.cwd(), '/views'))
+    app.set('views', path.join(process.cwd(), 'src/web/views'))
 
     app.set('trust proxy', 1);
     app.use(bodyParser.json());
