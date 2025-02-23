@@ -7,14 +7,9 @@ export default async function(interaction: DiscordInteraction) {
 
         await interaction.reply({
             embeds: [ interaction.components.embed({
-                description: `Yay! Continue to tutorial or do whatever you want or something`
+                description: `cool, you can play now`
             }) ],
-            components: [ interaction.components.buttons([{
-                label: "Cool",
-                style: "green",
-                emoji: "wyes",
-                id: "exit_intro"
-            }]) ]
+            components: [ ]
         });
     } else {
         await interaction.reply({

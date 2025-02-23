@@ -38,7 +38,8 @@ export default new Interactable({
             clearTimeout(timeout2Id);
 
             battle = await client.db.$transaction(async tx => {
-                await tx.cardInstance.updateMany({ where: { OR: [{id: team.id}, {id: card.id}], status: "IDLE" }, data: { status: "WILD_FIGHT" } });
+                await tx.cardInstance.update({ where: { id: team.id, status: "IDLE" }, data: { status: "FIGHT" } });
+                await tx.cardInstance.update({ where: { id: card.id, status: "WILD" }, data: { status: "WILD_FIGHT" } });
                 return await tx.battle.create({
                     data: { 
                         userId1: player.data.id,

@@ -60,16 +60,15 @@ export default class Battle {
         const selectedMove = this.battle.cards.find(c => c.id === this.cardsOrdered[this.userIndex].card.id).moves.find((m) => m.id === moveId);
         if (!selectedMove) throw new Error("Move not found");
 
-        const history = this.battle.history as any as HistoryElement[];
-
-        const usedMoves = history.filter((h: any) => h.userId === (this.isAi ? this.cardsOrdered[this.userIndex].card.id : this.usersOrdered[this.userIndex].id) && h.type === "move" && h.cardId === this.cardsOrdered[this.userIndex] && h.moveId === moveId).length;
-        if (usedMoves >= selectedMove.pp) throw new Error("Move out of PP");
-
         //perform move
         let update = {}
 
         update[this.userIndex === 0 ? "move1" : "move2"] = { type, moveId };
         this.battle[this.userIndex === 0 ? "move1" : "move2"] = { type, moveId };
+        
+        const history = this.battle.history as any as HistoryElement[];
+        const usedMoves = history.filter((h: any) => h.userId === (this.isAi ? this.cardsOrdered[this.userIndex].card.id : this.usersOrdered[this.userIndex].id) && h.type === "move" && h.cardId === this.cardsOrdered[this.userIndex] && h.moveId === moveId).length;
+        if (usedMoves >= selectedMove.pp) type = "skip";
 
         await db.battle.update({
             where: { id: this.battle.id },
@@ -142,10 +141,12 @@ export default class Battle {
         let hp = stats[enemy].hp - damage;
         if (hp <= 0) hp = 0;
 
-        await db.stat.update({
+        await db.stat.updateMany({
             where: { cardId: this.cardsOrdered[enemy].card.id },
             data: { hp: hp }
         });
+
+        this.cardsOrdered[enemy].stats.hp = hp;
 
         if (hp <= 0) {
             await this.end();
@@ -187,23 +188,32 @@ export default class Battle {
         const perfectMove = strongMoves.length ? strongMoves[0] : neutralMoves.length ? neutralMoves[0] : weakMoves[0];
         if (!perfectMove) {
             //out of moves, skip
-            return await this.skip();
+            return await this.skip(this.userIndex);
         }
 
         await this.move("move", perfectMove.id);
     }
 
     async end() {
-        for (const card of this.battle.cards) {
-            if (card.stat.hp <= 0) {
+        let exp = 0;
+        for (const [i, card] of this.battle.cards.entries()) {
+            if (card.status === "WILD_FIGHT") {
+                await db.cardInstance.deleteMany({
+                    where: { id: card.id },
+                });
+            } else if (card.stat.hp <= 0 && card.status === "FIGHT") {      
                 await db.cardInstance.update({
                     where: { id: card.id },
                     data: { status: "DEAD" }
                 });
             } else {
+                if (this.battle.type === "PVE") {
+                    exp = 600*(this.cardsOrdered[rev(i)].card.rarity);
+                }
+
                 await db.cardInstance.update({
                     where: { id: card.id },
-                    data: { status: "IDLE" }
+                    data: { status: "IDLE", exp: { increment: exp } }
                 });
             }
         }
@@ -215,7 +225,7 @@ export default class Battle {
 
         manager.broadcast(new BaseMessage({action: "edit", channelId: this.battle.channelId, messageId: this.battle.messageId, content: {
             embeds: [ {
-                description: `The battle has ended!`,
+                description: `The battle has ended!\n+${exp} EXP`,
                 image: { url: "attachment://card.jpg" },
                 color: parseColor("#ffffff")
             } ]

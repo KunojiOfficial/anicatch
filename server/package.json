@@ -8,7 +8,7 @@
     "start": "npx tsc-watch --outDir ./dist --onSuccess \"ts-node ./scripts/run\"",
     "db": "npx prisma migrate dev --name dev && npx prisma studio",
     "build": "tsc && cpy --cwd=src '*.json' '../dist/'",
-    "dev": "nodemon --exec tsx ./index.ts"
+    "dev": "nodemon --ignore src/assets --exec tsx ./index.ts"
   },
   "keywords": [],
   "author": "",

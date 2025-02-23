@@ -100,7 +100,7 @@ export default new Event({
                     username: user.username,
                     config: { create: { locale: interaction.locale } },
                     stats: { create: {} },
-                    items: { create: { itemId: 1, count: 15 } }
+                    items: { create: [{ itemId: 1, count: 15 }, { itemId: 2, count: 1 }, { itemId: 3, count: 1 }, { itemId: 4, count: 1 }] }
                 },
                 include: { config: true, role: true }
             });
