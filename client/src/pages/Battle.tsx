@@ -45,7 +45,7 @@ export default function Battle() {
         setModalContent(
             <div className="grid grid-cols-1 gap-3">
                 {moves.map((move: any, index: number) => (
-                    <Button disabled={move.pp-battle.history.filter((h: any) => h.type === "move" && h.cardId === battle.cardId1 && h.moveId === move.id).length<=0} key={index} icon={"src/assets/types/" + move.type + ".png"} pp={move.pp-battle.history.filter((h: any) => h.type === "move" && h.cardId === battle.cardId1 && h.moveId === move.id).length + "/" + move.pp} onClick={() => handleMoveClick(move.id)}>
+                    <Button key={index} icon={"src/assets/types/" + move.type + ".png"} pp={move.pp-battle.history.filter((h: any) => h.type === "move" && h.cardId === battle.cardId1 && h.moveId === move.id).length + "/" + move.pp} onClick={() => handleMoveClick(move.id)}>
                         {move.name}
                     </Button>
                 ))}
