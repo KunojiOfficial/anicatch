@@ -1,6 +1,8 @@
 import { Request, Response, NextFunction } from "express";
 import fetch from "node-fetch";
 
+import { db } from "index";
+
 export async function authMiddleware(req: Request, res: Response, next: NextFunction) {
     const token = req.headers.authorization?.split(" ")[1];
     if (!token) {
@@ -19,7 +21,19 @@ export async function authMiddleware(req: Request, res: Response, next: NextFunc
         }
 
         const userData = await response.json();
-        req.user = userData;
+
+        const user = await db.user.findUnique({
+            where: {
+                discordId: userData.id,
+            },
+            select: { id: true, discordId: true }
+        });
+
+        if (!user) {
+            throw new Error("User not found");
+        }
+
+        req.user = {...userData, db: user};
 
         next();
     } catch (error) {

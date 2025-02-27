@@ -46,6 +46,7 @@ const TradeWithIncludes = Prisma.validator<Prisma.TradeDefaultArgs>()({ include:
 type TradeIncluded = Prisma.TradeGetPayload<typeof TradeWithIncludes>;
 
 const BattleWithIncludes = Prisma.validator<Prisma.BattleDefaultArgs>()({ include: { cards: { include: { moves: true, stat: true, card: true } }, users: true } });
-type BattleIncluded = Prisma.BattleGetPayload<typeof BattleWithIncludes>;
+const BattleWithIncludesStronger = Prisma.validator<Prisma.BattleDefaultArgs>()({ include: { cards: { include: { moves: true, stat: true, card: true } }, users: { include: { cards: { where: { team: { gt: 0 } }, include: { moves: true, stat: true, card: true } } } } }});
+type BattleIncluded = Prisma.BattleGetPayload<typeof BattleWithIncludes> | Prisma.BattleGetPayload<typeof BattleWithIncludesStronger>; 
 
 export { DiscordClient, DiscordMessage, DiscordInteraction, UserRole, HistoryElement, CardIncluded, TradeIncluded, BattleIncluded };

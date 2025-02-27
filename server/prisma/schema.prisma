@@ -40,7 +40,6 @@ model User {
   cards         CardInstance[]
   vouchers      Voucher[]
   trades        Trade[]
-  battles       Battle[]
 
   logs          Log[]
 
@@ -136,6 +135,7 @@ enum CardStatus {
   FLED
   WILD_FIGHT
   DEAD
+  WILD_DEAD
   TRADE
 }
 
@@ -159,7 +159,6 @@ model CardInstance {
   card          CardCatalog       @relation(fields: [cardId], references: [id])
   user          User              @relation(fields: [userId], references: [id], onDelete: Cascade)
   ball          Item?             @relation(fields: [ballId], references: [id])
-  battles       Battle[]
   moves         Move[]
 
   createdAt     DateTime          @default(now())
@@ -272,6 +271,10 @@ enum BattleType {
 model Battle {
   id            Int             @unique @id @default(autoincrement())
  
+  type          BattleType
+  status        BattleStatus    @default(ACTIVE)
+  turn          Int             @default(0)
+
   userId1       Int
   userId2       Int
 
@@ -280,17 +283,11 @@ model Battle {
 
   move1         Json?
   move2         Json?
-  
-  type          BattleType
-  status        BattleStatus    @default(ACTIVE)
-  turn          Int             @default(0)
+
   history       Json[]
 
   channelId     String
   messageId     String
-
-  users         User[]
-  cards         CardInstance[]
 }
 
 enum MoveType {

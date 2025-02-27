@@ -1,4 +1,4 @@
-import { CardCatalog, CardInstance, Character, Item, Stat } from "@prisma/client";
+import { CardCatalog, CardInstance, Character, Item, Move, Stat } from "@prisma/client";
 import { AttachmentBuilder } from "discord.js";
 import { createCanvas, loadImage, registerFont } from "canvas";
 
@@ -15,18 +15,20 @@ export default class Card {
     parent?: CardCatalog
     character?: Character
     stats?: Stat
+    moves?: Move[]
     ball?: Item
     
     client?: DiscordClient
     rarity?: any
     type?: any
 
-    constructor(object: {card: CardInstance, parent?: CardCatalog, character?: Character, stats?: Stat, ball?: Item, client?: DiscordClient}) {
+    constructor(object: {card: CardInstance, parent?: CardCatalog, character?: Character, stats?: Stat, ball?: Item, moves?: Move[], client?: DiscordClient}) {
         this.card = object.card;
         if (object.parent) this.parent = object.parent;
         if (object.stats) this.stats = object.stats;
         if (object.character) this.character = object.character;
         if (object.ball) this.ball = object.ball;
+        if (object.moves) this.moves = object.moves;
 
         if (object.client) {
             this.client = object.client;

@@ -44,8 +44,9 @@ export const useBattleStore = create<BattleState>((set, get) => ({
                     set({ battle: data });
                     set({ error: null });
 
-                    const currentUser = data.users.find((user: any) => user.discordId === discordId);
-                    const targetMove = data.userId1 === currentUser.id ? data.move1 : data.move2;
+                    
+                    const currentUser = data.user1.discordId === discordId ? data.user1 : data.user2;
+                    const targetMove = data.battle.userId1 === currentUser.id ? data.battle.move1 : data.battle.move2;
 
                     set({ targetMove: targetMove });
 

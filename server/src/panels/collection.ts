@@ -18,7 +18,7 @@ export default new Panel({
             where: { discordId: owner.id }, 
             include: { 
                 cards: { 
-                    where: { status: { notIn: ["FLED", "WILD"] } }, 
+                    where: { status: { in: ["IDLE", "FIGHT", "DEAD", "TRADE"] } }, 
                     orderBy: [ { favorite: 'desc' }, { rarity: 'desc' } ], 
                     include: { card: { include: { character: true } } }
                 },

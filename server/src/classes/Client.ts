@@ -138,6 +138,8 @@ class Client extends DiscordClient {
                 }
             }
 
+            if (process.env.NODE_ENV === 'development') command.data.name = `dev-${command.data.name}`;
+
             command.data.description = command.emoji + " " + command.data.description;
             command = command.data as any;
         }

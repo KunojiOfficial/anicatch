@@ -21,34 +21,31 @@ export default new Interactable({
         });
 
         if (!battle) {
-            let team = await client.db.cardInstance.findFirst({
+            let team = await client.db.cardInstance.findMany({
                 where: { 
                     userId: player.data.id, 
                     team: { gt: 0 }, 
                     status: "IDLE",
-                    stat: { OR: [{ hp: -1 }, { hp: { gt: 0 } }] }
                 },
                 include: { stat: true },
                 orderBy: { team: "asc" }
-            })
+            });
     
-            if (!team) throw 55; //team dead or empty
+            if (!team.length) throw 55; //team dead or empty
 
             clearTimeout(timeoutId);
             clearTimeout(timeout2Id);
 
             battle = await client.db.$transaction(async tx => {
-                await tx.cardInstance.update({ where: { id: team.id, status: "IDLE" }, data: { status: "FIGHT" } });
+                await tx.cardInstance.updateMany({ where: { userId: player.data.id, team: { gt: 0 }, status: "IDLE" }, data: { status: "FIGHT" } });
                 await tx.cardInstance.update({ where: { id: card.id, status: "WILD" }, data: { status: "WILD_FIGHT" } });
                 return await tx.battle.create({
                     data: { 
                         userId1: player.data.id,
                         userId2: cardId,
-                        cardId1: team.id,
+                        cardId1: team[0].id,
                         cardId2: card.id,
                         type: "PVE",
-                        users: { connect: { id: player.data.id } },
-                        cards: { connect: [{ id: team.id }, { id: card.id }] },
                         channelId: interaction.channel.id,
                         messageId: interaction.message.id
                     }

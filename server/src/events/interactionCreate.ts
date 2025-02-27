@@ -119,8 +119,9 @@ export default new Event({
 
             //commands
             if (interaction.isChatInputCommand()) {
-                if (!client.commands.has(interaction.commandName)) throw "Command not found";
-                const command = client.commands.get(interaction.commandName);
+                let commandName = process.env.NODE_ENV !== 'development' ? interaction.commandName : interaction.commandName.replace("dev-", "");
+                if (!client.commands.has(commandName)) throw "Command not found";
+                const command = client.commands.get(commandName);
     
                 //get cooldown
                 const cd = cooldown(user.id, interaction.commandName, "cmd", command?.cooldown)

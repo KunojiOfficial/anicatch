@@ -6,7 +6,7 @@ import tailwindcss from '@tailwindcss/vite'
 export default defineConfig({
   envDir: './',
   server: {
-    allowedHosts: ["suggests-subdivision-having-imaging.trycloudflare.com"],
+    allowedHosts: ["nodes-oem-batman-glen.trycloudflare.com"],
     proxy: {
       '/api': {
         target: 'http://localhost:3000',

@@ -5,65 +5,79 @@ import rarities from "../../data/rarities.json";
 import types from "../../data/types.json";
 import Battle from 'src/classes/Battle';
 
-const prisma = new PrismaClient();
+import { db } from 'index';
+
+import locale from '../../locale/items/en-US.json';
+
 const client: any = { data: { rarities: rarities, types: types } };
 
+function extractNumericValue(str: string): string {
+    const match = str.match(/\d+/);
+    return match ? match[0] : '';
+}
 
-async function getBattle(discordId: string) {
-
-    const battle = await prisma.battle.findFirst({
-        where: { status: "ACTIVE", users: { some: { discordId } } },
-        include: { cards: { include: { moves: true, stat: true, card: { include: { character: true } } } }, users: true }
+async function fetchBattle(userId: number) {
+    const battle = await db.battle.findFirst({
+        where: { status: "ACTIVE", OR: [{ userId1: userId }, { userId2: userId }] },
     });
 
     if (!battle) throw new Error("Battle not found");
 
-    const cardsWithDetails = await Promise.all(
-        battle.cards.map(async (card) => {
-            const cardObj = new Card({ card, parent: card.card, character: card.card.character, stats: card.stat!, client });
-            const url = await cardObj.generateCanvas().then((canvas) => canvas?.toDataURL());
+    return battle;
+}
 
-            return {
-                ...card,
-                maxHp: cardObj.getMaxHealth(),
-                level: cardObj.getLevel(),
-                url
-            };
-        })
-    ).catch((error) => {
-        console.error("Error getting battle cards:", error);
-        throw new Error("Error getting battle cards");
+async function getBattle(userId: number) {
+    const battle = await fetchBattle(userId);
+
+    let users = await db.user.findMany({
+        where: { OR: [{ id: battle.userId1 }, { id: battle.userId2 }] },
+        include: { cards: { where: { team: { gt: 0 } }, include: { card: { include: { character: true } }, stat: true, moves: true } } }
     });
-    
-    battle.cards = cardsWithDetails;
 
-    if (battle.type === "PVE" && battle.move1 && !battle.move2)  {
-        try {
-            const battleObject = new Battle(battle, battle.cardId2);
-            await battleObject.enemyAI();
-        } catch (error) {
-            console.error("Error in enemy AI:", error);
-            throw new Error("Error in enemy AI");
+    if (users.length !== 2) {
+        let aiUser = { 
+            username: "AI", 
+            cards: await db.cardInstance.findMany({ where: { id: battle.cardId2 }, include: { card: { include: { character: true } }, stat: true, moves: true } })
+        };
+
+        users = [...users, aiUser as any ]; 
+    }
+
+    for (const user of users as any) {
+        for (const card of user.cards) {
+            if (card.id !== battle.cardId1 && card.id !== battle.cardId2) continue;
+            
+            const cardObj = new Card({ card, parent: card.card, character: card.card.character, stats: card.stat, moves: card.moves, client });
+            card.url = await cardObj.generateCanvas().then((canvas) => canvas?.toDataURL());
+            card.maxHp = cardObj.getMaxHealth();
+            card.level = cardObj.getLevel();
         }
     }
 
-    return { ...battle, urls: cardsWithDetails.map(card => card.url) };
+    return {
+        battle,
+        user1: users.find((user: any) => user.id === userId),
+        user2: users.find((user: any) => user.id !== userId),
+    };
 }
 
-async function setMove(discordId: string, moveId: number) {
-    const battle = await prisma.battle.findFirst({
-        where: { status: "ACTIVE", users: { some: { discordId } } },
-        include: { cards: { include: { moves: true, stat: true, card: true } }, users: true }
-    });
 
-    if (!battle) throw new Error("Battle not found");
+async function setMove(userId: number, moveId: number) {
+    const battle = await fetchBattle(userId);
 
-    const userId = battle.users.find((user: any) => user.discordId === discordId).id;
-    
     const battleObject = new Battle(battle, userId);
-    await battleObject.move("move", moveId);
+    await battleObject.selectAction("move", {moveId, userId});
 
     return {  };
 }
 
-export { getBattle, setMove };
+async function switchCard(userId: number, cardId: number) {
+    const battle = await fetchBattle(userId);
+
+    const battleObject = new Battle(battle, userId);
+    await battleObject.selectAction("switch", {cardId});
+
+    return { };
+}
+
+export { getBattle, setMove, switchCard };
