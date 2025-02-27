@@ -1,4 +1,5 @@
 .battle-background {
+    user-select: none;
     background-color: linear-gradient(135deg, #013511, #024e06);
     background-image: url('/src/assets/bg.png');
     background-repeat: repeat;

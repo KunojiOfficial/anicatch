@@ -34,6 +34,13 @@ interface HistoryElement {
     type: string;
     moveId?: number;
     efectivness?: 0.5 | 1 | 2;
+    itemId?: number;
+    itemData?: any;
+    kill?: number;
+    damage?: number;
+    defended?: number;
+    moveType?: string;
+    miss?: boolean;
 }
 
 const UserWithIncludes = Prisma.validator<Prisma.UserDefaultArgs>()({ include: { config: true, role: true } });
@@ -45,8 +52,4 @@ type CardIncluded = Prisma.CardInstanceGetPayload<typeof CardWithIncludes>;
 const TradeWithIncludes = Prisma.validator<Prisma.TradeDefaultArgs>()({ include: { users: true } });
 type TradeIncluded = Prisma.TradeGetPayload<typeof TradeWithIncludes>;
 
-const BattleWithIncludes = Prisma.validator<Prisma.BattleDefaultArgs>()({ include: { cards: { include: { moves: true, stat: true, card: true } }, users: true } });
-const BattleWithIncludesStronger = Prisma.validator<Prisma.BattleDefaultArgs>()({ include: { cards: { include: { moves: true, stat: true, card: true } }, users: { include: { cards: { where: { team: { gt: 0 } }, include: { moves: true, stat: true, card: true } } } } }});
-type BattleIncluded = Prisma.BattleGetPayload<typeof BattleWithIncludes> | Prisma.BattleGetPayload<typeof BattleWithIncludesStronger>; 
-
-export { DiscordClient, DiscordMessage, DiscordInteraction, UserRole, HistoryElement, CardIncluded, TradeIncluded, BattleIncluded };
+export { DiscordClient, DiscordMessage, DiscordInteraction, UserRole, HistoryElement, CardIncluded, TradeIncluded };

@@ -24,7 +24,7 @@ async function main(interaction: DiscordInteraction, where: any) {
     const rarity = card.getRarity()!;
     const type = card.getType()!;
 
-    return [{ 
+    return [{
         embeds: [ interaction.components.embed({
             description: getDesc(animon, interaction.player),
             fields: [
@@ -153,6 +153,7 @@ export default new Panel({
         }]) ];
 
         return {
+            content: `-# #${card.card.id}`,
             ...data,
             components: components
         }

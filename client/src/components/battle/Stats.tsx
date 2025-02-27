@@ -22,7 +22,7 @@ export default function Stats({data}: StatsProps) {
                 <div className="my-2 p-2">
                     <Bar text="HP" val={data.hp} max={data.maxHp} color="green"/>
                     <div className="mx-auto w-3/5 px-5 mt-4 flex justify-evenly">
-                        {Array.from({ length: 6 }).map((_, index) => (
+                        {Array.from({ length: 5 }).map((_, index) => (
                             <img key={index} src={"src/assets/balls/aniball.png"} alt="ball" className={"h-5 w-5 hover:rotate-90 transition" + (index < data.teamAlive ? "" :" grayscale-100")}/>
                         ))}
                     </div>

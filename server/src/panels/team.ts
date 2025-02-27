@@ -18,8 +18,8 @@ export default new Panel({
             let animon = animons.find(a => a.team === i);
             
             if (!animon) {
-                fields.push({ name: `{emoji_emptyBall} Empty Slot #${i}`, value: "-# *Empty slot for*\n-# *your Animon.*", inline: true });
-                options.push({ label: `Slot #${i}`, emoji: "emptyBall", description: "Empty slot", value: `1:${i}`, default: i == slot });
+                fields.push({ name: `{emoji_emptyball} Empty Slot #${i}`, value: "-# *Empty slot for*\n-# *your Animon.*", inline: true });
+                options.push({ label: `Slot #${i}`, emoji: "emptyball", description: "Empty slot", value: `1:${i}`, default: i == slot });
                 continue;
             }
 

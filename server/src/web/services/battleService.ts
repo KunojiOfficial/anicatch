@@ -31,7 +31,9 @@ async function getBattle(userId: number) {
 
     let users = await db.user.findMany({
         where: { OR: [{ id: battle.userId1 }, { id: battle.userId2 }] },
-        include: { cards: { where: { team: { gt: 0 } }, include: { card: { include: { character: true } }, stat: true, moves: true } } }
+        include: { 
+            cards: { where: { team: { gt: 0 } }, include: { card: { include: { character: true } }, stat: true, moves: true } },
+        }
     });
 
     if (users.length !== 2) {
@@ -43,7 +45,19 @@ async function getBattle(userId: number) {
         users = [...users, aiUser as any ]; 
     }
 
+    let items = [];
     for (const user of users as any) {
+        if (user.id == userId) {
+            items = await db.inventory.findMany({ where: { userId: user.id, item: { type: "CONSUMABLE" }}, include: { item: true }});
+            items = items.map((item) => {
+                return {
+                    id: item.itemId,
+                    name: locale[item.item.name].name,
+                    img: item.item.name
+                };
+            });
+        }
+
         for (const card of user.cards) {
             if (card.id !== battle.cardId1 && card.id !== battle.cardId2) continue;
             
@@ -58,6 +72,7 @@ async function getBattle(userId: number) {
         battle,
         user1: users.find((user: any) => user.id === userId),
         user2: users.find((user: any) => user.id !== userId),
+        items: items
     };
 }
 
@@ -80,4 +95,22 @@ async function switchCard(userId: number, cardId: number) {
     return { };
 }
 
-export { getBattle, setMove, switchCard };
+async function useItem(userId: number, cardId: number, itemId: number) {
+    const battle = await fetchBattle(userId);
+
+    const battleObject = new Battle(battle, userId);
+    await battleObject.selectAction("item", {cardId, itemId});
+
+    return { };
+}
+
+async function run(userId: number) {
+    const battle = await fetchBattle(userId);
+
+    const battleObject = new Battle(battle, userId);
+    await battleObject.selectAction("run", {});
+
+    return { };
+}
+
+export { getBattle, setMove, switchCard, useItem, run };

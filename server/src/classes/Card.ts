@@ -141,7 +141,7 @@ export default class Card {
         return this.getBar(requiredExp-previousExp, this.card.exp-previousExp, "exp");
     }
 
-    getBar(max:number, current:number, variant:string="", length:number = 12) {
+    getBar(max:number, current:number, variant:string="hp", length:number = 12) {
         let part = max/length;
         
         let bar = "";

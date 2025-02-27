@@ -101,7 +101,8 @@ export default class Components {
             if (button.id !== undefined) customId.push(button.id);
             else customId.push(buttons.length <= 1 ? 0 : Math.random());
 
-            customId.push(this.user.id);
+            if (!button.owner) customId.push(this.user.id);
+            else customId.push(button.owner);
 
             if (button.cooldown) {
                 customId.push(button.cooldown.id);

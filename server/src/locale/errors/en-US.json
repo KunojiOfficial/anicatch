@@ -4,7 +4,7 @@
     "4": "No items found in your inventory.",
     "5": "This Animon doesn't exist or its status makes it impossible to use in this interaction.",
     "6": "**You have run out of available Animon encounters.**\nYour next encounter will be available {custom_timestamp}.\n\nIf you don't want to wait, visit {command_store} to **buy additional encounters** using your **{emoji_smallCoin} coins**. You can also **vote for {custom_bot}** and earn free encounters – check {command_vote}.\n\nNeed more encounters? **Become our Patron** to enjoy much higher daily encounter limits, lower recharge time and other benefits - {command_patreon}!",
-    "7": "User not found.",
+    "7": "Selected user is not registered in the bot's database.",
     "8": "Invalid ID provided. Please check your input.",
     "9": "You do not have enough coins to make this purchase.",
     "10": "You do not have enough gems to make this purchase.",
@@ -15,7 +15,7 @@
     "15": "Input must be a number. Please try again.",
     "16": "The number provided is invalid.",
     "17": "This card belongs to another user.",
-    "18": "To perform this action, your Animon must be idle.",
+    "18": "To perform this action, your Animon can't be dead, in fight or in trade.",
     "19": "You cannot sell favorite cards.",
     "20": "You cannot use buttons that belong to another user.",
     "21": "status not fled",
@@ -52,5 +52,8 @@
     "52": "you cant send without offering anything",
     "53": "no trade offers to display",
     "54": "you're in active battle",
-    "55": "no team or all defeated"
+    "55": "no team or all defeated",
+    "56": "cant use when card in battle",
+    "57": "enemy in active battle",
+    "58": "enemy no team or all defeated"
 }

@@ -9,12 +9,13 @@ import { DiscordInteraction } from '../types'
  */
 export default class Command {
     emoji?: string | object
-    data: SlashCommandBuilder
+    data: any
     panel?: string
     execute?: (interaction: DiscordInteraction) => Promise<void> | void
     autocomplete?: (interaction: AutocompleteInteraction) => Promise<void> | void
     dontReply?: Boolean
     cooldown?: number
+    aliases?: string[]
 
     /**
      * @param {{
@@ -25,12 +26,13 @@ export default class Command {
      */
     constructor(options: {
         emoji: string | object,
-        data: SlashCommandBuilder
+        data: any
         panel?: string
         execute?: (interaction: DiscordInteraction) => Promise<void> | void
         autocomplete?: (interaction: AutocompleteInteraction) => Promise<void> | void
         dontReply?: Boolean,
-        cooldown?: number
+        cooldown?: number,
+        aliases?: string[]
     }) {
         if (options.execute) {
             this.execute = options.execute
@@ -41,5 +43,6 @@ export default class Command {
         if (options.panel) this.panel = options.panel;
         if (options.dontReply) this.dontReply = options.dontReply;
         if (options.cooldown) this.cooldown = options.cooldown;
+        if (options.aliases) this.data.aliases = options.aliases;
     }
 }

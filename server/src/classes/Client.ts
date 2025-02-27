@@ -245,7 +245,8 @@ class Client extends DiscordClient {
             embeds: [ interaction.components.embed({
                 description: `-# Code **#${err}**\n${locale[err]}\n\n-# *${locale.note}*`,
                 color: "#ff0000"
-            }) ]
+            }) ],
+            ephemeral: true
         }
 
         if (interaction.deferred) await interaction.followUp(message).catch(console.error);

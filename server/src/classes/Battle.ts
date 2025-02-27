@@ -1,5 +1,5 @@
-import { CardInstance, Battle as DbBattle } from "@prisma/client";
-import { BattleIncluded, HistoryElement } from "src/types";
+import { Battle as DbBattle } from "@prisma/client";
+import { HistoryElement } from "src/types";
 import Card from "./Card";
 import { manager, db } from "../../index";
 import { BaseMessage } from "discord-hybrid-sharding";
@@ -7,13 +7,9 @@ import { parseColor } from "src/helpers/utils";
 import rarities from "../data/rarities.json";
 import types from "../data/types.json";
 import Client from "./Client";
+import consumable from "src/mechanics/consumable";
 
-// Define interfaces for better type safety
-interface SmallMove {
-    type: string;
-    moveId?: number;
-    cardId?: number;
-}
+import locale from "../locale/items/en-US.json";
 
 const fakeClient = { data: { rarities, types } } as Client;
 
@@ -64,7 +60,6 @@ class Battle {
 
         if (this.battle.move1 && this.battle.move2) {
             //execute actions
-            console.log("executing actions");
             await this.executeActions();
         } else if (this.battle.move1 && this.battle.type === "PVE") {
             await this.enemyAI();
@@ -136,8 +131,8 @@ class Battle {
 
         let movesOrdered = [];
         
-        if (move1.type === "switch") movesOrdered = [move1,move2];
-        else if (move2.type === "switch") movesOrdered = [move2,move1];
+        if (move1.type === "switch" || move1.type === "item" || move1.type === "run") movesOrdered = [move1,move2];
+        else if (move2.type === "switch" || move2.type === "item" || move2.type === "run") movesOrdered = [move2,move1];
         else if (move1.type === "move" && move2.type === "move") {
             //who goes first based on agi
             const stats1 = this.activeCards[0].getStats();
@@ -160,6 +155,10 @@ class Battle {
                 moveResult = await this.switch(move.cardId, move.userIndex);
             } else if (move.type === "skip") {
                 moveResult = { userId: this.battle[`userId${move.userIndex+1}`], cardId: this.battle[`cardId${move.userIndex+1}`], type: "skip" };
+            } else if (move.type === "item") {
+                moveResult = await this.item(move.cardId, move.itemId, this.battle[`userId${move.userIndex+1}`]);
+            } else if (move.type === "run") {
+                return await this.end(false);
             }
 
             history.push(moveResult);
@@ -188,20 +187,12 @@ class Battle {
             });
     
             if (!this.cachedCard) {
-                return await this.end();
+                return await this.end(false);
             }
 
             let index = deadCard.card.userId === this.battle.userId1 ? 1 : 2;
             data[`cardId${index}`] = this.cachedCard.id;
         }
-
-        // console.log({
-        //     history: [...this.battle.history, ...history] as any,
-        //     move1: null,
-        //     move2: null,
-        //     turn: { increment: 1 },
-        //     ...data
-        // });
 
         //update battle
         await db.battle.update({
@@ -216,6 +207,16 @@ class Battle {
         });
 
         return true;
+    }
+
+    private async item(cardId: number, itemId: number, userId: number): Promise<HistoryElement> {
+        try {
+            const itemData = await consumable({ client: {...fakeClient, db}, player: { data: { id: userId } } } as any, itemId, cardId, 1, true);
+            if (cardId === this.battle.cardId1 || cardId === this.battle.cardId2) await this.setActiveCards();
+            return { userId, cardId, type: "item", itemId, itemData: { name: locale[itemData.item.name].name } };
+        } catch (e) {
+            return { userId, cardId, type: "fail" };
+        }
     }
 
     /**
@@ -279,37 +280,55 @@ class Battle {
         const card = this.activeCards[userIndex];
         const move = card.moves.find(m => m.id === moveId);
 
-        console.log("move", move);
         if (!move) return { userId: this.battle[`userId${userIndex+1}`], cardId: card.card.id, type: "fail" };
 
         const enemyCard = this.activeCards[rev(userIndex)];
-
-        const efectivness = this.getEfectivness(move.type, enemyCard.parent.type);
-
         const cardStats = card.getStats();
         const enemyStats = enemyCard.getStats();
+        
+        let data = {}, efectivness: 1 | 0.5 | 2 = 1, defended = 0, damage = 0, hp = -1, moveType, miss = false;
+        if (move.moveType === "ATTACK") {
+            efectivness = this.getEfectivness(move.type, enemyCard.parent.type);
+            damage = Math.round(cardStats.pow * move.power * efectivness - enemyStats.def);
 
-        let damage = Math.round(cardStats.pow * move.power * efectivness - enemyStats.def);
-        if (damage < 0) damage = 0;
+            if (order === 1) { //move is second, check for defense of enemy
+                const enemyMove = enemyCard.moves.find(m => m.id === (this.battle.move1 as any).moveId);
+                if (enemyMove && enemyMove.moveType === "DEFENSE") {
+                    defended = Math.round(enemyStats.def * enemyMove.power);
+                }
+            }
 
-        let hp = enemyStats.hp - damage;
-        if (hp < 0) hp = 0;
+            damage -= defended;
+            if (damage < 0) damage = 0;
+    
+            if (move.accuracy !== 100) {
+                const hit = Math.random() < move.accuracy/100;
+                if (!hit) {
+                    miss = true;
+                    damage = 0;
+                }
+            }
 
-        let data = { stat: { update: { hp: hp } } };
-        if (hp === 0 && enemyCard.card.status === "FIGHT") {
-            data["status"] = "DEAD";
-            enemyCard.card.status = "DEAD";
-        } else if (hp === 0 && enemyCard.card.status === "WILD_FIGHT") {
-            data["status"] = "WILD_DEAD";
-            enemyCard.card.status = "WILD_DEAD";
+            hp = enemyStats.hp - damage;
+            if (hp < 0) hp = 0;
+    
+            data = { stat: { update: { hp: hp } } };
+            if (hp === 0 && enemyCard.card.status === "FIGHT") {
+                data["status"] = "DEAD";
+                enemyCard.card.status = "DEAD";
+            } else if (hp === 0 && enemyCard.card.status === "WILD_FIGHT") {
+                data["status"] = "WILD_DEAD";
+                enemyCard.card.status = "WILD_DEAD";
+            }
+
+            await db.cardInstance.update({
+                where: { id: enemyCard.card.id },
+                data: data
+            });
         }
 
-        await db.cardInstance.update({
-            where: { id: enemyCard.card.id },
-            data: data
-        });
 
-        return { userId: this.battle[`userId${userIndex+1}`], cardId: card.card.id, type: "move", moveId, efectivness };
+        return { userId: this.battle[`userId${userIndex+1}`], cardId: card.card.id, type: "move", moveId, efectivness, kill: hp === 0 ? enemyCard.card.id : 0, damage, defended, moveType, miss };
     }
 
 
@@ -361,11 +380,12 @@ class Battle {
         await this.selectAction("move", { type: "move", moveId: perfectMove.id, cardId: this.activeCards[this.userIndex].card.id });
     }
 
-    async end(): Promise<boolean> {
+    async end(isWin: boolean = true): Promise<boolean> {
+        console.log("Battle ended");
         let exp = 0;
 
         if (this.battle.type === "PVE") {
-            exp = 300*this.activeCards[1].card.rarity;
+            exp = isWin ? 300*this.activeCards[1].card.rarity : 0;
         }
 
         await db.$transaction(async tx => {
@@ -376,7 +396,7 @@ class Battle {
 
             await tx.cardInstance.updateMany({
                 where: { userId: { in: [this.battle.userId1, this.battle.userId2] }, status: "FIGHT", team: { gt: 0 } },
-                data: { status: "IDLE", exp: exp }
+                data: { status: "IDLE", exp: { increment: exp } }
             });
 
             if (this.battle.type === "PVE") {
@@ -393,6 +413,8 @@ class Battle {
                 color: parseColor("#ffffff")
             } ]
         }}));
+
+        return true;
     }
 }
 

@@ -27,7 +27,7 @@ export default new Interactable({
                 
                 if (!slot) throw 30; 
 
-                await client.db.cardInstance.updateMany({ where: { userId: player.data.id, team: 0, id: number }, data: { team: slot } });
+                await client.db.cardInstance.updateMany({ where: { userId: player.data.id, team: 0, id: number, status: "IDLE" }, data: { team: slot } });
                 break;
             default:
                 break;

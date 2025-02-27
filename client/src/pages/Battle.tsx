@@ -7,6 +7,7 @@ import { useBattleStore } from "../store/battleStore";
 import { useEffect, useState } from "react";
 import useWindowDimensions from "../hooks/useWindowDimensions"; // Import custom hook
 import './Battle.css'; // Import the CSS file for background animation
+import Move from "../components/battle/Move";
 
 export default function Battle() {
     const { battle, targetMove, connect, error } = useBattleStore();
@@ -17,6 +18,7 @@ export default function Battle() {
 
     const [cachedTurn, setCachedTurn] = useState(0);
     const [cachedMove, setCachedMove] = useState(0);
+
     const { width } = useWindowDimensions(); // Get screen width
 
     useEffect(() => {
@@ -29,7 +31,12 @@ export default function Battle() {
     const processHistory = (history: any) => {
         let text = "";
 
+        let index = 0;
+        if (battle.user1.cards.find((card: any) => card.id === history.cardId)) index = 1;
+        else index = 2;
+
         const card = battle.user1.cards.find((card: any) => card.id === history.cardId) || battle.user2.cards.find((card: any) => card.id === history.cardId);
+        const user = index === 1 ? battle.user1 : battle.user2;
         
         const cardName = card.card.character.name;
         
@@ -37,11 +44,30 @@ export default function Battle() {
             const moveName = card.moves.find((move: any) => move.id === history.moveId).name;
     
             text = `${cardName} used ${moveName}!`;
+            
+            if (history.miss) text += " But it missed!";
+            else {
+                if (history.moveType === "ATTACK") {
+                    if (history.efectivness === 0.5) text += " It was not very effective...";
+                    else if (history.efectivness === 2) text += " It was super effective!";
+                }
     
-            if (history.efectivness === 0.5) text += " It was not very effective...";
-            else if (history.efectivness === 2) text += " It was super effective!";
+                if (history.defended > 0) text += `\nThe enemy blocked ${history.defended} damage!`;
+                if (history.damage > 0) text += `\n${cardName} dealt ${history.damage} damage!`;
+    
+                if (history.kill > 0) {
+                    const enemy = user.id === battle.user1.id ? battle.user2 : battle.user1;
+                    const killedCard = enemy.cards.find((card: any) => card.id === history.kill);
+    
+                    text += ` ${killedCard.card.character.name} fainted!`;
+                }
+            }
         } else if (history.type === "switch") {
             text = `${cardName} joins the battle!`;
+        } else if (history.type === "item") {
+            text = `${user.username} used ${history.itemData.name} on ${cardName}!`;
+        } else if (history.type === "fail") {
+            text = `${user.username}'s action failed...`;
         } else {
             text = `${cardName} did nothing...`;
         }
@@ -56,9 +82,17 @@ export default function Battle() {
         setModalContent(
             <div className="grid grid-cols-1 gap-3">
                 {moves.map((move: any, index: number) => (
-                    <Button key={index} icon={"src/assets/types/" + move.type + ".png"} pp={move.pp-battle.battle.history.filter((h: any) => h.type === "move" && h.cardId === card.id && h.moveId === move.id).length + "/" + move.pp} onClick={() => handleMoveClick(move.id)}>
+                    <Move 
+                        key={index} 
+                        icon={"src/assets/types/" + move.type + ".png"} 
+                        type={move.moveType}
+                        acc={move.accuracy}
+                        pow={move.power}
+                        pp={move.pp-battle.battle.history.filter((h: any) => h.type === "move" && h.cardId === card.id && h.moveId === move.id).length + "/" + move.pp} 
+                        onClick={() => handleMoveClick(move.id)}
+                    >
                         {move.name}
-                    </Button>
+                    </Move>
                 ))}
             </div>
         );
@@ -67,12 +101,12 @@ export default function Battle() {
     };
 
     const handleBagClick = () => {
-        const items = battle.users.find((user: any) => user.discordId === localStorage.getItem("discordId")).items;
+        const items = battle.items;
 
         setModalContent(
             <div className="grid grid-cols-1 gap-3">
                 {items.map((item: any, index: number) => (
-                    <Button key={index} icon={`src/assets/items/${item.img}.png`} onClick={() => handleMoveClick(item.id)}>
+                    <Button key={index} icon={`src/assets/items/${item.img}.png`} onClick={() => handleItemClick(item.id)}>
                         {item.name}
                     </Button>
                 ))}
@@ -81,6 +115,53 @@ export default function Battle() {
 
         setIsModalOpen(true);
     };
+
+    const handleItemClick = (itemId: number) => {
+        const cards = battle.user1.cards;
+
+        setModalContent(
+            <div className="grid grid-cols-1 gap-3">
+                {cards.map((card: any, index: number) => (
+                    <Button key={index} icon={"src/assets/types/" + card.card.type + ".png"} onClick={() => handleTeamItemClick(card.id, itemId)}>
+                        {card.card.character.name}
+                    </Button>
+                ))}
+            </div>
+        );
+
+        setIsModalOpen(true);
+    }
+
+    const handleTeamItemClick = async (cardId: number, itemId: number) => {
+        if (itemId === 0) return;
+
+        setCachedTurn(0);
+        setIsModalOpen(false);
+
+        const accessToken = localStorage.getItem('accessToken');
+        if (!accessToken) {
+            console.error('Access token is missing');
+            return;
+        }
+
+        try {
+            const response = await fetch('/.proxy/api/battle/item', {
+                method: 'POST',
+                headers: {
+                    Authorization: `Bearer ${accessToken}`, // Use the stored access token
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ itemId, cardId }),
+            });
+
+            if (!response.ok) throw new Error('Network response was not ok');
+            
+            connect();
+        } catch (error) {
+            console.error('Error posting move:', error);
+        }
+        
+    };  
 
     const handleTeamClick = () => {
         const cards = battle.user1.cards;
@@ -100,7 +181,30 @@ export default function Battle() {
     };
 
     const handleRunClick = async () => {
+        const accessToken = localStorage.getItem('accessToken');
+        if (!accessToken) {
+            console.error('Access token is missing');
+            return;
+        }
 
+        try {
+            const response = await fetch('/.proxy/api/battle/run', {
+                method: 'POST',
+                headers: {
+                    Authorization: `Bearer ${accessToken}`, // Use the stored access token
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ }),
+            });
+
+            if (!response.ok) throw new Error('Network response was not ok');
+
+            connect(); // Restart polling after move
+        } catch (error) {
+            console.error('Error posting move:', error);
+        }
+        
+        setIsModalOpen(false);
     };
 
     const handleMoveClick = async (move: string) => {
@@ -122,8 +226,6 @@ export default function Battle() {
 
             if (!response.ok) throw new Error('Network response was not ok');
             
-            const data = await response.json();
-            console.log('Move response:', JSON.stringify(data));
             connect(); // Restart polling after move
         } catch (error) {
             console.error('Error posting move:', error);

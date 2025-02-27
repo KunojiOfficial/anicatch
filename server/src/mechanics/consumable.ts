@@ -7,15 +7,16 @@ interface Property {
     value: number
 }
 
-export default async function(interaction: DiscordInteraction, itemId: number, cardId: number, count: number) {
+export default async function(interaction: DiscordInteraction, itemId: number, cardId: number, count: number, inFight?: boolean) {
     const { client, player } = interaction;
 
     const [ item, card ] = await Promise.all([
         client.db.inventory.findFirst({ where: { itemId: itemId, userId: player.data.id, count: { gt: 0 } }, include: { item: true } }),
-        client.db.cardInstance.findFirst({ where: { id: cardId, userId: player.data.id, status: { in: [ "IDLE", "DEAD" ] } }, include: { stat: true, card: true } })
+        client.db.cardInstance.findFirst({ where: { id: cardId, userId: player.data.id, status: { in: [ "IDLE", "DEAD", "FIGHT" ] } }, include: { stat: true, card: true } })
     ]);
 
     if (!item) throw 24; if (!card) throw 5;
+    if (!inFight && card.status === "FIGHT") throw 56;
 
     const properties = item.item.properties as any as Property;
     const cardData = new Card({ card: card, client: client, stats: card.stat!, parent: card.card });
@@ -33,7 +34,7 @@ export default async function(interaction: DiscordInteraction, itemId: number, c
                 count = 1;
 
                 const hp = Math.floor((cardData.getMaxHealth())*properties.value);
-                await tx.cardInstance.update({ where: { id: card.id }, data: { status: "IDLE", stat: { update: { data: { hp: hp } } } }, include: { stat: true } });
+                await tx.cardInstance.update({ where: { id: card.id }, data: { status: inFight ? "FIGHT" : "IDLE", stat: { update: { data: { hp: hp } } } }, include: { stat: true } });
                 break;
             case "HEAL":
                 if (card.status === "DEAD") throw 34;

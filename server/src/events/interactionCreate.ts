@@ -154,7 +154,7 @@ export default new Event({
                 interaction.owner = owner;
                 interaction.args = args;
                 
-                if (owner !== user.id && owner !== "0") throw 20;
+                if (owner !== user.id && owner != "0") throw 20;
 
                 //get cooldown
                 if (cdId && cdTime) {
