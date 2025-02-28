@@ -128,7 +128,7 @@ class Client extends DiscordClient {
      */
     async deployCommands() {
         const rest = new REST({ version: '10' }).setToken(process.env.BOT_TOKEN);
-        let route = Routes.applicationGuildCommands(process.env.BOT_CLIENT_ID, config.bot.dev_guild);
+        let route = Routes.applicationGuildCommands(process.env.DISCORD_CLIENT_ID, config.bot.dev_guild);
     
         let jsonCommands: Array<{data: any, emoji: any}> = this.commands.map(cmd => ({data: cmd.data.toJSON(), emoji: cmd.emoji}));
         for (let command of jsonCommands) {
@@ -156,7 +156,7 @@ class Client extends DiscordClient {
 
     async loadCommandsData() {
         const rest = new REST({ version: '10' }).setToken(process.env.BOT_TOKEN);
-        const commandsData = await rest.get(Routes.applicationGuildCommands(process.env.BOT_CLIENT_ID, config.bot.dev_guild));
+        const commandsData = await rest.get(Routes.applicationGuildCommands(process.env.DISCORD_CLIENT_ID, config.bot.dev_guild));
         
         const object: any = {};
         for (const command of commandsData as any) {
