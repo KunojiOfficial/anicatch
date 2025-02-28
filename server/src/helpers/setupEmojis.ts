@@ -11,9 +11,9 @@ dotenv.config({
 const prisma = new PrismaClient();
 
 let obj = {};
-axios.get(`https://discord.com/api/v10/applications/${process.env.DISCORD_CLIENT_ID}/emojis`, {
+axios.get(`https://discord.com/api/v10/applications/${process.env.DEV_DISCORD_CLIENT_ID}/emojis`, {
     headers: {
-        'Authorization': `Bot ${process.env.BOT_TOKEN}`
+        'Authorization': `Bot ${process.env.DEV_BOT_TOKEN}`
     }
 }).then(async res => {
     if (res.status !== 200) {

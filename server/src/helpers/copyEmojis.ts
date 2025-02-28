@@ -7,9 +7,9 @@ dotenv.config({
     path: "../../.env"
 });
 
-const token = process.env.BOT_TOKEN;
+const token = process.env.DEV_BOT_TOKEN;
 
-const emojis = axios.get(`https://discord.com/api/v10/applications/${process.env.DISCORD_CLIENT_ID}/emojis`, {
+const emojis = axios.get(`https://discord.com/api/v10/applications/${process.env.DEV_DISCORD_CLIENT_ID}/emojis`, {
     headers: {
         'Authorization': `Bot ${token}`
     }
@@ -26,21 +26,21 @@ const emojis = axios.get(`https://discord.com/api/v10/applications/${process.env
         // await downloadImage(url, filePath);
 
         // Fetch the image data and convert to Data URI
-        // const dataUri = await getImageDataUri(url);
+        const dataUri = await getImageDataUri(url);
 
-        // const payload = {
-        //     name: encodeURIComponent(emoji.name),
-        //     image: dataUri
-        // };
+        const payload = {
+            name: encodeURIComponent(emoji.name),
+            image: dataUri
+        };
 
-        // const upload = await axios.post(`https://discord.com/api/v10/applications/${process.env.DISCORD_CLIENT_ID}/emojis`, payload, {
-        //     headers: {
-        //         'Authorization': `Bot ${process.env.BOT_TOKEN}`,
-        //         'Content-Type': 'application/json'
-        //     }
-        // }).catch(err => {
-        //     console.log(err);
-        // });
+        const upload = await axios.post(`https://discord.com/api/v10/applications/${process.env.DISCORD_CLIENT_ID}/emojis`, payload, {
+            headers: {
+                'Authorization': `Bot ${process.env.BOT_TOKEN}`,
+                'Content-Type': 'application/json'
+            }
+        }).catch(err => {
+            console.log(err);
+        });
     }
 });
 
