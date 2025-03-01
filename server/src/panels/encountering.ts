@@ -118,21 +118,19 @@ export default new Panel({
         if (components.length) components = components.map(c => interaction.components.buttons(c));
 
         components.push(interaction.components.buttons([{
-            id: "11",
-            emoji: "plus",
-            args: { id: card.card.id }
-        },{
             // id: "10",
             label: `Battle!`,
             emoji: "fight",
             args: { id: timeOutId, id2: data.timeout, cardId: card.card.id },
             id: "17",
+            style: "red"
         }, {
             id: '2',
             label: `Next (${player.data.encounters-1})`,
             emoji: "next",
             cooldown: { id: "next", time: 2 },
             args: { id: timeOutId },
+            style: "green"
         }]));
 
         //send message

@@ -57,16 +57,6 @@ export default async function(interaction: DiscordInteraction) {
             moves: { connect: [{ id: move?.id }, { id: 1 }] }
         } });
 
-        await tx.stat.create({ data: {
-            cardId: card.id,
-            vit: getRandomNumber(1, 20),
-            def: getRandomNumber(1, 20),
-            pow: getRandomNumber(1, 20),
-            agi: getRandomNumber(1, 20),
-            spi: getRandomNumber(1, 20),
-            res: getRandomNumber(1, 20)
-        } });
-
         const timeoutId = setTimeout(async () => {
             await client.db.cardInstance.deleteMany({ where: { id: card.id, status: "WILD" } })
         }, 1000 * 16);

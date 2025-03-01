@@ -1,4 +1,3 @@
-import { Stat } from "@prisma/client";
 import Card from "../classes/Card";
 import { DiscordInteraction } from "../types";
 
@@ -12,14 +11,14 @@ export default async function(interaction: DiscordInteraction, itemId: number, c
 
     const [ item, card ] = await Promise.all([
         client.db.inventory.findFirst({ where: { itemId: itemId, userId: player.data.id, count: { gt: 0 } }, include: { item: true } }),
-        client.db.cardInstance.findFirst({ where: { id: cardId, userId: player.data.id, status: { in: [ "IDLE", "DEAD", "FIGHT" ] } }, include: { stat: true, card: true } })
+        client.db.cardInstance.findFirst({ where: { id: cardId, userId: player.data.id, status: { in: [ "IDLE", "DEAD", "FIGHT" ] } } })
     ]);
 
     if (!item) throw 24; if (!card) throw 5;
     if (!inFight && card.status === "FIGHT") throw 56;
 
     const properties = item.item.properties as any as Property;
-    const cardData = new Card({ card: card, client: client, stats: card.stat!, parent: card.card });
+    const cardData = new Card({ card: card, client: client });
 
     await client.db.$transaction(async tx => {
         switch (properties.effect) {
@@ -34,7 +33,7 @@ export default async function(interaction: DiscordInteraction, itemId: number, c
                 count = 1;
 
                 const hp = Math.floor((cardData.getMaxHealth())*properties.value);
-                await tx.cardInstance.update({ where: { id: card.id }, data: { status: inFight ? "FIGHT" : "IDLE", stat: { update: { data: { hp: hp } } } }, include: { stat: true } });
+                await tx.cardInstance.update({ where: { id: card.id }, data: { status: inFight ? "FIGHT" : "IDLE", hp: hp } });
                 break;
             case "HEAL":
                 if (card.status === "DEAD") throw 34;
@@ -52,7 +51,7 @@ export default async function(interaction: DiscordInteraction, itemId: number, c
                 
                 count = Math.min(maxCount, count);
                 let newHp = Math.floor(Math.min(cardData.getMaxHealth(), cardData.getCurrentHealth()!+(count*properties.value)));
-                await tx.cardInstance.update({ where: { id: card.id }, data: { stat: { update: { data: { hp: newHp } } } }, include: { stat: true } });
+                await tx.cardInstance.update({ where: { id: card.id }, data: { hp: newHp } });
 
                 break;
         }

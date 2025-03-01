@@ -32,14 +32,14 @@ async function getBattle(userId: number) {
     let users = await db.user.findMany({
         where: { OR: [{ id: battle.userId1 }, { id: battle.userId2 }] },
         include: { 
-            cards: { where: { team: { gt: 0 } }, include: { card: { include: { character: true } }, stat: true, moves: true } },
+            cards: { where: { team: { gt: 0 } }, include: { card: { include: { character: true } }, moves: true } },
         }
     });
 
     if (users.length !== 2) {
         let aiUser = { 
             username: "AI", 
-            cards: await db.cardInstance.findMany({ where: { id: battle.cardId2 }, include: { card: { include: { character: true } }, stat: true, moves: true } })
+            cards: await db.cardInstance.findMany({ where: { id: battle.cardId2 }, include: { card: { include: { character: true } }, moves: true } })
         };
 
         users = [...users, aiUser as any ]; 
@@ -61,7 +61,7 @@ async function getBattle(userId: number) {
         for (const card of user.cards) {
             if (card.id !== battle.cardId1 && card.id !== battle.cardId2) continue;
             
-            const cardObj = new Card({ card, parent: card.card, character: card.card.character, stats: card.stat, moves: card.moves, client });
+            const cardObj = new Card({ card, parent: card.card, character: card.card.character, moves: card.moves, client });
             card.url = await cardObj.generateCanvas().then((canvas) => canvas?.toDataURL());
             card.maxHp = cardObj.getMaxHealth();
             card.level = cardObj.getLevel();

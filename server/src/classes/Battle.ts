@@ -72,15 +72,15 @@ class Battle {
     private async setActiveCards() {
         const cards = await db.cardInstance.findMany({
             where: { id: { in: [this.battle.cardId1, this.battle.cardId2] } },
-            include: { stat: true, card: true, moves: true }
+            include: { card: true, moves: true }
         });
 
         const card1 = cards.find(c => c.id === this.battle.cardId1);
         const card2 = cards.find(c => c.id === this.battle.cardId2);
 
         this.activeCards = [
-            new Card({ card: card1, parent: card1.card, stats: card1.stat, moves: card1.moves, client: fakeClient }),
-            new Card({ card: card2, parent: card2.card, stats: card2.stat, moves: card2.moves, client: fakeClient })
+            new Card({ card: card1, parent: card1.card, moves: card1.moves, client: fakeClient }),
+            new Card({ card: card2, parent: card2.card, moves: card2.moves, client: fakeClient })
         ];
     }
 
@@ -112,7 +112,7 @@ class Battle {
     private async validateSwitch(cardId: number, userId: number): Promise<boolean> {
         const card = await db.cardInstance.findFirst({
             where: { id: cardId, userId, status: "FIGHT", team: { gt: 0 } },
-            include: { card: true, stat: true, moves: true }
+            include: { card: true, moves: true }
         });
 
         if (!card) return false;
@@ -229,7 +229,7 @@ class Battle {
         const owner = this.battle[`userId${userIndex+1}`];
         const card = this.cachedCard ? this.cachedCard : await db.cardInstance.findFirst({
             where: { id: cardId, userId: owner, status: "FIGHT", team: { gt: 0 } },
-            include: { card: true, stat: true, moves: true }
+            include: { card: true, moves: true }
         });
 
         if (!card) return { userId: owner, cardId, type: "fail" };
@@ -242,7 +242,7 @@ class Battle {
         });
 
         this.battle[`cardId${userIndex+1}`] = card.id;
-        this.activeCards[userIndex] = new Card({ card, parent: card.card, stats: card.stat, moves: card.moves, client: fakeClient });
+        this.activeCards[userIndex] = new Card({ card, parent: card.card, moves: card.moves, client: fakeClient });
 
         return { userId: owner, cardId, type: "switch" };
     }
@@ -312,7 +312,7 @@ class Battle {
             hp = enemyStats.hp - damage;
             if (hp < 0) hp = 0;
     
-            data = { stat: { update: { hp: hp } } };
+            data = { hp: hp };
             if (hp === 0 && enemyCard.card.status === "FIGHT") {
                 data["status"] = "DEAD";
                 enemyCard.card.status = "DEAD";

@@ -13,8 +13,8 @@ function getDesc(card: CardInstance, player: Player) {
     else return undefined;
 }
 
-async function main(interaction: DiscordInteraction, where: any) {
-    const { client } = interaction;
+async function main(interaction: DiscordInteraction, where: any, userAccess: boolean = false, page: string = "main") {
+    const { client, player } = interaction;
 
     const animon = await client.db.cardInstance.findFirst({ where: where, include: { card: { include: { character: true } }, ball: true, user: true } });
     if (!animon) throw 5;
@@ -23,6 +23,35 @@ async function main(interaction: DiscordInteraction, where: any) {
     const attachment = await card.generateImage()!;
     const rarity = card.getRarity()!;
     const type = card.getType()!;
+
+    const isOwner = animon.userId === player.data.id;
+    let isTeam = card.card.team>0;
+
+    let components = [];
+    if (isOwner && animon.status !== "TRADE") components = [...components, interaction.components.buttons([{
+        id: '6',
+        label: animon.favorite ? "\u2800Un-Favorite" : "\u2800Favorite",
+        emoji: animon.favorite ? "favorite2" : "unfavorite",
+        args: { cardId: animon.id },
+        cooldown: { id: "fav", time: 2 }
+    }, {
+        id: "12",
+        label: isTeam ? "\u2800Un-Team" : "\u2800Team",
+        emoji: isTeam ? "team" : "unteam",
+        args: isTeam ? { action: "clear", slot: card.card.team, where: "card", data: `${card.card.id}:${userAccess}:${page}` } : { action: "add", slot: card.card.id,  where: "card", data: `${card.card.id}:${userAccess}:${page}` }
+    }]), interaction.components.buttons([{
+        id: "0",
+        label: "\u2800Use Items",
+        emoji: "donut",
+        args: { path: "fastUse", cardId: card.card.id }
+    },  {
+        id: '7',
+        label: `\u2800Sell (+${rarity.sellPrice})`,
+        emoji: "smallCoin",
+        disabled: animon.favorite,
+        args: { cardId: animon.id },
+        cooldown: { id: "sell", time: 5 }
+    }]) ];
 
     return [{
         embeds: [ interaction.components.embed({
@@ -35,17 +64,18 @@ async function main(interaction: DiscordInteraction, where: any) {
             color: rarity.color,
             image: "attachment://card.jpg"
         }) ],
-        files: [attachment]
+        files: [attachment],
+        components: components
     }, animon];
 }
 
 async function stats(interaction: DiscordInteraction, where: any) {
-    const { client, player } = interaction;
+    const { client } = interaction;
 
-    const animon = await client.db.cardInstance.findFirst({ where: where, include: { card: { include: { character: true } }, stat: true, user: true } });
-    if (!animon || !animon.stat) throw 5;
+    const animon = await client.db.cardInstance.findFirst({ where: where, include: { card: { include: { character: true } }, user: true } });
+    if (!animon) throw 5;
 
-    const card = new Card({card: animon, parent: animon.card, stats: animon.stat, client: client});
+    const card = new Card({card: animon, parent: animon.card, client: client});
     const stats = card.getStats();
     const rarity = card.getRarity()!;
     const attachment = await card.generateImage()!;
@@ -63,10 +93,12 @@ async function stats(interaction: DiscordInteraction, where: any) {
         if (key === "hp") continue;
         fields.push({ 
             name: `{locale_main_stats_${key}}`,
-            value: `${stats[key as keyof typeof stats]}\n-# ${animon.stat[key as keyof typeof animon.stat]}/20`,
+            value: `\`${stats[key as keyof typeof stats].toString().padEnd(6, ' ')}\``,
             inline: true
         });
     }
+
+    let components = [];
 
     return [{
         embeds: [ interaction.components.embed({
@@ -75,7 +107,8 @@ async function stats(interaction: DiscordInteraction, where: any) {
             image: `attachment://${attachment?.name}`,
             color: rarity.color
         }) ],
-        files: [attachment]
+        files: [attachment],
+        components: components
     }, animon];
 }
 
@@ -97,15 +130,8 @@ export default new Panel({
         }
 
         let [data, animon]: [any, any] = [{}, {}];
-        if (page === "main") [data, animon] = await main(interaction, where);
+        if (page === "main") [data, animon] = await main(interaction, where, userAccess);
         else if (page === "stats") [data, animon] = await stats(interaction, where);
-        
-        const isOwner = animon.userId === player.data.id;
-
-        const card = new Card({card: animon, client: client});
-        const rarity = card.getRarity()!;
-
-        let isTeam = card.card.team>0;
 
         let components = [interaction.components.buttons([{
             id: "0",
@@ -127,35 +153,10 @@ export default new Panel({
             disabled: true
         }])]
 
-        if (isOwner && animon.status !== "TRADE") components = [...components, interaction.components.buttons([{
-            id: '6',
-            label: animon.favorite ? "\u2800Un-Favorite" : "\u2800Favorite",
-            emoji: animon.favorite ? "favorite2" : "unfavorite",
-            args: { cardId: animon.id },
-            cooldown: { id: "fav", time: 2 }
-        }, {
-            id: "12",
-            label: isTeam ? "\u2800Un-Team" : "\u2800Team",
-            emoji: isTeam ? "team" : "unteam",
-            args: isTeam ? { action: "clear", slot: card.card.team, where: "card", data: `${card.card.id}:${userAccess}:${page}` } : { action: "add", slot: card.card.id,  where: "card", data: `${card.card.id}:${userAccess}:${page}` }
-        }]), interaction.components.buttons([{
-            id: "0",
-            label: "\u2800Use Items",
-            emoji: "donut",
-            args: { path: "fastUse", cardId: card.card.id }
-        },  {
-            id: '7',
-            label: `\u2800Sell (+${rarity.sellPrice})`,
-            emoji: "smallCoin",
-            disabled: animon.favorite,
-            args: { cardId: animon.id },
-            cooldown: { id: "sell", time: 5 }
-        }]) ];
-
         return {
-            content: `-# #${card.card.id}`,
+            content: `-# #${animon.id}`,
             ...data,
-            components: components
+            components: [...components, ...data.components]
         }
     }
 });

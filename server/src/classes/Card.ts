@@ -1,4 +1,4 @@
-import { CardCatalog, CardInstance, Character, Item, Move, Stat } from "@prisma/client";
+import { CardCatalog, CardInstance, Character, Item, Move } from "@prisma/client";
 import { AttachmentBuilder } from "discord.js";
 import { createCanvas, loadImage, registerFont } from "canvas";
 
@@ -10,11 +10,20 @@ const statKeys = ["vit", "def", "pow", "agi", "spi", "res"];
 
 // registerFont("./src/assets/fonts/SpaceMono-Regular.ttf", { family: "SpaceMono" });
 
+interface Stats {
+    hp: number,
+    vit: number,
+    def: number,
+    pow: number,
+    agi: number,
+    spi: number,
+    res: number
+}
+
 export default class Card {
     card: CardInstance
     parent?: CardCatalog
     character?: Character
-    stats?: Stat
     moves?: Move[]
     ball?: Item
     
@@ -22,10 +31,9 @@ export default class Card {
     rarity?: any
     type?: any
 
-    constructor(object: {card: CardInstance, parent?: CardCatalog, character?: Character, stats?: Stat, ball?: Item, moves?: Move[], client?: DiscordClient}) {
+    constructor(object: {card: CardInstance, parent?: CardCatalog, character?: Character, ball?: Item, moves?: Move[], client?: DiscordClient}) {
         this.card = object.card;
         if (object.parent) this.parent = object.parent;
-        if (object.stats) this.stats = object.stats;
         if (object.character) this.character = object.character;
         if (object.ball) this.ball = object.ball;
         if (object.moves) this.moves = object.moves;
@@ -54,25 +62,16 @@ export default class Card {
         return maxLevel;
     }
 
-    getStats() : Stat {
-        if (!this.parent || !this.stats) return { cardId: 0, vit: 0, pow: 0, def: 0, agi: 0, spi: 0, res: 0, hp: 0 };
-
-        const rarity = this.rarity;
-        const result: {hp: number, vit: number, def: number, pow: number, agi: number, spi: number, res: number} = {hp:-1, vit:0,def:0,pow:0,agi:0,spi:0,res:0};
-        
-        for (const key of statKeys) {
-            result[key as keyof typeof result] = Math.floor(
-                (this.parent[key as keyof typeof this.parent] as number) * //base values from parent
-                (1+((this.getLevel() - 1)/99)*5) * //level multiplier
-                rarity.multipier * //rarity multiplier
-                ((100+(this.stats[key as keyof typeof this.stats] as number))/100) //encounter multipliers
-            );
-        }
-
-        if (this.stats.hp === -1) result.hp = result.vit * 100;
-        else result.hp = this.stats.hp;
-
-        return result as Stat;
+    getStats() : Stats {
+        return { 
+            hp: this.card.hp === -1 ? this.card.vit * 100 : this.card.hp,
+            vit: this.card.vit,
+            def: this.card.def,
+            pow: this.card.pow,
+            agi: this.card.agi,
+            spi: this.card.spi,
+            res: this.card.res
+        } as Stats;
     }
 
     getRarity() {
@@ -122,12 +121,12 @@ export default class Card {
     }
 
     getCurrentHealth() {
-        if (this.stats?.hp === -1) return this.getMaxHealth();
-        return this.stats?.hp;
+        if (this.card.hp === -1) return this.getMaxHealth();
+        return this.card.hp;
     }
 
     getMaxHealth() {
-        let stats: Stat = this.getStats() as Stat;
+        let stats: Stats = this.getStats();
         return stats.vit * 100;
     }
 

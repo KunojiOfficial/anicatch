@@ -27,7 +27,6 @@ export default new Interactable({
                     team: { gt: 0 }, 
                     status: "IDLE",
                 },
-                include: { stat: true },
                 orderBy: { team: "asc" }
             });
     

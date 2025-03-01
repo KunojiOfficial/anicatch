@@ -46,7 +46,7 @@ interface HistoryElement {
 const UserWithIncludes = Prisma.validator<Prisma.UserDefaultArgs>()({ include: { config: true, role: true } });
 type UserRole = Prisma.UserGetPayload<typeof UserWithIncludes>;
 
-const CardWithIncludes = Prisma.validator<Prisma.CardInstanceDefaultArgs>()({ include: { card: true, stat: true } });
+const CardWithIncludes = Prisma.validator<Prisma.CardInstanceDefaultArgs>()({ include: { card: true } });
 type CardIncluded = Prisma.CardInstanceGetPayload<typeof CardWithIncludes>;
 
 const TradeWithIncludes = Prisma.validator<Prisma.TradeDefaultArgs>()({ include: { users: true } });

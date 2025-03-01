@@ -91,13 +91,6 @@ model Character {
   cards         CardCatalog[]
 }
 
-enum Class {
-  TANK
-  ATTACKER
-  CASTER
-  BALANCED  
-}
-
 enum CardType {
   NONE
   INFERNO
@@ -113,14 +106,6 @@ model CardCatalog {
   count         Int               @default(0)
   
   characterId   Int
-
-  class         Class
-  vit           Int          
-  pow           Int
-  def           Int
-  agi           Int
-  spi           Int
-  res           Int
 
   fledPrints    Json[]             @default([])
 
@@ -150,12 +135,22 @@ model CardInstance {
 
   rarity        Int
   print         Int               @default(0)
+ 
   exp           Int               @default(0)
+  points        Int               @default(0)
+
+  hp            Int               @default(-1)
+
+  vit           Int               @default(1)
+  pow           Int               @default(1)
+  def           Int               @default(1)
+  agi           Int               @default(1)
+  spi           Int               @default(1)
+  res           Int               @default(1)
 
   ballId        Int?              //the id of the ball item
   fatherId      Int?              //the id of the first owner
 
-  stat          Stat?
   card          CardCatalog       @relation(fields: [cardId], references: [id])
   user          User              @relation(fields: [userId], references: [id], onDelete: Cascade)
   ball          Item?             @relation(fields: [ballId], references: [id])
@@ -164,21 +159,6 @@ model CardInstance {
   createdAt     DateTime          @default(now())
 
   @@unique([cardId, print])
-}
-
-model Stat {
-  cardId        Int               @unique @id
-
-  hp            Int               @default(-1)
-
-  vit           Int
-  pow           Int
-  def           Int
-  agi           Int
-  spi           Int
-  res           Int
-
-  card          CardInstance      @relation(fields: [cardId], references: [id], onDelete: Cascade)
 }
 
 enum ItemType {
@@ -284,6 +264,9 @@ model Battle {
   move1         Json?
   move2         Json?
 
+  move1Date     DateTime?
+  move2Date     DateTime?
+
   history       Json[]
 
   channelId     String
@@ -293,6 +276,8 @@ model Battle {
 enum MoveType {
   ATTACK
   DEFENSE
+  SPIRIT
+  SPIRIT_DEFENSE
 }
 
 model Move {

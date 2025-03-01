@@ -51,16 +51,16 @@ export default new Interactable({
         if (captured) {
             newComponents.push(interaction.components.buttons([{
                 id: "7",
-                label: `\u2800{locale_main_sell} (+${rarity.sellPrice})`,
+                label: `{locale_main_sell} (+${rarity.sellPrice})`,
                 emoji: "whsmallCoin",
                 cooldown: { id: "sell", time: 5 },
                 args: { cardId: card.id },
                 style: "red"
             }, {
                 id: "0F",
-                label: "\u2800{locale_main_viewDetails}",
+                label: "{locale_main_viewDetails}",
                 emoji: "glass",
-                args: { path: "animon", cardId: card.id }
+                args: { path: "animon", cardId: card.id },
             }]))
         } else {
             newComponents.push(interaction.components.buttons([{
