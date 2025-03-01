@@ -55,5 +55,7 @@
     "55": "no team or all defeated",
     "56": "cant use when card in battle",
     "57": "enemy in active battle",
-    "58": "enemy no team or all defeated"
+    "58": "enemy no team or all defeated",
+    "59": "animon doesnt belong to you",
+    "60": "not enough attribute points"
 }

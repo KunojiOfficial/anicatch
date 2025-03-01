@@ -48,12 +48,12 @@ export default new Interactable({
         let team1 = "\u2800\n", team2 = "\u2800\n";
         
         for (const card of team) {
-            const cardObj = new Card({ card: card, parent: card.card, character: card.card.character, ball: card.ball, client: client });
+            const cardObj = new Card({ card: card, parent: card.card, character: card.card.character, ball: card.ball });
             team1 += cardObj.getLabel() + "\n\n";
         }
 
         for (const card of enemyTeam) {
-            const cardObj = new Card({ card: card, parent: card.card, character: card.card.character, ball: card.ball, client: client });
+            const cardObj = new Card({ card: card, parent: card.card, character: card.card.character, ball: card.ball });
             team2 += cardObj.getLabel() + "\n\n";
         }
 

@@ -1,20 +1,9 @@
-import { PrismaClient } from '@prisma/client';
 import Card from '../../classes/Card';
-
-import rarities from "../../data/rarities.json";
-import types from "../../data/types.json";
 import Battle from 'src/classes/Battle';
 
 import { db } from 'index';
 
 import locale from '../../locale/items/en-US.json';
-
-const client: any = { data: { rarities: rarities, types: types } };
-
-function extractNumericValue(str: string): string {
-    const match = str.match(/\d+/);
-    return match ? match[0] : '';
-}
 
 async function fetchBattle(userId: number) {
     const battle = await db.battle.findFirst({
@@ -61,7 +50,7 @@ async function getBattle(userId: number) {
         for (const card of user.cards) {
             if (card.id !== battle.cardId1 && card.id !== battle.cardId2) continue;
             
-            const cardObj = new Card({ card, parent: card.card, character: card.card.character, moves: card.moves, client });
+            const cardObj = new Card({ card, parent: card.card, character: card.card.character, moves: card.moves });
             card.url = await cardObj.generateCanvas().then((canvas) => canvas?.toDataURL());
             card.maxHp = cardObj.getMaxHealth();
             card.level = cardObj.getLevel();

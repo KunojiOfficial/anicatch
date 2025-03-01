@@ -10,6 +10,7 @@ import Client from "./Client";
 import consumable from "src/mechanics/consumable";
 
 import locale from "../locale/items/en-US.json";
+import { calculateAtk, calculateDmg, calculateDroppedExp } from "src/mechanics/statsCalculator";
 
 const fakeClient = { data: { rarities, types } } as Client;
 
@@ -72,15 +73,15 @@ class Battle {
     private async setActiveCards() {
         const cards = await db.cardInstance.findMany({
             where: { id: { in: [this.battle.cardId1, this.battle.cardId2] } },
-            include: { card: true, moves: true }
+            include: { card: { include: { character: true } }, moves: true }
         });
 
         const card1 = cards.find(c => c.id === this.battle.cardId1);
         const card2 = cards.find(c => c.id === this.battle.cardId2);
 
         this.activeCards = [
-            new Card({ card: card1, parent: card1.card, moves: card1.moves, client: fakeClient }),
-            new Card({ card: card2, parent: card2.card, moves: card2.moves, client: fakeClient })
+            new Card({ card: card1, parent: card1.card, character: card1.card.character, moves: card1.moves }),
+            new Card({ card: card2, parent: card2.card, character: card2.card.character, moves: card2.moves })
         ];
     }
 
@@ -242,7 +243,7 @@ class Battle {
         });
 
         this.battle[`cardId${userIndex+1}`] = card.id;
-        this.activeCards[userIndex] = new Card({ card, parent: card.card, moves: card.moves, client: fakeClient });
+        this.activeCards[userIndex] = new Card({ card, parent: card.card, moves: card.moves });
 
         return { userId: owner, cardId, type: "switch" };
     }
@@ -280,7 +281,7 @@ class Battle {
         const card = this.activeCards[userIndex];
         const move = card.moves.find(m => m.id === moveId);
 
-        if (!move) return { userId: this.battle[`userId${userIndex+1}`], cardId: card.card.id, type: "fail" };
+        if (!move || card.card.status === "DEAD") return { userId: this.battle[`userId${userIndex+1}`], cardId: card.card.id, type: "fail" };
 
         const enemyCard = this.activeCards[rev(userIndex)];
         const cardStats = card.getStats();
@@ -289,17 +290,20 @@ class Battle {
         let data = {}, efectivness: 1 | 0.5 | 2 = 1, defended = 0, damage = 0, hp = -1, moveType, miss = false;
         if (move.moveType === "ATTACK") {
             efectivness = this.getEfectivness(move.type, enemyCard.parent.type);
-            damage = Math.round(cardStats.pow * move.power * efectivness - enemyStats.def);
 
             if (order === 1) { //move is second, check for defense of enemy
                 const enemyMove = enemyCard.moves.find(m => m.id === (this.battle.move1 as any).moveId);
                 if (enemyMove && enemyMove.moveType === "DEFENSE") {
-                    defended = Math.round(enemyStats.def * enemyMove.power);
+                    defended = calculateAtk(enemyStats.def, enemyMove.power);
                 }
             }
 
-            damage -= defended;
-            if (damage < 0) damage = 0;
+            damage = calculateDmg(
+                calculateAtk(cardStats.pow, move.power),
+                enemyStats.def,
+                efectivness,
+                defended
+            );
     
             if (move.accuracy !== 100) {
                 const hit = Math.random() < move.accuracy/100;
@@ -381,12 +385,12 @@ class Battle {
     }
 
     async end(isWin: boolean = true): Promise<boolean> {
-        console.log("Battle ended");
         let exp = 0;
 
         if (this.battle.type === "PVE") {
-            exp = isWin ? 300*this.activeCards[1].card.rarity : 0;
+            exp = isWin ? calculateDroppedExp(this.activeCards[1].getLevel()) : 0;
         }
+        console.log("tutaj")
 
         await db.$transaction(async tx => {
             await tx.battle.update({
@@ -396,7 +400,12 @@ class Battle {
 
             await tx.cardInstance.updateMany({
                 where: { userId: { in: [this.battle.userId1, this.battle.userId2] }, status: "FIGHT", team: { gt: 0 } },
-                data: { status: "IDLE", exp: { increment: exp } }
+                data: { status: "IDLE" }
+            });
+
+            if (exp > 0 && this.activeCards[0].canLevel()) await tx.cardInstance.updateMany({
+                where: { id: this.activeCards[0].card.id },
+                data: { exp: { increment: exp } }
             });
 
             if (this.battle.type === "PVE") {
@@ -406,9 +415,23 @@ class Battle {
             }
         });
 
+        let hasLeveledUp = false;
+        if (exp > 0 && this.activeCards[0].canLevel()) {
+            const card = this.activeCards[0];
+            const level = card.getLevel();
+            if (level != card.getLevel(card.card.exp+exp)) hasLeveledUp = true;
+        }
+
+        let message = "⚔️ **The battle has ended!** ⚔️";
+        if (exp > 0) message += `\n✨ **${this.activeCards[0].character.name}** received **${exp} EXP**! ✨`;
+        if (hasLeveledUp) {
+            const newLevel = this.activeCards[0].getLevel() + 1;
+            message += `\n🎉 **${this.activeCards[0].character.name}** has leveled up! 🎉\nNew level: **${newLevel}**`;
+        }
+
         manager.broadcast(new BaseMessage({action: "edit", channelId: this.battle.channelId, messageId: this.battle.messageId, content: {
             embeds: [ {
-                description: `The battle has ended!\n+${exp} EXP`,
+                description: message,
                 image: { url: "attachment://card.jpg" },
                 color: parseColor("#ffffff")
             } ]

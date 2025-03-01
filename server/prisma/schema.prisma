@@ -137,7 +137,6 @@ model CardInstance {
   print         Int               @default(0)
  
   exp           Int               @default(0)
-  points        Int               @default(0)
 
   hp            Int               @default(-1)
 

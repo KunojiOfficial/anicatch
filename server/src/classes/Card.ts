@@ -2,13 +2,11 @@ import { CardCatalog, CardInstance, Character, Item, Move } from "@prisma/client
 import { AttachmentBuilder } from "discord.js";
 import { createCanvas, loadImage, registerFont } from "canvas";
 
-import { DiscordClient } from "../types";
+import { calculateExpForLevel, calculateHp, calculateLevelFromExp } from "../mechanics/statsCalculator";
 
-import levels from "../data/levels.json";
-
-const statKeys = ["vit", "def", "pow", "agi", "spi", "res"];
-
-// registerFont("./src/assets/fonts/SpaceMono-Regular.ttf", { family: "SpaceMono" });
+import rarities from "../data/rarities.json";
+import types from "../data/types.json";
+import { base10ToBase26 } from "src/helpers/utils";
 
 interface Stats {
     hp: number,
@@ -27,22 +25,22 @@ export default class Card {
     moves?: Move[]
     ball?: Item
     
-    client?: DiscordClient
     rarity?: any
     type?: any
 
-    constructor(object: {card: CardInstance, parent?: CardCatalog, character?: Character, ball?: Item, moves?: Move[], client?: DiscordClient}) {
+    constructor(object: {card: CardInstance, parent?: CardCatalog, character?: Character, ball?: Item, moves?: Move[]}) {
         this.card = object.card;
         if (object.parent) this.parent = object.parent;
         if (object.character) this.character = object.character;
         if (object.ball) this.ball = object.ball;
         if (object.moves) this.moves = object.moves;
 
-        if (object.client) {
-            this.client = object.client;
-            this.rarity = object.client.data.rarities[object.card.rarity.toString() as keyof typeof object.client.data.rarities];
-            if (object.parent) this.type = object.client.data.types[object.parent.type.toString() as keyof typeof object.client.data.types];
-        }
+        this.rarity = rarities[this.card.rarity.toString() as keyof typeof rarities];
+        this.type = types[this.parent?.type.toString() as keyof typeof types];
+    }
+
+    canLevel() : boolean {
+        return this.getLevel() < this.rarity.maxLevel;
     }
 
     getLevel(forceExp?: number) {
@@ -50,21 +48,14 @@ export default class Card {
         if (exp === 0) return 1;
 
         let maxLevel = this.rarity.maxLevel;
-        if (exp >= levels[maxLevel.toString() as keyof typeof levels]) return maxLevel;
+        let level = calculateLevelFromExp(exp);
 
-        const values = Object.values(levels);
-        for (let i = 0; i < values.length; i++) {
-            if (values[i] === exp) return i+1;
-            else if (values[i] > exp) return i;
-            else continue;
-        }
-
-        return maxLevel;
+        return Math.min(level, maxLevel);
     }
 
     getStats() : Stats {
         return { 
-            hp: this.card.hp === -1 ? this.card.vit * 100 : this.card.hp,
+            hp: this.card.hp === -1 ? calculateHp(this.card.vit) : this.card.hp,
             vit: this.card.vit,
             def: this.card.def,
             pow: this.card.pow,
@@ -75,23 +66,21 @@ export default class Card {
     }
 
     getRarity() {
-        if (!this.client) return;
-
-        return this.rarity as typeof this.client.data.rarities[1];
+        return this.rarity as typeof rarities[1];
     }
 
     getType() {
-        if (!this.client || !this.parent) return;
+        if (!this.parent) return;
 
-        return this.type as typeof this.client.data.types.INFERNO;
+        return this.type as typeof types.INFERNO;
     }
 
     getRequiredExp(forcedLevel?: number) {
         let level = forcedLevel ? forcedLevel : this.getLevel();
         let requiredExp = 0;
 
-        let thisLevel = levels[(level).toString() as keyof typeof levels];
-        let nextLevel = levels[(level+1).toString() as keyof typeof levels];
+        let thisLevel = calculateExpForLevel(level);
+        let nextLevel = calculateExpForLevel(level+1);
 
         if (nextLevel) requiredExp = nextLevel-thisLevel;
 
@@ -100,16 +89,15 @@ export default class Card {
 
     getExpForExactLevelUps(levelUps: number) {
         const level = this.getLevel()+levelUps;
-        
-        return levels[level.toString() as keyof typeof levels];
+        return calculateExpForLevel(level);
     }
 
     getPercentage(forceLevel?: number, forceExp?: number) {
         let level = forceLevel ? forceLevel : this.getLevel();
         let requiredExp = 0;
 
-        let thisLevel = levels[(level).toString() as keyof typeof levels];
-        let nextLevel = levels[(level+1).toString() as keyof typeof levels];
+        let thisLevel = calculateExpForLevel(level);
+        let nextLevel = calculateExpForLevel(level+1);
 
         if (nextLevel) requiredExp = nextLevel-thisLevel;
 
@@ -127,17 +115,17 @@ export default class Card {
 
     getMaxHealth() {
         let stats: Stats = this.getStats();
-        return stats.vit * 100;
+        return calculateHp(stats.vit);
     }
 
-    getHealthBar() {
-        return this.getBar(this.getMaxHealth(), this.getCurrentHealth()!);
+    getHealthBar(length: number = 12) {
+        return this.getBar(this.getMaxHealth(), this.getCurrentHealth()!, "hp", length);
     }
 
-    getExpBar() {
-        let requiredExp = levels[(this.getLevel()+1).toString() as keyof typeof levels];
-        let previousExp = levels[(this.getLevel()).toString() as keyof typeof levels];
-        return this.getBar(requiredExp-previousExp, this.card.exp-previousExp, "exp");
+    getExpBar(length: number = 12) {
+        let requiredExp = calculateExpForLevel(this.getLevel()+1);
+        let previousExp = calculateExpForLevel(this.getLevel());
+        return this.getBar(requiredExp-previousExp, this.card.exp-previousExp, "exp", length);
     }
 
     getBar(max:number, current:number, variant:string="hp", length:number = 12) {
@@ -183,10 +171,17 @@ export default class Card {
     }
 
     getId() {
-        return this.client!.getId(this.card.cardId, this.card.print) as string;
+        return `${base10ToBase26(this.card.cardId)}-${this.card.print}`;
     }
 
     getLabel() {
         return `${this.ball?.emoji} **${this.character?.name}** [Lv. ${this.getLevel()}]\n\`${this.getId().padEnd(7, " ")}\`${this.type.emoji}\n${this.rarity.emoji.full}`;
+    }
+
+    getStatPoints() {
+        let expectedPoints = this.getLevel() * 6;
+        let spentPoints = this.card.vit + this.card.def + this.card.pow + this.card.agi + this.card.spi + this.card.res;
+
+        return Math.max(0, expectedPoints-spentPoints);
     }
 }

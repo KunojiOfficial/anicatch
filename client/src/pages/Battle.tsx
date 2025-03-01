@@ -284,7 +284,7 @@ export default function Battle() {
                                     name: card1.card.character.name,
                                     type: card1.card.type,
                                     level: card1.level,
-                                    hp: card1.stat.hp === -1 ? card1.maxHp : card1.stat.hp,
+                                    hp: card1.hp === -1 ? card1.maxHp : card1.hp,
                                     maxHp: card1.maxHp,
                                     teamAlive: battle.user1.cards.filter((card: any) => card.status !== "DEAD").length
                                 }} />
@@ -301,7 +301,7 @@ export default function Battle() {
                                     name: card2.card.character.name,
                                     type: card2.card.type,
                                     level: card2.level,
-                                    hp: card2.stat.hp === -1 ? card2.maxHp : card2.stat.hp,
+                                    hp: card2.hp === -1 ? card2.maxHp : card2.hp,
                                     maxHp: card2.maxHp,
                                     teamAlive: battle.user2.cards.filter((card: any) => card.status !== "DEAD").length
                                 }} />

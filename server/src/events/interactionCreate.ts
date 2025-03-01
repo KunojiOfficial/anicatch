@@ -109,7 +109,7 @@ export default new Event({
             player = await refreshEncounters(client, player);
 
             interaction.player = new Player(interaction.user, player, player.role, player.config || undefined);
-            interaction.components = new Components(client, interaction.locale, interaction.user);
+            interaction.components = new Components(client, interaction.locale, interaction.player);
 
             //introduction
             if (player.status === "NEW") {

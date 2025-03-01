@@ -18,7 +18,7 @@ export default async function(interaction: DiscordInteraction, itemId: number, c
     if (!inFight && card.status === "FIGHT") throw 56;
 
     const properties = item.item.properties as any as Property;
-    const cardData = new Card({ card: card, client: client });
+    const cardData = new Card({ card: card });
 
     await client.db.$transaction(async tx => {
         switch (properties.effect) {

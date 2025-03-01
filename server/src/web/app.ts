@@ -7,6 +7,9 @@ import path from 'path';
 import apiRouter from './api';
 import { createServer } from 'http';
 
+import { db } from 'index';
+import { base26ToBase10 } from 'src/helpers/utils';
+
 export default (clusterManager: ClusterManager) => {
     const app = express();
     const server = createServer(app);
@@ -26,13 +29,26 @@ export default (clusterManager: ClusterManager) => {
         res.render('admin');
     });
 
-    app.post("/admin", (req) => {
+    app.post("/admin", async (req, res) => {
         if (req.body.password !== process.env.ADMIN_PASSWORD) return;
-        switch (req.body.action) {
-            case "reload":
-                clusterManager.broadcast(new BaseMessage({action: "deploy"}))
-                break;
+        try {
+            switch (req.body.action) {
+                case "reload":
+                    clusterManager.broadcast(new BaseMessage({action: "deploy"}))
+                    break;
+                case "revive":
+                    await db.cardInstance.updateMany({ where: { team: { gt: 0 }, userId: parseInt(req.body.id) }, data: { hp: -1, status: "IDLE" } });
+                    break;
+                case "translate":
+                    res.send(`THE ID IS ${base26ToBase10(req.body.id.toUpperCase())}`);
+                    return;
+                    break;
+            }
+        } catch (e) {
+            console.error(e);
         }
+
+        res.redirect("/admin");
     });
 
     server.listen(port, () => {

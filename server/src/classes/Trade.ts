@@ -165,7 +165,7 @@ export default class Trade {
             for (const item of itemsOfType) {
                 let data = type !== "currencies" ? itemsData[type].find((i: any) => i.id === item.value) : {};
                 if (type === "cards") {
-                    let card = new Card({ card: data, parent: data.card, character: data.card.character, ball: data.ball, client: client });
+                    let card = new Card({ card: data, parent: data.card, character: data.card.character, ball: data.ball });
                     text += `${card.getLabel()}\n`;                    
                     options.push({ label: card.character!.name, hardEmoji: card.rarity.emoji.short, value: `${type}:${item.value}` });
                 } else if (type === "items") {

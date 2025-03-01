@@ -2,6 +2,7 @@ import { APIEmbed, ActionRowBuilder, ButtonBuilder, ModalBuilder, StringSelectMe
 import { DiscordClient } from "../types";
 import { deepValue, parseColor } from "../helpers/utils";
 import emoji from '../config/emoji.json';
+import Player from "./Player";
 
 let emojis: any = emoji;
 
@@ -33,13 +34,13 @@ interface Button {
 
 export default class Components {
     client: DiscordClient
-    user: User
+    player: Player
     locale: string
 
-    constructor(client: DiscordClient, locale: string, user: User) {
+    constructor(client: DiscordClient, locale: string, player: Player) {
         this.client = client;
         this.locale = client.locales[locale] ? locale : "en-US";
-        this.user = user;
+        this.player = player;
     }
 
     /**
@@ -64,8 +65,8 @@ export default class Components {
 
         if (object.footer?.text) object.footer.text = this.client.formatText(object.footer.text, this.locale, replace);
 
-        if (!replace) replace = { user: [this.user.displayName] }
-        else replace = { ...replace, user: [this.user.displayName] };
+        if (!replace) replace = { user: [this.player.user.displayName] }
+        else replace = { ...replace, user: [this.player.user.displayName] };
 
         if (object.title) object.title = this.client.formatText(object.title, this.locale, replace);
         if (object.description) object.description = this.client.formatText(object.description, this.locale, replace);
@@ -77,6 +78,8 @@ export default class Components {
                 if (field.value) field.value = this.client.formatText(field.value, this.locale, replace);
             }
         }
+
+        if (this.player.config.isMobile && !object.footer && object.fields) object.footer = { text: this.client.formatText("{locale_main_mobileVersion}", this.locale) }; 
 
         return {
             ...object,
@@ -101,7 +104,7 @@ export default class Components {
             if (button.id !== undefined) customId.push(button.id);
             else customId.push(buttons.length <= 1 ? 0 : Math.random());
 
-            if (!button.owner) customId.push(this.user.id);
+            if (!button.owner) customId.push(this.player.user.id);
             else customId.push(button.owner);
 
             if (button.cooldown) {
@@ -169,7 +172,7 @@ export default class Components {
         if (object.id !== undefined) customId.push(object.id + (object.followUp ? "F" : ""));
         else customId.push(0);
 
-        customId.push(this.user.id);
+        customId.push(this.player.user.id);
 
         if (object.cooldown) {
             customId.push(object.cooldown.id);

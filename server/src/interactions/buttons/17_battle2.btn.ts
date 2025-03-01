@@ -1,6 +1,7 @@
 import { InteractionReplyOptions } from "discord.js";
 import Interactable from "../../classes/Interactable";
 import launchActivity from "../../mechanics/launchActivity";
+import { calculateExpForLevel, calculateLevelFromExp } from "src/mechanics/statsCalculator";
 
 export default new Interactable({
     id: 17,
@@ -35,9 +36,21 @@ export default new Interactable({
             clearTimeout(timeoutId);
             clearTimeout(timeout2Id);
 
+            // calculate average level of the team and set stats of the wild animon
+            let avgLevel = Math.ceil(team.reduce((acc, card) => acc + calculateLevelFromExp(card.exp), 0) / team.length);
+            let availablePoints = (avgLevel-1) * 6;
+            
+            // randomly distribute the points
+            let stats = { vit: 1, def: 1, pow: 1, agi: 1, spi: 1, res: 1 };
+            while (availablePoints > 0) {
+                let stat = Object.keys(stats)[Math.floor(Math.random() * 6)];
+                stats[stat]++;
+                availablePoints--;
+            }
+
             battle = await client.db.$transaction(async tx => {
                 await tx.cardInstance.updateMany({ where: { userId: player.data.id, team: { gt: 0 }, status: "IDLE" }, data: { status: "FIGHT" } });
-                await tx.cardInstance.update({ where: { id: card.id, status: "WILD" }, data: { status: "WILD_FIGHT" } });
+                await tx.cardInstance.update({ where: { id: card.id, status: "WILD" }, data: { status: "WILD_FIGHT", ...stats, exp: calculateExpForLevel(avgLevel) } });
                 return await tx.battle.create({
                     data: { 
                         userId1: player.data.id,

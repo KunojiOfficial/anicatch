@@ -12,7 +12,7 @@ export default new Panel({
         if (typeof page === 'string') page = parseInt(page);
         if (typeof owner === 'string' && owner !== '0') owner = await client.users.fetch(owner);
 
-        if (!owner) owner = player.user;
+        if (!owner || typeof owner === 'string') owner = player.user;
 
         const userData = await client.db.user.findFirst({ 
             where: { discordId: owner.id }, 

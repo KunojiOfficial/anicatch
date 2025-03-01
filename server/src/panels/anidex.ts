@@ -27,7 +27,7 @@ export default new Panel({
 
         const type = client.data.types[card.type.toString() as keyof typeof client.data.types];
 
-        const cardC = new Card({ card: { rarity: rarity } as CardInstance, parent: card, client: client });
+        const cardC = new Card({ card: { rarity: rarity } as CardInstance, parent: card });
         const attachment = await cardC.generateImage();
 
         const defaults = { id: '0', args: { path: "anidex", page: page, rarity: rarity } };

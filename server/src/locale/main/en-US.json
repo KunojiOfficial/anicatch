@@ -12,11 +12,17 @@
     "voucher": "Voucher",
     "stats": {
         "vit": "Vitality",
+        "vitDesc": "Increases your maximum health points.",
         "def": "Defense",
+        "defDesc": "Reduces the physical damage you take.",
         "pow": "Power",
+        "powDesc": "Increases the physical damage you deal.",
         "agi": "Agility",
+        "agiDesc": "Defines your speed and dodge chance.",
         "spi": "Spirit",
-        "res": "Resilience"
+        "spiDesc": "Increases the magical damage you deal.",
+        "res": "Resilience",
+        "resDesc": "Reduces the magical damage you take."
     },
     "cards": "Animons",
     "currencies": "Currencies",
@@ -36,5 +42,6 @@
     "tradeCancel": "You have successfully cancelled sending this trade offer!",
     "tradeSent": "You have successfully sent this trade offer!",
     "tradeAccept": "You have successfully accepted this trade offer!",
-    "tradeReject": "You have successfully rejected this trade offer!"
+    "tradeReject": "You have successfully rejected this trade offer!",
+    "mobileVersion" : "Mobile Version"
 }
