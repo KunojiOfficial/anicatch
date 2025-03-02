@@ -5,7 +5,9 @@ import { RPCCloseCodes } from "@discord/embedded-app-sdk";
 interface BattleState {
     battle: { type: string; [key: string]: any } | null;
     targetMove: { type: string; [key: string]: any } | null;
+    battleFinished: boolean | null;
     setBattle: (battle: unknown) => void;
+    setBattleFinished: (battle: unknown) => void;
     intervalId: NodeJS.Timeout | null;
     connect: () => void;
     error: string | null;
@@ -14,8 +16,10 @@ interface BattleState {
 export const useBattleStore = create<BattleState>((set, get) => ({
     battle: null,
     targetMove: null,
+    battleFinished: null,
     setBattle: (battle) => set({ battle }),
     setTargetMove: (targetMove) => set({ targetMove }),
+    setBattleFinished: (battleFinished) => set({ battleFinished }),
     intervalId: null,
     error: null,
     connect: () => {
@@ -39,11 +43,12 @@ export const useBattleStore = create<BattleState>((set, get) => ({
                 if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
 
                 const data = await response.json();
+                
                 if (data.type === "UPDATE_BATTLE") {
-                    console.log("🔄 Battle updated:", data);
                     set({ battle: data });
                     set({ error: null });
 
+                    console.log("🔄 Battle updated:", data);
                     
                     const currentUser = data.user1.discordId === discordId ? data.user1 : data.user2;
                     const targetMove = data.battle.userId1 === currentUser.id ? data.battle.move1 : data.battle.move2;
@@ -61,10 +66,13 @@ export const useBattleStore = create<BattleState>((set, get) => ({
                         set({ intervalId: null });
                     }
                 } else if (data.type === "BATTLE_NOT_FOUND") {
-                    console.log("🛑 Battle not found, closing Discord SDK...");
-                    discordSdk.close(RPCCloseCodes.CLOSE_NORMAL, "You exited from the app."); // Close the Discord SDK
+                    set({ battleFinished: true });
+                    clearInterval(get().intervalId);
+                    set({ intervalId: null });
+                    // discordSdk.close(RPCCloseCodes.CLOSE_NORMAL, "You exited from the app."); // Close the Discord SDK
                 }
 
+                
             } catch (error) {
                 console.error("HTTP polling error:", error);
                 set({ error: error.message });

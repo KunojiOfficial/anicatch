@@ -14,6 +14,37 @@ function getDesc(card: CardInstance, player: Player) {
     else return undefined;
 }
 
+async function moves(interaction: DiscordInteraction, where: any) {
+    const { client, player } = interaction;
+
+    const animon = await client.db.cardInstance.findFirst({ where: where, include: { card: { include: { character: true } }, user: true, moves: true } });
+    if (!animon) throw 5;
+
+    const fields = [];
+    for (let i = 0; i < 4; i++) {
+        const move = animon.moves[i];
+        if (!move) fields.push({ name: `Empty Move ${i+1}`, value: `-# Teach your Animon a move to fill this slot.` });
+        else fields.push({ name: `{emoji_${move.type.toLowerCase()}}\u2800${move.name}`, value: `-# **Power:** ${move.power}\u2800**Accuracy:** ${move.accuracy}%\u2800**Limit:** ${move.pp}\n-# {locale_main_${move.moveType}}` });
+    }
+
+    const card = new Card({card: animon, parent: animon.card });
+
+    return [{
+        embeds: [ interaction.components.embed({
+            description: `${player.getBalance()}\nManage your Animon's moves using the menu below.\n-# Moves are used during battles to deal damage or apply effects.\n\u2800`,
+            fields: fields,
+            color: card.getRarity()?.color,
+            thumbnail: "attachment://card.jpg"
+        }) ],
+        components: [interaction.components.buttons([{
+            label: "Edit Moves",
+            emoji: "plus",
+            style: "green",
+            args: { path: "moves", cardId: animon.id }
+        }]) ]
+    }, animon]
+}
+
 async function main(interaction: DiscordInteraction, where: any, userAccess: boolean = false, page: string = "main") {
     const { client, player } = interaction;
 
@@ -146,6 +177,7 @@ export default new Panel({
         let [data, animon]: [any, any] = [{}, {}];
         if (page === "main") [data, animon] = await main(interaction, where, userAccess);
         else if (page === "stats") [data, animon] = await stats(interaction, where, additional);
+        else if (page === "moves") [data, animon] = await moves(interaction, where);
 
         let components = [interaction.components.buttons([{
             id: "0",
@@ -162,12 +194,15 @@ export default new Panel({
             disabled: page === "stats",
             args: { path: "animon", id: animon.id, userAccess: false, page: "stats" }
         }, {
+            id: "0",
             label: "Moves",
+            style: page === "moves" ? "blurple" : "gray",
             emoji: "evolve",
+            disabled: page === "moves",
+            args: { path: "animon", id: animon.id, userAccess: false, page: "moves" }
         }])]
 
         return {
-            content: `-# #${animon.id}`,
             ...data,
             components: [...components, ...data.components]
         }

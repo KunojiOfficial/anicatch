@@ -25,7 +25,7 @@ export default class Card {
     moves?: Move[]
     ball?: Item
     
-    rarity?: any
+    rarity?: typeof rarities[1]
     type?: any
 
     constructor(object: {card: CardInstance, parent?: CardCatalog, character?: Character, ball?: Item, moves?: Move[]}) {
@@ -176,6 +176,10 @@ export default class Card {
 
     getLabel() {
         return `${this.ball?.emoji} **${this.character?.name}** [Lv. ${this.getLevel()}]\n\`${this.getId().padEnd(7, " ")}\`${this.type.emoji}\n${this.rarity.emoji.full}`;
+    }
+
+    getShortLabel() {
+        return `${this.ball ? `${this.ball?.emoji} ` : ""}${this.type.emoji} ${this.rarity.emoji.short} \`${this.getId().padEnd(7, " ")}\` **${this.character?.name}** [Lv. ${this.getLevel()}]`;
     }
 
     getStatPoints() {

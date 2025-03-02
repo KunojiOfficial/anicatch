@@ -1,9 +1,9 @@
-import { Battle as DbBattle } from "@prisma/client";
+import { Battle as DbBattle, User } from "@prisma/client";
 import { HistoryElement } from "src/types";
 import Card from "./Card";
 import { manager, db } from "../../index";
 import { BaseMessage } from "discord-hybrid-sharding";
-import { parseColor } from "src/helpers/utils";
+import { numberWithCommas, parseColor } from "src/helpers/utils";
 import rarities from "../data/rarities.json";
 import types from "../data/types.json";
 import Client from "./Client";
@@ -159,7 +159,7 @@ class Battle {
             } else if (move.type === "item") {
                 moveResult = await this.item(move.cardId, move.itemId, this.battle[`userId${move.userIndex+1}`]);
             } else if (move.type === "run") {
-                return await this.end(false);
+                return await this.end(false, this.battle[`userId${rev(move.userIndex)+1}`]);
             }
 
             history.push(moveResult);
@@ -180,7 +180,7 @@ class Battle {
         for (const deadCard of dead) {
             this.cachedCard = null;
 
-            if (deadCard.card.status === "WILD_DEAD") return await this.end();
+            if (deadCard.card.status === "WILD_DEAD") return await this.end(true, this.battle.userId1);
 
             this.cachedCard = await db.cardInstance.findFirst({
                 where: { userId: deadCard.card.userId, status: "FIGHT", team: { gt: 0 } },
@@ -188,7 +188,7 @@ class Battle {
             });
     
             if (!this.cachedCard) {
-                return await this.end(false);
+                return await this.end(false, deadCard.card.userId === this.battle.userId1 ? this.battle.userId2 : this.battle.userId1);
             }
 
             let index = deadCard.card.userId === this.battle.userId1 ? 1 : 2;
@@ -288,19 +288,20 @@ class Battle {
         const enemyStats = enemyCard.getStats();
         
         let data = {}, efectivness: 1 | 0.5 | 2 = 1, defended = 0, damage = 0, hp = -1, moveType, miss = false;
-        if (move.moveType === "ATTACK") {
+        if (move.moveType === "ATTACK" || move.moveType === "SPIRIT_ATTACK") {
+            let isSpirit = move.moveType === "SPIRIT_ATTACK";
             efectivness = this.getEfectivness(move.type, enemyCard.parent.type);
 
             if (order === 1) { //move is second, check for defense of enemy
                 const enemyMove = enemyCard.moves.find(m => m.id === (this.battle.move1 as any).moveId);
-                if (enemyMove && enemyMove.moveType === "DEFENSE") {
-                    defended = calculateAtk(enemyStats.def, enemyMove.power);
+                if (enemyMove && enemyMove.moveType === (isSpirit ? "SPIRIT_DEFENSE" : "DEFENSE")) {
+                    defended = isSpirit ? calculateAtk(enemyStats.res, enemyMove.power) :  calculateAtk(enemyStats.def, enemyMove.power);
                 }
             }
 
             damage = calculateDmg(
-                calculateAtk(cardStats.pow, move.power),
-                enemyStats.def,
+                calculateAtk(isSpirit ? cardStats.spi : cardStats.pow, move.power),
+                isSpirit ? enemyStats.res : enemyStats.def,
                 efectivness,
                 defended
             );
@@ -384,13 +385,11 @@ class Battle {
         await this.selectAction("move", { type: "move", moveId: perfectMove.id, cardId: this.activeCards[this.userIndex].card.id });
     }
 
-    async end(isWin: boolean = true): Promise<boolean> {
+    async end(isWin: boolean = true, winner?: number): Promise<boolean> {
+        const user = await db.user.findFirst({ where: { id: winner }, include: { role: true } });
         let exp = 0;
 
-        if (this.battle.type === "PVE") {
-            exp = isWin ? calculateDroppedExp(this.activeCards[1].getLevel()) : 0;
-        }
-        console.log("tutaj")
+        if (this.battle.type === "PVE") exp = isWin ? calculateDroppedExp(this.activeCards[1].getLevel()) : 0;
 
         await db.$transaction(async tx => {
             await tx.battle.update({
@@ -403,10 +402,30 @@ class Battle {
                 data: { status: "IDLE" }
             });
 
-            if (exp > 0 && this.activeCards[0].canLevel()) await tx.cardInstance.updateMany({
-                where: { id: this.activeCards[0].card.id },
-                data: { exp: { increment: exp } }
-            });
+            if (exp > 0) {
+                await tx.cardInstance.updateMany({
+                    where: { id: this.activeCards[0].card.id },
+                    data: { exp: { increment: exp } }
+                });
+
+                //exp share
+                if (user.role.expShare > 0) {
+                    const team = await tx.cardInstance.findMany({
+                        where: { userId: user.id, team: { gt: 0 } }
+                    });
+
+                    for (const card of team.filter(c => c.id !== this.activeCards[0].card.id)) {
+                        const cardObj = new Card({ card });
+                        if (!cardObj.canLevel()) continue;
+
+                        const sharedExp = Math.floor(exp * user.role.expShare);
+                        await tx.cardInstance.update({
+                            where: { id: card.id },
+                            data: { exp: { increment: sharedExp } }
+                        });
+                    }
+                }
+            }
 
             if (this.battle.type === "PVE") {
                 await tx.cardInstance.deleteMany({
@@ -422,11 +441,21 @@ class Battle {
             if (level != card.getLevel(card.card.exp+exp)) hasLeveledUp = true;
         }
 
-        let message = "⚔️ **The battle has ended!** ⚔️";
-        if (exp > 0) message += `\n✨ **${this.activeCards[0].character.name}** received **${exp} EXP**! ✨`;
+        let message = "**The battle has ended!**";
+        if (exp > 0) {
+            if (this.activeCards[0].canLevel()) message += `\n**${this.activeCards[0].character.name}** received **${numberWithCommas(exp)} EXP**!`;
+            if (user.role.expShare > 0) message += `\nThe rest of Animons in your team received **${numberWithCommas(Math.floor(exp * user.role.expShare))} EXP**!`;
+        }
+
         if (hasLeveledUp) {
             const newLevel = this.activeCards[0].getLevel() + 1;
-            message += `\n🎉 **${this.activeCards[0].character.name}** has leveled up! 🎉\nNew level: **${newLevel}**`;
+            message += `\n\n**${this.activeCards[0].character.name}** has leveled up!\nNew level: **${newLevel}**`;
+        } else if (!isWin) {
+            message += "\nAll your Animons have fainted!\nYou lost the battle!";
+        }
+
+        if (winner && this.battle.type === "PVP") {
+            message = `**${user.username}** has won the battle!`;
         }
 
         manager.broadcast(new BaseMessage({action: "edit", channelId: this.battle.channelId, messageId: this.battle.messageId, content: {
@@ -434,7 +463,8 @@ class Battle {
                 description: message,
                 image: { url: "attachment://card.jpg" },
                 color: parseColor("#ffffff")
-            } ]
+            } ],
+            components: []
         }}));
 
         return true;

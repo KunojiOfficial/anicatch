@@ -190,7 +190,7 @@ export default class Components {
 
         const menu = new StringSelectMenuBuilder();
         menu.setCustomId(customId.join(';'));
-        
+
         if (object.placeholder) menu.setPlaceholder(object.placeholder);
         if (object.options) {
             const options = [];

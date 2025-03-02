@@ -7,6 +7,7 @@ import { Config, Prisma, User } from "@prisma/client";
 import { Collection } from "discord.js";
 import Client from "../classes/Client";
 import introduction from "../mechanics/introduction";
+import { createUser } from "src/mechanics/createUser";
 
 const cooldowns = new Collection();
 
@@ -92,18 +93,7 @@ export default new Event({
         const { client, user } = interaction;
 
         try {
-            let player = await client.db.user.upsert({
-                where: { discordId: user.id },
-                update: { },
-                create: { 
-                    discordId: user.id, 
-                    username: user.username,
-                    config: { create: { locale: interaction.locale } },
-                    stats: { create: {} },
-                    items: { create: [{ itemId: 1, count: 15 }, { itemId: 2, count: 1 }, { itemId: 3, count: 1 }, { itemId: 4, count: 1 }] }
-                },
-                include: { config: true, role: true }
-            });
+            let player = await createUser(user, client, interaction.locale);
 
             //encounter refresh logic
             player = await refreshEncounters(client, player);

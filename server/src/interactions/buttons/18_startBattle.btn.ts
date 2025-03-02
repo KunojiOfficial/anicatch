@@ -48,13 +48,13 @@ export default new Interactable({
         let team1 = "\u2800\n", team2 = "\u2800\n";
         
         for (const card of team) {
-            const cardObj = new Card({ card: card, parent: card.card, character: card.card.character, ball: card.ball });
-            team1 += cardObj.getLabel() + "\n\n";
+            const cardObj = new Card({ card: card, parent: card.card, character: card.card.character });
+            team1 += cardObj.getShortLabel() + "\n";
         }
 
         for (const card of enemyTeam) {
-            const cardObj = new Card({ card: card, parent: card.card, character: card.card.character, ball: card.ball });
-            team2 += cardObj.getLabel() + "\n\n";
+            const cardObj = new Card({ card: card, parent: card.card, character: card.card.character });
+            team2 += cardObj.getShortLabel() + "\n";
         }
 
         await Promise.all([
@@ -68,10 +68,17 @@ export default new Interactable({
                         { name: `${enemyPlayer.username}'s Team`, value: team2, inline: true }
                     ]
                 }) ],
+                components: []
+            }),
+            interaction.message.reply({
+                content: `<@${enemyPlayer.discordId}>`,
+                embeds: [ interaction.components.embed({
+                    description: `Join the battle with {command_battle resume} or with the button below.`
+                })],
                 components: [ interaction.components.buttons([{
                     id: '19',
                     owner: '0',
-                    label: "View Battle",
+                    label: "Join Battle",
                     emoji: "wyes"
                 }]) ]
             })

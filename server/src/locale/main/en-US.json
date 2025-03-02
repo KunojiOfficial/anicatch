@@ -43,5 +43,11 @@
     "tradeSent": "You have successfully sent this trade offer!",
     "tradeAccept": "You have successfully accepted this trade offer!",
     "tradeReject": "You have successfully rejected this trade offer!",
-    "mobileVersion" : "Mobile Version"
+    "mobileVersion" : "Mobile Version",
+    "ATTACK": "Physical Attack",
+    "DEFENSE": "Physical Defense",
+    "SPIRIT": {
+        "ATTACK": "Magical Attack",
+        "DEFENSE": "Magical Defense"
+    }
 }

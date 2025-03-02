@@ -10,7 +10,7 @@ import './Battle.css'; // Import the CSS file for background animation
 import Move from "../components/battle/Move";
 
 export default function Battle() {
-    const { battle, targetMove, connect, error } = useBattleStore();
+    const { battle, targetMove, connect, error, battleFinished } = useBattleStore();
     const initialButtonTexts = ["Fight", "Bag", "Team", "Run"];
     const [buttonTexts] = useState(initialButtonTexts);
     const [modalContent, setModalContent] = useState<React.ReactNode>(null);
@@ -273,80 +273,90 @@ export default function Battle() {
 
     return (
         <div className="battle-background">
-            <div className={`flex  ${width > 1120 ? "p-10  w-full justify-center" : "pt-5"}`}>
-                <div className="flex">
-                    {(() => {
-                        const card1 = battle.user1.cards.find((card: any) => card.id === battle.battle.cardId1 || card.id === battle.battle.cardId2);
-                        return (
-                            <>
-                                {width > 1120 && <Card url={card1.url} />}
-                                <Stats data={{
-                                    name: card1.card.character.name,
-                                    type: card1.card.type,
-                                    level: card1.level,
-                                    hp: card1.hp === -1 ? card1.maxHp : card1.hp,
-                                    maxHp: card1.maxHp,
-                                    teamAlive: battle.user1.cards.filter((card: any) => card.status !== "DEAD").length
-                                }} />
-                            </>
-                        );
-                    })()}
-                </div>
-                <div className="flex">
-                    {(() => {
-                        const card2 = battle.user2.cards.find((card: any) => card.id === battle.battle.cardId1 || card.id === battle.battle.cardId2);
-                        return (
-                            <>
-                                <Stats data={{
-                                    name: card2.card.character.name,
-                                    type: card2.card.type,
-                                    level: card2.level,
-                                    hp: card2.hp === -1 ? card2.maxHp : card2.hp,
-                                    maxHp: card2.maxHp,
-                                    teamAlive: battle.user2.cards.filter((card: any) => card.status !== "DEAD").length
-                                }} />
-                                {width > 1120 && <Card url={card2.url} />}
-                            </>
-                        );
-                    })()}
-                </div>
-            </div>
-            <div className="fixed bottom-0" onClick={nextDialogue}>
-                <div className="flex w-screen min-h-50 bg-gray-900 border-t-2 border-gray-700 px-16">
-                    <div className={battle.battle.turn === cachedTurn && !targetMove ? "w-2/5 p-5" : "w-full p-5"}>
-                        <h2 className="text-2xl">
-                            {battle.battle.turn === cachedTurn ? 
-                                (targetMove ? "Waiting for opponent..." : <>What will <span className="font-bold">{battle.user1.cards.find((card: any) => card.id === battle.battle.cardId1 || card.id === battle.battle.cardId2).card.character.name}</span> do?</>) :
-                                <>
-                                    {cachedMove === 0 ? processHistory(battle.battle.history[battle.battle.history.length-2]) : processHistory(battle.battle.history[battle.battle.history.length-1])}
-                                    <div className="text-1x1 mt-2 italic">Click to continue...</div>
-                                </>
-                            }
-                        </h2>
+            {battleFinished ? 
+                <div className="flex justify-center items-center h-screen">
+                    <div className=" bg-gray-900 border-2 border-gray-700 p-16 rounded-2xl shadow-2xl">
+                        <h1 className="text-4xl">The battle has ended!</h1>
+                        <h2 className="text-2xl mt-5">You can close this window and view the battle results in the Discord chat.</h2>
                     </div>
-                    <div className="w-3/5 p-5 grid grid-rows-2 grid-cols-2 gap-1.5">
-                    {!targetMove && cachedTurn === battle.battle.turn ? <>
-                        <Button onClick={handleFightClick}>
-                            {buttonTexts[0]}
-                        </Button>
-                        <Button onClick={handleBagClick}>
-                            {buttonTexts[1]}
-                        </Button>
-                        <Button onClick={handleTeamClick}>
-                            {buttonTexts[2]}
-                        </Button>
-                        <Button onClick={handleRunClick}>
-                            {buttonTexts[3]}
-                        </Button>
-                    </> : <></>}
+                </div> : 
+                <>
+                    <div className={`flex  ${width > 1120 ? "p-10  w-full justify-center" : "pt-5"}`}>
+                        <div className="flex">
+                            {(() => {
+                                const card1 = battle.user1.cards.find((card: any) => card.id === battle.battle.cardId1 || card.id === battle.battle.cardId2);
+                                return (
+                                    <>
+                                        {width > 1120 && <Card url={card1.url} />}
+                                        <Stats data={{
+                                            name: card1.card.character.name,
+                                            type: card1.card.type,
+                                            level: card1.level,
+                                            hp: card1.hp === -1 ? card1.maxHp : card1.hp,
+                                            maxHp: card1.maxHp,
+                                            teamAlive: battle.user1.cards.filter((card: any) => card.status !== "DEAD").length
+                                        }} />
+                                    </>
+                                );
+                            })()}
+                        </div>
+                        <div className="flex">
+                            {(() => {
+                                const card2 = battle.user2.cards.find((card: any) => card.id === battle.battle.cardId1 || card.id === battle.battle.cardId2);
+                                return (
+                                    <>
+                                        <Stats data={{
+                                            name: card2.card.character.name,
+                                            type: card2.card.type,
+                                            level: card2.level,
+                                            hp: card2.hp === -1 ? card2.maxHp : card2.hp,
+                                            maxHp: card2.maxHp,
+                                            teamAlive: battle.user2.cards.filter((card: any) => card.status !== "DEAD").length
+                                        }} />
+                                        {width > 1120 && <Card url={card2.url} />}
+                                    </>
+                                );
+                            })()}
+                        </div>
                     </div>
-                </div>
-            </div>
-            {isModalOpen && (
-                <Modal onClose={() => setIsModalOpen(false)}>
-                    {modalContent}
-                </Modal>
-            )}
+                    <div className="fixed bottom-0" onClick={nextDialogue}>
+                        <div className="flex w-screen min-h-50 bg-gray-900 border-t-2 border-gray-700 px-16">
+                            <div className={battle.battle.turn === cachedTurn && !targetMove ? "w-2/5 p-5" : "w-full p-5"}>
+                                <h2 className="text-2xl">
+                                    {battle.battle.turn === cachedTurn ? 
+                                        (targetMove ? "Waiting for opponent..." : <>What will <span className="font-bold">{battle.user1.cards.find((card: any) => card.id === battle.battle.cardId1 || card.id === battle.battle.cardId2).card.character.name}</span> do?</>) :
+                                        <>
+                                            {cachedMove === 0 ? processHistory(battle.battle.history[battle.battle.history.length-2]) : processHistory(battle.battle.history[battle.battle.history.length-1])}
+                                            <div className="text-1x1 mt-2 italic">Click to continue...</div>
+                                        </>
+                                    }
+                                </h2>
+                            </div>
+                            <div className="w-3/5 p-5 grid grid-rows-2 grid-cols-2 gap-1.5">
+                            {!targetMove && cachedTurn === battle.battle.turn ? <>
+                                <Button onClick={handleFightClick}>
+                                    {buttonTexts[0]}
+                                </Button>
+                                <Button onClick={handleBagClick}>
+                                    {buttonTexts[1]}
+                                </Button>
+                                <Button onClick={handleTeamClick}>
+                                    {buttonTexts[2]}
+                                </Button>
+                                <Button onClick={handleRunClick}>
+                                    {buttonTexts[3]}
+                                </Button>
+                            </> : <></>}
+                            </div>
+                        </div>
+                    </div>
+                    {isModalOpen && (
+                        <Modal onClose={() => setIsModalOpen(false)}>
+                            {modalContent}
+                        </Modal>
+                    )}
+                </>
+            }
         </div>
     );
 }

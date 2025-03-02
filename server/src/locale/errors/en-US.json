@@ -57,5 +57,9 @@
     "57": "enemy in active battle",
     "58": "enemy no team or all defeated",
     "59": "animon doesnt belong to you",
-    "60": "not enough attribute points"
+    "60": "not enough attribute points",
+    "61": "unknown move",
+    "62": "move slot already filled",
+    "63": "level not high enough to teach",
+    "64": "move already known"
 }

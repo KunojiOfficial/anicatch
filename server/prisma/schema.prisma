@@ -58,6 +58,8 @@ model Role {
   maxEncounters Int
   rechargeTime  Int
 
+  expShare      Float             @default(0)
+
   daily         Json[]
 
   users         User[]
@@ -275,7 +277,7 @@ model Battle {
 enum MoveType {
   ATTACK
   DEFENSE
-  SPIRIT
+  SPIRIT_ATTACK
   SPIRIT_DEFENSE
 }
 
@@ -285,8 +287,12 @@ model Move {
   power         Int
   accuracy      Int
   pp            Int            
+  requiredLevel Int             @default(1)
 
   moveType      MoveType        @default(ATTACK)
+
+  coins         Int             @default(0)
+  gems          Int             @default(0)
 
   type          CardType
   cards         CardInstance[]
