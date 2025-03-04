@@ -66,8 +66,12 @@ model Role {
 }
 
 model Config {
-  isMobile      Boolean           @default(false)
   locale        String            @default("en-US")
+  
+  isMobile      Boolean           @default(false)
+  profile       Boolean           @default(true)
+  trades        Boolean           @default(true)
+  encounters    Boolean           @default(true)
   
   userId        Int               @unique
   user          User              @relation(fields: [userId], references: [id], onDelete: Cascade)

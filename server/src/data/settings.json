@@ -1,0 +1,21 @@
+{
+    "general": [{
+        "name": "locale",
+        "type": "options",
+        "emoji": "{locale_main_emoji}"
+    }, {
+        "name": "isMobile",
+        "type": "switch"
+    }],
+    "privacy": [{
+        "name": "profile",
+        "type": "switch"
+    }, {
+        "name": "trades",
+        "type": "switch"
+    }],
+    "notifications": [{
+        "name": "encounters",
+        "type": "switch"
+    }]
+}

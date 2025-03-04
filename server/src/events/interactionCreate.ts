@@ -95,6 +95,8 @@ export default new Event({
         try {
             let player = await createUser(user, client, interaction.locale);
 
+            interaction.locale = (player.config?.locale || "en-US") as any;
+
             //encounter refresh logic
             player = await refreshEncounters(client, player);
 

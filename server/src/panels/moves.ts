@@ -110,7 +110,12 @@ export default new Panel({
 
         return {
             ...panel,
-            components: components
+            components: [...components, interaction.components.buttons([{
+                label: "Back",
+                emoji: "back",
+                id: "0",
+                args: { path: "animon", cardId: cardId, userAccess: false, page: "moves" }
+            }])]
         }
     }
 }); 

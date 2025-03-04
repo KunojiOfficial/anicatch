@@ -39,7 +39,7 @@ export default class Components {
 
     constructor(client: DiscordClient, locale: string, player: Player) {
         this.client = client;
-        this.locale = client.locales[locale] ? locale : "en-US";
+        this.locale = client.locales.main[locale] ? locale : "en-US";
         this.player = player;
     }
 
@@ -68,6 +68,7 @@ export default class Components {
         if (!replace) replace = { user: [this.player.user.displayName] }
         else replace = { ...replace, user: [this.player.user.displayName] };
 
+        if (object.author?.name) object.author.name = this.client.formatText(object.author.name, this.locale, replace);
         if (object.title) object.title = this.client.formatText(object.title, this.locale, replace);
         if (object.description) object.description = this.client.formatText(object.description, this.locale, replace);
         if (object.fields) {

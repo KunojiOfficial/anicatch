@@ -27,6 +27,7 @@ export default new Event({
             case "gems":
                 await entitlement.consume();
                 await client.db.user.updateMany({ where: { id: player.id }, data: { gems: { increment: data.gems } } });
+                await client.db.log.create({ data: { userId: player.id, action: "gem-purchase", description: `bought ${data.gems} gems` } });
                 break;
             default:
                 break;
@@ -36,13 +37,7 @@ export default new Event({
             embeds: [ components.embed({
                 description: `### Thanks for your purchase! ❤️\nYou’ve successfully acquired **${data.gems} {locale_main_${data.type}}**.\nWe hope you enjoy your new goodies!\n\nIf you haven't received your goods, hop into our [support server]({config_urls_support})!`,
                 thumbnail: client.getEmojiUrl("gem")
-            }) ],
-            components: [ components.buttons([{
-                id: '0F',
-                label: "Activate Voucher",
-                emoji: "smallGem",
-                args: { path: "vouchers" }
-            }]) ]
+            }) ]
         });
     }
 });
