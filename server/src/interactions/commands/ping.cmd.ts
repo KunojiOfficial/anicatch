@@ -4,6 +4,7 @@ import Command from '../../classes/Command';
 export default new Command({
     emoji: "🏓",
     dontReply: true,
+    cooldown: 5,
     data: new SlashCommandBuilder()
         .setName("ping")
         .setDescription("Pong!")

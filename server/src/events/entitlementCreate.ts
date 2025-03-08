@@ -5,7 +5,6 @@ import { DiscordClient } from "../types";
 
 import vouchersData from "../data/vouchers.json";
 import Player from "src/classes/Player";
-import { createUser } from "src/mechanics/createUser";
 
 export default new Event({
     async execute(entitlement: Entitlement): Promise<void> {
@@ -16,18 +15,20 @@ export default new Event({
 
         let locale = "en-US";
         
-        const player = await createUser(user, client, "en-US");
+        const player = new Player(user);
+        await player.create(user, client, "en-US");
+
         locale = player.config?.locale || "en-US";
 
-        const components = new Components(client, locale, new Player(user, player, player.role, player.config));
+        const components = new Components(client, locale, player);
         const data = vouchersData[entitlement.skuId as keyof typeof vouchersData];
 
         // Add the entitlement to the user's account
         switch (data.type) {
             case "gems":
                 await entitlement.consume();
-                await client.db.user.updateMany({ where: { id: player.id }, data: { gems: { increment: data.gems } } });
-                await client.db.log.create({ data: { userId: player.id, action: "gem-purchase", description: `bought ${data.gems} gems` } });
+                await client.db.user.updateMany({ where: { id: player.data.id }, data: { gems: { increment: data.gems } } });
+                await client.db.log.create({ data: { userId: player.data.id, action: "gem-purchase", description: `bought ${data.gems} gems` } });
                 break;
             default:
                 break;

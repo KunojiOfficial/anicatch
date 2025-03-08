@@ -5,12 +5,11 @@ import { readdirSync } from "fs";
 import path from "path";
 
 import { DiscordInteraction, UserRole } from "../types";
-import { deepValue, getTextBetweenTwoStrings, numberWithCommas, base10ToBase26, base26ToBase10 } from "../helpers/utils";
+import { deepValue, getTextBetweenTwoStrings, numberWithCommas, base10ToBase26, base26ToBase10, loadFiles, unixDate } from "../helpers/utils";
 import Event from "./Event";
 import Panel from "./Panel";
 import Command from "./Command";
 import Interactable from "./Interactable";
-import Locale from "./Locale";
 
 import config from "../config/main.json";
 import emoji from "../config/emoji.json";
@@ -20,49 +19,30 @@ import Logger from "./Logger";
 import rarities from "../data/rarities.json";
 import types from "../data/types.json";
 import { pathToFileURL } from "url";
-
-async function loadFiles(collection: Collection<string, any>, directory: string) {
-    const filePath: string = path.resolve(process.cwd(), directory);
-    const files: string[] = readdirSync(filePath).filter(
-        (file) => file.endsWith('.js') || file.endsWith('.ts')
-    );
-
-    for (const file of files) {
-        let name = path.parse(file).name.replace(/.cmd|.sel|.btn/, '');
-        const cmdUrl = pathToFileURL(`${filePath}/${file}`).href;
-        const command: any = (await import(cmdUrl)).default as any
-        
-        if (command.id !== undefined) name = command.id.toString();
-        collection.set(name, command);
-    }
-}
-
-const FORMATABLES: any = {
-    emoji: emoji,
-    config: config,
-    number: {},
-    locale: {},
-    custom: {},
-    command: {},
-    item: {}
-}
+import Formatter from "./Formatter";
 
 class Client extends DiscordClient {
+    cluster: ClusterClient<DiscordClient> | undefined;
+    db: PrismaClient;
+    
     commands: Collection<string, Command>;
     buttons: Collection<string, Interactable>; 
     menus: Collection<string, Interactable>;
     modals: Collection<string, Interactable>;
     panels: Collection<string, Panel>;
-    locales: any;
-    cluster: ClusterClient<DiscordClient> | undefined;
-    db: PrismaClient;
+
     config: any;
+
     logger: Logger;
+    formatter: Formatter;
+    
     data: { rarities: typeof rarities, types: typeof types }
+    
+    state: string = "loading"
 
     constructor(options: ClientOptions) {
         super(options)
-    
+        
         //initialize database connection
         this.db = new PrismaClient();
 
@@ -71,40 +51,39 @@ class Client extends DiscordClient {
         this.menus = new Collection();
         this.modals = new Collection();
         this.panels = new Collection();
-        this.locales = {};
 
         this.config = config;
 
         this.data = { rarities: rarities, types: types };
 
         this.logger = new Logger(this);
+        this.formatter = new Formatter();
 
         //initialize collections
-        this.loadEvents();
-        this.loadCommandsData();
-
-        loadFiles(this.commands, "src/interactions/commands");
-        loadFiles(this.buttons, "src/interactions/buttons");
-        loadFiles(this.menus, "src/interactions/menus");
-        loadFiles(this.modals, "src/interactions/modals");
-        loadFiles(this.panels, "src/panels");
+        this.initializeAsync();
     
-        //initalize locales
-        let localeDir = path.resolve(process.cwd(), "src/locale");
-        let directories = readdirSync(localeDir);
-        for (let dir of directories) {
-            let locale = new Locale();
-            locale.load(`${localeDir}/${dir}`);
+    }
+    
+    private async initializeAsync() {
+        await this.loadEvents();
 
-            this.locales[dir] = locale.languages;
-        }
+        await loadFiles(this.commands, "src/interactions/commands");
+        await loadFiles(this.buttons, "src/interactions/buttons");
+        await loadFiles(this.menus, "src/interactions/menus");
+        await loadFiles(this.modals, "src/interactions/modals");
+        await loadFiles(this.panels, "src/panels");
 
+        this.state = "ready";
+    }
+
+    public formatText(text: string, locale: string, variables?: object): string {
+        return this.formatter.f(text, locale, variables);
     }
 
     /**
      * Loads all Discord events
      */
-    async loadEvents() {
+    private async loadEvents() {
         const eventPath: string = path.resolve(process.cwd(), "src/events");
         const eventFiles: string[] = readdirSync(eventPath).filter(
             (file) => file.endsWith('.js') || file.endsWith('.ts')
@@ -121,14 +100,16 @@ class Client extends DiscordClient {
                 this.on(name, (...args: any[]) => event.execute(...args))
             }
         }
+
+        console.log(`Loaded ${eventFiles.length} events!`);
     }
 
     /**
      * Deploys commands to Discord API
      */
-    async deployCommands() {
+    public async deployCommands() {
         const rest = new REST({ version: '10' }).setToken(process.env.BOT_TOKEN);
-        let route = Routes.applicationGuildCommands(process.env.DISCORD_CLIENT_ID, config.bot.dev_guild);
+        let route = process.env.NODE_ENV === "development" ? Routes.applicationGuildCommands(process.env.DISCORD_CLIENT_ID, config.bot.dev_guild) : Routes.applicationCommands(process.env.DISCORD_CLIENT_ID);
     
         let jsonCommands: Array<{data: any, emoji: any}> = this.commands.map(cmd => ({data: cmd.data.toJSON(), emoji: cmd.emoji}));
         for (let command of jsonCommands) {
@@ -137,8 +118,6 @@ class Client extends DiscordClient {
                     sub.description = command.emoji[sub.name] + " " + sub.description;
                 }
             }
-
-            if (process.env.NODE_ENV === 'development') command.data.name = `dev-${command.data.name}`;
 
             command.data.description = command.emoji + " " + command.data.description;
             command = command.data as any;
@@ -154,61 +133,6 @@ class Client extends DiscordClient {
         })();
     }
 
-    async loadCommandsData() {
-        const rest = new REST({ version: '10' }).setToken(process.env.BOT_TOKEN);
-        const commandsData = await rest.get(Routes.applicationGuildCommands(process.env.DISCORD_CLIENT_ID, config.bot.dev_guild));
-        
-        const object: any = {};
-        for (const command of commandsData as any) {
-            if (command.options?.find((o:any) => o.type === 1)) { //subcommands
-                for (const sub of command.options?.filter((o:any) => o.type === 1)) {
-                    object[`${command.name} ${sub.name}`] = command.id;
-                }
-            }
-
-            object[command.name] = command.id;
-        }
-
-        FORMATABLES["command"] = object;
-    }
-
-    /**
-     * Replaces variables in text
-     * @param {string} text 
-     */ 
-    formatText(text: string, locale?: string, replace?: object) {
-        for (let formatable of Object.keys(FORMATABLES)) {
-            const [matches, values] = getTextBetweenTwoStrings(text, `{${formatable}_`, '}');
-
-            for (let i = 0; i < matches.length; i++) {
-                let replacement;
-                if (formatable === 'command') replacement = `</${values[i]}:${FORMATABLES.command[values[i]]}>`;
-                else if (formatable === 'number') replacement = numberWithCommas(values[i]);
-                else if (formatable === 'locale' && locale) {
-                    let [ namespace, ...rest ] = values[i].split("_");
-                    replacement = this.formatText(deepValue(this.locales[namespace][locale], rest.join('.')), locale, replace);
-                }
-                else if (formatable === 'custom') {
-                    replacement = deepValue(replace, values[i]); 
-                    if (replacement.length > 1) {
-                        replacement = replacement.reverse();
-                        replacement = replacement.pop();
-                    } else if (replacement.length) {
-                        replacement = this.formatText(replacement[0], locale);
-                    }
-                } else if (formatable === 'item') {
-                    replacement = deepValue(replace, values[0]);
-                }
-                else replacement = deepValue(FORMATABLES[formatable], values[i].replaceAll("_", "."))
-                
-                text = text.replace(matches[i], replacement);
-            }
-
-        }
-
-        return text;
-    }
-
     /**
      * Creates an unix date
      * @param date 
@@ -216,15 +140,7 @@ class Client extends DiscordClient {
      * @returns 
      */
     unixDate(date: Date, format?: 'long' | 'short' | 'hours') {
-        let type = 'R';
-        switch (format) {
-            case 'long': type = 'f'; break;
-            case 'short': type = 'D'; break;
-            case 'hours': type = 't'; break;
-            default: type = 'R'; break;
-        }
-    
-        return (`<t:${parseInt((date.getTime() / 1000).toFixed(0))}:${type}>`);
+        return unixDate(date, format);
     }
 
     /**
@@ -238,12 +154,9 @@ class Client extends DiscordClient {
             err = 3;
         }
 
-        let locale : any = this.locales['errors'][lang];
-        if (!locale) locale = this.locales['errors']['en-US'];
-
         const message = {
             embeds: [ interaction.components.embed({
-                description: `-# Code **#${err}**\n${locale[err]}\n\n-# *${locale.note}*`,
+                description: `-# Code **#${err}**\n{locale_errors_${err}}\n\n-# *{locale_errors_note}*`,
                 color: "#ff0000"
             }) ]
         }

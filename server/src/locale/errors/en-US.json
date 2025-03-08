@@ -61,5 +61,6 @@
     "61": "unknown move",
     "62": "move slot already filled",
     "63": "level not high enough to teach",
-    "64": "move already known"
+    "64": "move already known",
+    "65": "this user disabled trade offers"
 }

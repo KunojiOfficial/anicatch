@@ -1,12 +1,10 @@
 import { APIEmbed, ActionRowBuilder, ButtonBuilder, ModalBuilder, StringSelectMenuBuilder, TextInputBuilder, TextInputStyle, User } from "discord.js";
-import { DiscordClient } from "../types";
+import { DiscordClient, Button } from "../types";
 import { deepValue, parseColor } from "../helpers/utils";
 import emoji from '../config/emoji.json';
 import Player from "./Player";
 
 let emojis: any = emoji;
-
-
 
 const BUTTON_COLORS: any = {
     blurple: 1,
@@ -17,21 +15,6 @@ const BUTTON_COLORS: any = {
     premium: 6
 }
 
-interface Button {
-    id?: String
-    owner?: String
-    cooldown?: { id: string, time: number }
-    label?: string
-    emoji?: keyof typeof emoji | string
-    hardEmoji?: string,
-    args?: Object
-    url?: string
-    disabled?: Boolean,
-    skuId?: string,
-    style?: "blurple" | "gray" | "green" | "red" | "link" | "premium"
-}
-
-
 export default class Components {
     client: DiscordClient
     player: Player
@@ -39,7 +22,8 @@ export default class Components {
 
     constructor(client: DiscordClient, locale: string, player: Player) {
         this.client = client;
-        this.locale = client.locales.main[locale] ? locale : "en-US";
+        this.locale = locale;
+        
         this.player = player;
     }
 

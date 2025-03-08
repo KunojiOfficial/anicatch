@@ -1,3 +1,11 @@
+import { Collection } from "discord.js";
+import { readdirSync } from "fs";
+import path from "path";
+import { pathToFileURL } from "url";
+
+import config from "../config/main.json";
+import emoji from "../config/emoji.json";
+
 function toUpperCamelCase (text: string): string {
     return text.replace(/(?:^\w|[A-Z]|\b\w)/g, (word) => word.toUpperCase());
 }
@@ -54,4 +62,34 @@ function getRandomNumber(x: number, y: number) {
     return Math.floor(Math.random() * (y - x + 1)) + x;
 }
 
-export { getRandomNumber, toUpperCamelCase, getTextBetweenTwoStrings, deepValue, numberWithCommas, randomElement, addHours, base10ToBase26, base26ToBase10, parseColor };
+async function loadFiles(collection: Collection<string, any>, directory: string) {
+    const filePath: string = path.resolve(process.cwd(), directory);
+    const files: string[] = readdirSync(filePath).filter(
+        (file) => file.endsWith('.js') || file.endsWith('.ts')
+    );
+
+    for (const file of files) {
+        let name = path.parse(file).name.replace(/.cmd|.sel|.btn/, '');
+        const cmdUrl = pathToFileURL(`${filePath}/${file}`).href;
+        const command: any = (await import(cmdUrl)).default as any
+        
+        if (command.id !== undefined) name = command.id.toString();
+        collection.set(name, command);
+    }
+
+    console.log(`Loaded ${collection.size} from ${directory}!`);
+}
+
+function unixDate(date: Date, format?: 'long' | 'short' | 'hours') {
+    let type = 'R';
+    switch (format) {
+        case 'long': type = 'f'; break;
+        case 'short': type = 'D'; break;
+        case 'hours': type = 't'; break;
+        default: type = 'R'; break;
+    }
+
+    return (`<t:${parseInt((date.getTime() / 1000).toFixed(0))}:${type}>`);
+}
+
+export { getRandomNumber, toUpperCamelCase, getTextBetweenTwoStrings, deepValue, numberWithCommas, randomElement, addHours, base10ToBase26, base26ToBase10, parseColor, loadFiles, unixDate };

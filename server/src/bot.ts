@@ -44,6 +44,7 @@ client.cluster.on('message', async message => {
             } catch (err) {
                 return;
             }
+            break;
     }
 });
 

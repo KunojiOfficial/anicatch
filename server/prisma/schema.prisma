@@ -184,6 +184,8 @@ model Item {
   priceGem      Int?
   discount      Float?
 
+  value         Int               @default(1)
+
   inventories   Inventory[]
   cards         CardInstance[]
 }
@@ -216,6 +218,7 @@ model UserStats {
   encountered   Int               @default(0)
   captured      Int               @default(0)
   coinsSpent    Int               @default(0)
+  votes         Json              @default("{}")
 
   user          User              @relation(fields: [userId], references: [id], onDelete: Cascade)
 }

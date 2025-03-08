@@ -1,5 +1,5 @@
 import { InteractionReplyOptions } from "discord.js";
-import { DiscordInteraction } from "../types";
+import { Button, DiscordInteraction } from "../types";
 import Panel from "../classes/Panel";
 import Card from "../classes/Card";
 import { CardInstance } from "@prisma/client";
@@ -32,16 +32,23 @@ export default new Panel({
 
         const defaults = { id: '0', args: { path: "anidex", page: page, rarity: rarity } };
 
-        const rarities = [];
+        const rarities: Button[] = [];
         for (const key of Object.keys(client.data.rarities)) {
             let data = client.data.rarities[key as keyof typeof client.data.rarities];
             rarities.push({
-                label: data.name,
+                id: "0",
                 hardEmoji: data.emoji.short,
-                value: `2:${key}`,
-                default: rarity == key
+                style: rarity == key ? "blurple" : "gray",
+                disabled: rarity == key,
+                args: { path: "anidex", page: page, rarity: key }
             });
         }
+
+        const rarityGroups = [];
+        for (let i = 0; i < rarities.length; i += 4) {
+            rarityGroups.push(interaction.components.buttons(rarities.slice(i, i + 4)));
+        }
+
         return {
             embeds: [ interaction.components.embed({
                 fields: [
@@ -53,24 +60,19 @@ export default new Panel({
                 color: cardC.getRarity()?.color
             }) ],
             files: [attachment!],
-            components: [ interaction.components.selectMenu({
-                ...defaults,
-                id: 0,
-                placeholder: "⭐\u2800Select a rarity...",
-                options: rarities
-            }), interaction.components.buttons([{
+            components: [ interaction.components.buttons([{
                 ...defaults,
                 emoji: "chevron.single.left",
                 args: { ...defaults.args, page: page-1 }
             }, {
                 id: '5',
-                label: `${page} / ${count}`,
+                label: `\u2800\u2800\u2800{number_${page}} / {number_${count}}\u2800\u2800\u2800`,
                 args: { min: 1, max: count, index: 1, customId: Object.values(defaults.args).join(':') }
             }, {
                 ...defaults,
                 emoji: "chevron.single.right",
                 args: { ...defaults.args, page: page+1 }
-            }]) ]
+            }]), ...rarityGroups ]
         }
     }
 });

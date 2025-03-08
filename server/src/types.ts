@@ -4,6 +4,8 @@ import Player from "./classes/Player";
 import Components from "./classes/Components";
 import { Prisma } from "@prisma/client";
 
+import emoji from 'src/config/emoji.json';
+
 type DiscordClient = Client;
 type DiscordMessage = Message;
 
@@ -26,6 +28,20 @@ interface DiscordInteraction extends
         fields: ModalSubmitFields,
         showModal: any,
         editReply: (options: string | MessagePayload | InteractionReplyOptions) => Promise<void>
+}
+
+interface Button {
+    id?: String
+    owner?: String
+    cooldown?: { id: string, time: number }
+    label?: string
+    emoji?: keyof typeof emoji | string
+    hardEmoji?: string,
+    args?: Object
+    url?: string
+    disabled?: Boolean,
+    skuId?: string,
+    style?: "blurple" | "gray" | "green" | "red" | "link" | "premium"
 }
 
 interface HistoryElement {
@@ -52,4 +68,4 @@ type CardIncluded = Prisma.CardInstanceGetPayload<typeof CardWithIncludes>;
 const TradeWithIncludes = Prisma.validator<Prisma.TradeDefaultArgs>()({ include: { users: true } });
 type TradeIncluded = Prisma.TradeGetPayload<typeof TradeWithIncludes>;
 
-export { DiscordClient, DiscordMessage, DiscordInteraction, UserRole, HistoryElement, CardIncluded, TradeIncluded };
+export { DiscordClient, DiscordMessage, DiscordInteraction, UserRole, HistoryElement, CardIncluded, TradeIncluded, Button };

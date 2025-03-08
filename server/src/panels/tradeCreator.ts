@@ -28,9 +28,10 @@ export default new Panel({
                 };
             }
 
-            const recipientData = await client.db.user.findFirst({ where: { discordId: recipient.id }, include: { trades: { where: { status: { in: ["ACTIVE", "CREATING"] } } } } });
+            const recipientData = await client.db.user.findFirst({ where: { discordId: recipient.id }, include: { trades: { where: { status: { in: ["ACTIVE", "CREATING"] } } }, config: true } });
             if (!recipientData) throw 7; //no user found
             if (recipientData.trades.length >= 5) throw 38; //recipient too many offers
+            if (!recipientData.config?.trades) throw 65; //recipient has trades disabled
 
             offer = await client.db.trade.create({ data: { 
                 offererId: player.data.id,

@@ -10,7 +10,6 @@ export default new Panel({
         if (typeof cardId === "string") cardId = parseInt(cardId);
         if (typeof itemId === "string") itemId = parseInt(itemId);
         if (typeof count === "string") count = parseInt(count);
-
         
         let items = await client.db.inventory.findMany({ where: { userId: player.data.id, item: { type: "CONSUMABLE" } }, include: { item:true }});
         if (!items.length) throw 35;
@@ -38,6 +37,8 @@ export default new Panel({
             args: { path: "fastUse", cardId: cardId, itemId: itemId, count: count }
         }
 
+        count = count as number;
+
         buttons = [{
             ...defaults,
             label: "Back",
@@ -51,7 +52,10 @@ export default new Panel({
             args: { ...defaults.args, count: count-1 }
         }, {
             ...defaults,
-            label: `x${count}`
+            id: '5',
+            label: `x${count}`,
+            disabled: count <= 1,
+            args: { min: 1, max: Math.min(activeItem?.count||0, 50), index: 3, customId: Object.values(defaults.args).join(':') }
         }, {
             ...defaults,
             emoji: "plus",
