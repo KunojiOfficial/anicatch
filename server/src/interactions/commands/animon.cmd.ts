@@ -4,6 +4,7 @@ import Command from '../../classes/Command';
 export default new Command({
     emoji: "🃏",
     cooldown: 2,
+    aliases: ["card"],
     data: new SlashCommandBuilder()
         .setName("animon")
         .setDescription("View the details of the selected Animon(s)!")

@@ -5,7 +5,6 @@ import Player from "./Player";
 import Components from "./Components";
 
 import introduction from "src/mechanics/introduction";
-import tutorialSteps from "../data/tutorial.json";
 
 export default class Interaction {
     interaction: DiscordInteraction;
@@ -55,10 +54,13 @@ export default class Interaction {
 
     private async handleCommands() {
         let name = this.interaction.commandName;
-        if (!this.interaction.client.commands.has(name)) throw "Command not found";
-        
-        if (this.interaction.player.data.status === "TUTORIAL") await this.tutorial(`command/${name}`);
+        if (!this.interaction.client.commands.has(name)) {
+            let parentCommand = this.interaction.client.commands.find(cmd => cmd.data.aliases?.includes(name));
+            if (!parentCommand) throw 13;
 
+            name = parentCommand.data.name;
+        }
+        
         const command = this.interaction.client.commands.get(name);
         const cooldown = await this.cooldown(name, "command", command.cooldown);
 
@@ -85,8 +87,6 @@ export default class Interaction {
         const [ id, owner, cdId, cdTime, ...args ] = this.interaction.customId.split(';');
         const followUp = id.includes("F");
        
-        if (this.interaction.player.data.status === "TUTORIAL") await this.tutorial(`interactable/${id}`);
-        
         this.interaction.targetId = parseInt(!followUp ? id : id.replace("F", ""));
         this.interaction.owner = owner;
         this.interaction.args = args;
@@ -108,17 +108,6 @@ export default class Interaction {
         
         if (followUp) await this.interaction.followUp(message);
         else if (!interactable.dontReply) await this.interaction.editReply(message);
-    }
-
-    /**
-     * Tutorial 
-     */
-    private async tutorial(target: string) {
-        console.log(target);
-        const data = await this.interaction.client.db.tutorial.findFirst({ where: { userId: this.interaction.player.data.id } });
-        if (target !== tutorialSteps[data.step]) throw "chuj";
-
-        this.interaction.tutorial = true;
     }
 
     private cooldown(cmdId: string, type: string, time?: number) {

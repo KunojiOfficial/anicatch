@@ -1,7 +1,10 @@
 import { APIEmbed, ActionRowBuilder, ButtonBuilder, ModalBuilder, StringSelectMenuBuilder, TextInputBuilder, TextInputStyle, User } from "discord.js";
 import { DiscordClient, Button } from "../types";
 import { deepValue, parseColor } from "../helpers/utils";
+
 import emoji from '../config/emoji.json';
+import config from '../config/main.json';
+
 import Player from "./Player";
 
 let emojis: any = emoji;
@@ -44,7 +47,7 @@ export default class Components {
     }, replace?: object) {
         if (object.fields) object.fields = object.fields.filter(o => o !== null);
 
-        if (!object.color) object.color = this.client.config.defaults.embed.color;
+        if (!object.color) object.color = config.defaults.embed.color;
         let embedColor = parseColor(object.color!);
 
         if (object.footer?.text) object.footer.text = this.client.formatText(object.footer.text, this.locale, replace);

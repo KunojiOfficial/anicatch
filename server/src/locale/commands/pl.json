@@ -17,7 +17,7 @@
         "options": {
             "start": {
                 "name": "start",
-                "description": "Rozpocznij nową walkę!",
+                "description": "Rozpocznij nową waleczkę!",
                 "options": {
                     "user": {
                         "name": "użytkownik",

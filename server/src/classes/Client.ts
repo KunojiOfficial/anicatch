@@ -30,8 +30,6 @@ class Client extends DiscordClient {
     modals: Collection<string, Interactable>;
     panels: Collection<string, Panel>;
 
-    config: any;
-
     logger: Logger;
     formatter: Formatter;
     
@@ -49,9 +47,6 @@ class Client extends DiscordClient {
         this.modals = new Collection();
         this.panels = new Collection();
 
-        this.config = config;
-
-        this.logger = new Logger(this);
         this.formatter = new Formatter();
 
         //initialize collections

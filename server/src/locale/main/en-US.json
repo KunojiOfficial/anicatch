@@ -112,5 +112,6 @@
     "joinBattle": "Join Battle",
     "allocateSuccess": "You have successfully allocated {custom_points} points to {custom_stat}.",
     "removedMove": "You have successfully removed {custom_move} from slot {custom_slot}.",
-    "taughtMove": "You have successfully taught {custom_move} to your Animon."
+    "taughtMove": "You have successfully taught {custom_move} to your Animon.",
+    "guide": "Guide"
 }

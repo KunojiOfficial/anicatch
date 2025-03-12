@@ -1,6 +1,8 @@
 import winston from 'winston';
-import { WebhookClient } from "discord.js";
+import { User, WebhookClient } from "discord.js";
 import { DiscordClient } from "../types";
+
+import config from "../config/main.json";
 
 const logger = winston.createLogger({
     level: 'info',
@@ -13,24 +15,19 @@ const logger = winston.createLogger({
 let webhookDetails = {};
 
 export default class Logger {
-    client: DiscordClient
+    clusterId: number
     webhooks: {
         error: WebhookClient
     }
 
-    constructor(client: DiscordClient) {
-        this.client = client;
+    constructor(clusterId: number) {
+        this.clusterId = clusterId;
 
-        if (client.config && client.user) {
-            this.webhooks = {
-                error: new WebhookClient({ url: client.config.webhooks.error })
-            }
-    
-            webhookDetails = {
-                username: client.user?.displayName,
-                avatarURL: client.user?.displayAvatarURL()
-            };
-        }
+        this.webhooks = { error: new WebhookClient({ url: config.webhooks.error }) }
+
+        webhookDetails = {
+            username: config.bot.name,
+        };
     }
 
     error(err : Error) {
@@ -39,7 +36,7 @@ export default class Logger {
         this.webhooks.error.send({
             ...webhookDetails,
             embeds: [ {
-                title: `Cluster #${this.client.cluster?.id}`,
+                title: `Cluster #${this.clusterId}`,
                 description: `\`\`\`js\n${err.stack}\`\`\``,
                 color: 0xff0000
             } ]
@@ -47,6 +44,6 @@ export default class Logger {
     }
 
     info(message: string) {
-        logger.info(`[${this.client.cluster.id.toString().padStart(2,'0')}] ${message}`);
+        logger.info(`[${this.clusterId.toString().padStart(2,'0')}] ${message}`);
     }
 }

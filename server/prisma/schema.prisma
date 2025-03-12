@@ -18,7 +18,6 @@ enum UserStatus {
   NEW
   ACTIVE
   BANNED
-  TUTORIAL
 }
 
 model User {
@@ -322,9 +321,4 @@ model Move {
 
   type          CardType
   cards         CardInstance[]
-}
-
-model Tutorial {
-  userId        Int             @unique @id
-  step          Int             @default(0)
 }

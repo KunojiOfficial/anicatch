@@ -35,9 +35,10 @@ export default async function(interaction: DiscordInteraction) {
                 thumbnail: interaction.client.getEmojiUrl("aniball")
             })],
             components: [ interaction.components.buttons([{
-                id: "22",
+                id: "0",
                 label: "\u2800Tutorial",
                 emoji: "📚",
+                args: { path: "guide" }
             }]) ]
         });
 

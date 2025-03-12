@@ -4,6 +4,7 @@ import Command from '../../classes/Command';
 export default new Command({
     emoji: "💠",
     cooldown: 2,
+    aliases: ["roll"],
     panel: "encountering",
     data: new SlashCommandBuilder()
         .setName("catch")

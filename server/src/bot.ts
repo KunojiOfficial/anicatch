@@ -1,6 +1,7 @@
 import { ClusterClient, IPCMessage, getInfo } from 'discord-hybrid-sharding'
 import { default as Client } from './classes/Client';
 import { TextBasedChannel } from 'discord.js';
+import Logger from './classes/Logger';
 
 const client = new Client({
     shards: getInfo().SHARD_LIST,
@@ -9,6 +10,7 @@ const client = new Client({
 });
 
 client.cluster = new ClusterClient(client);
+client.logger = new Logger(client.cluster.id);
 
 client.cluster.on('message', async message => {
     const action = (message as IPCMessage).action;

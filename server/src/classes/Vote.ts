@@ -1,4 +1,5 @@
-import { db, manager, formatter } from "index";
+
+import { db, formatter, manager } from "index";
 import { addHours, parseColor, unixDate } from "src/helpers/utils";
 
 import votesData from "../config/vote.json";

@@ -1,0 +1,17 @@
+{
+    "gettingStarted": {
+        "name": "Getting Started",
+        "firstSteps": {
+            "name": "First Steps",
+            "description": "**Welcome to the world of Animons!**\nIn this guide, you will find some tips to get you started.\n\nLet's start by catching your first Animon!\nIt's really simple, just use the command {command_catch} and you will encounter a wild Animon of a random type and rarity.\nWhen you encounter an Animon, you will have the option to catch it or ignore it and look for a different one.\nIf you decide to catch it, you will have to use one of your **AniBalls**.\n\n**AniBalls** are the items you use to catch Animons. You can get them by purchasing them in the {command_store}, or you can get some for free once a day with {command_daily}.\n\nAfter you catch your first Animon, you can visit your {command_collection} to see all the Animons you have caught so far."
+        },
+        "encounters": {
+            "name": "Encounters",
+            "description": "In {config_bot_name}, you can use the {command_catch} command a limited number of times. These attempts are called encounters, and the number you have depends on your role. Encounters recharge over time.\n\nYou can check how many encounters you have left with the {command_inventory} command, or enable notifications to receive a message when your encounters recharge in your {command_settings}.\nIf you run out of encounters, you can purchase more in the {command_store}. You can also get more encounters by voting for {config_bot_name} with the {command_vote} command.\n\nWant even more encounters? Become a {command_patron} and enjoy many cool perks, including additional encounters!"
+        },
+        "teamAndBattles": {
+            "name": "Team and Battles",
+            "description": "In {config_bot_name}, you can create a team of Animons to battle other users and wild Animons. You can have up to 5 Animons in your team, and you can change them at any time using the {command_team} command.\n\nOnce your team is set up, you can battle wild Animons after encountering them with {command_catch} by using the \"Battle\" button.\n\nBattles against other users are also available. You can challenge other users to a battle with the {command_battle start} command. You can also join a battle that someone else has started with the {command_battle resume} command.\n\nBattles are turn-based, and you can use different moves to defeat your opponent. You can teach your Animons new moves using the {command_animon} command in the \"Moves\" section.\n\nEach Animon has a special type and stats that determine its strength in battle. You can allocate points to different stats using the {command_animon} command in the \"Stats\" section. Types determine the effectiveness of moves in battle, so choose your team wisely! If you want to see the types and their effectiveness, use the {command_types} command."
+        }
+    }
+}
