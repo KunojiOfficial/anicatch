@@ -4,8 +4,9 @@ import { PrismaClient, User as PrismaUser, Role as PrismaRole } from "@prisma/cl
 import { readdirSync } from "fs";
 import path from "path";
 
-import { DiscordInteraction, UserRole } from "../types";
-import { deepValue, getTextBetweenTwoStrings, numberWithCommas, base10ToBase26, base26ToBase10, loadFiles, unixDate } from "../helpers/utils";
+import { base10ToBase26, base26ToBase10, loadFiles, unixDate } from "../helpers/utils";
+import { DiscordInteraction } from "../types";
+
 import Event from "./Event";
 import Panel from "./Panel";
 import Command from "./Command";
@@ -16,8 +17,6 @@ import emoji from "../config/emoji.json";
 
 import Logger from "./Logger";
 
-import rarities from "../data/rarities.json";
-import types from "../data/types.json";
 import { pathToFileURL } from "url";
 import Formatter from "./Formatter";
 
@@ -36,8 +35,6 @@ class Client extends DiscordClient {
     logger: Logger;
     formatter: Formatter;
     
-    data: { rarities: typeof rarities, types: typeof types }
-    
     state: string = "loading"
 
     constructor(options: ClientOptions) {
@@ -53,8 +50,6 @@ class Client extends DiscordClient {
         this.panels = new Collection();
 
         this.config = config;
-
-        this.data = { rarities: rarities, types: types };
 
         this.logger = new Logger(this);
         this.formatter = new Formatter();
@@ -74,6 +69,8 @@ class Client extends DiscordClient {
         await loadFiles(this.panels, "src/panels");
 
         this.state = "ready";
+        
+        this.logger.info(`Bot is ready.`);
     }
 
     public formatText(text: string, locale: string, variables?: object): string {
@@ -100,37 +97,6 @@ class Client extends DiscordClient {
                 this.on(name, (...args: any[]) => event.execute(...args))
             }
         }
-
-        console.log(`Loaded ${eventFiles.length} events!`);
-    }
-
-    /**
-     * Deploys commands to Discord API
-     */
-    public async deployCommands() {
-        const rest = new REST({ version: '10' }).setToken(process.env.BOT_TOKEN);
-        let route = process.env.NODE_ENV === "development" ? Routes.applicationGuildCommands(process.env.DISCORD_CLIENT_ID, config.bot.dev_guild) : Routes.applicationCommands(process.env.DISCORD_CLIENT_ID);
-    
-        let jsonCommands: Array<{data: any, emoji: any}> = this.commands.map(cmd => ({data: cmd.data.toJSON(), emoji: cmd.emoji}));
-        for (let command of jsonCommands) {
-            if (typeof command.emoji === "object") { //subcommands
-                for (const sub of command.data.options.filter((o:any) => o.type === 1)) {
-                    sub.description = command.emoji[sub.name] + " " + sub.description;
-                }
-            }
-
-            command.data.description = command.emoji + " " + command.data.description;
-            command = command.data as any;
-        }
-
-        (async () => {
-            try {
-                await rest.put(route, { body: jsonCommands.map(cmd => cmd.data) });
-                console.log("Commands reloaded!")
-            } catch (err) {
-                console.log(err);
-            }
-        })();
     }
 
     /**
@@ -141,28 +107,6 @@ class Client extends DiscordClient {
      */
     unixDate(date: Date, format?: 'long' | 'short' | 'hours') {
         return unixDate(date, format);
-    }
-
-    /**
-     * Error dealer
-     * @param err 
-     */
-    async error(err: any, interaction: DiscordInteraction) {
-        const lang = interaction.locale;
-        if (typeof err !== 'number'){ 
-            this.logger.error(err);
-            err = 3;
-        }
-
-        const message = {
-            embeds: [ interaction.components.embed({
-                description: `-# Code **#${err}**\n{locale_errors_${err}}\n\n-# *{locale_errors_note}*`,
-                color: "#ff0000"
-            }) ]
-        }
-
-        if (interaction.deferred) await interaction.followUp(message).catch(console.error);
-        else await interaction.reply(message).catch(console.error);
     }
 
     getId(cardId: number, printId?: number) {

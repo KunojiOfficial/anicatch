@@ -4,6 +4,9 @@ import Panel from "../classes/Panel";
 
 const PER_PAGE = 12;
 
+import rarities from "../data/rarities.json";
+import types from "../data/types.json";
+
 export default new Panel({
     name: "collection",
     async execute(interaction: DiscordInteraction, page: number | string = 1, owner: User): Promise<InteractionReplyOptions> {
@@ -41,8 +44,8 @@ export default new Panel({
         
         const fields = [], options = [];
         for (const c of pageCards) {
-            const type = client.data.types[c.card.type.toString() as keyof typeof client.data.types];
-            const rarity = client.data.rarities[c.rarity.toString() as keyof typeof client.data.rarities];
+            const type = types[c.card.type.toString() as keyof typeof types];
+            const rarity = rarities[c.rarity.toString() as keyof typeof rarities];
             const ball = ballData.find(b => b.id === c.ballId);
             const id = client.getId(c.cardId, c.print);
 

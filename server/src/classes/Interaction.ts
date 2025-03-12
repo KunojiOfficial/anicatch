@@ -1,9 +1,11 @@
-import { Collection, Locale } from "discord.js";
+import { Collection, InteractionReplyOptions, Locale } from "discord.js";
 import { DiscordInteraction } from "src/types";
 
 import Player from "./Player";
-import introduction from "src/mechanics/introduction";
 import Components from "./Components";
+
+import introduction from "src/mechanics/introduction";
+import tutorialSteps from "../data/tutorial.json";
 
 export default class Interaction {
     interaction: DiscordInteraction;
@@ -55,6 +57,8 @@ export default class Interaction {
         let name = this.interaction.commandName;
         if (!this.interaction.client.commands.has(name)) throw "Command not found";
         
+        if (this.interaction.player.data.status === "TUTORIAL") await this.tutorial(`command/${name}`);
+
         const command = this.interaction.client.commands.get(name);
         const cooldown = await this.cooldown(name, "command", command.cooldown);
 
@@ -77,10 +81,12 @@ export default class Interaction {
         if (this.interaction.isStringSelectMenu()) collection = this.interaction.client.menus;
         else if (this.interaction.isButton()) collection = this.interaction.client.buttons;
         else if (this.interaction.isModalSubmit()) collection = this.interaction.client.modals;
-    
+
         const [ id, owner, cdId, cdTime, ...args ] = this.interaction.customId.split(';');
         const followUp = id.includes("F");
-
+       
+        if (this.interaction.player.data.status === "TUTORIAL") await this.tutorial(`interactable/${id}`);
+        
         this.interaction.targetId = parseInt(!followUp ? id : id.replace("F", ""));
         this.interaction.owner = owner;
         this.interaction.args = args;
@@ -102,6 +108,17 @@ export default class Interaction {
         
         if (followUp) await this.interaction.followUp(message);
         else if (!interactable.dontReply) await this.interaction.editReply(message);
+    }
+
+    /**
+     * Tutorial 
+     */
+    private async tutorial(target: string) {
+        console.log(target);
+        const data = await this.interaction.client.db.tutorial.findFirst({ where: { userId: this.interaction.player.data.id } });
+        if (target !== tutorialSteps[data.step]) throw "chuj";
+
+        this.interaction.tutorial = true;
     }
 
     private cooldown(cmdId: string, type: string, time?: number) {
@@ -146,11 +163,12 @@ export default class Interaction {
             err = 3;
         }
 
-        const message = {
+        const message: InteractionReplyOptions = {
             embeds: [ this.interaction.components.embed({
                 description: `-# Code **#${err}**\n{locale_errors_${err}}\n\n-# *{locale_errors_note}*`,
                 color: "#ff0000"
-            }, variables) ]
+            }, variables) ],
+            flags: [ "Ephemeral" ]
         }
 
         if (this.interaction.deferred) await this.interaction.followUp(message).catch(console.error);

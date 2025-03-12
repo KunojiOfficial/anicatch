@@ -15,9 +15,6 @@ client.cluster.on('message', async message => {
     const msg = message as any;
 
     switch (action) {
-        case "deploy":
-            await client.deployCommands();
-            break;
         case "directMessage":
             
             try {

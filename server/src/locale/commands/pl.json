@@ -1,0 +1,30 @@
+{
+    "anidex": {
+        "name": "anidex",
+        "description": "Wyświetl szczegóły określonego Animona lub przeglądaj wszystkie!",
+        "options": {
+            "id": {
+                "name": "id",
+                "description": "ID wybranego Animona(ów). Maksymalnie 5, oddzielone przecinkami."
+            }
+        }
+    },
+    "animon": {
+        "name": "animon"
+    },
+    "battle": {
+        "name": "walka",
+        "options": {
+            "start": {
+                "name": "start",
+                "description": "Rozpocznij nową walkę!",
+                "options": {
+                    "user": {
+                        "name": "użytkownik",
+                        "description": "Użytkownik, z którym chcesz walczyć (musi być na serwerze)."
+                    }
+                }
+            }
+        }
+    }
+}

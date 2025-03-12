@@ -2,15 +2,27 @@ import { PrismaClient } from "@prisma/client";
 import { ClusterManager } from 'discord-hybrid-sharding';
 import dotenv from "dotenv";
 
+import Formatter from "src/classes/Formatter";
+import Logger from "src/classes/Logger";
+
 import encounterRecharge from "./src/intervals/encounterRecharge";
+import voteNotifications from "src/intervals/voteNotifications";
 
 import website from './src/web/app';
 import loadCommandsData from "src/helpers/loadCommandsData";
+import deployCommands from "src/helpers/deployCommands";
 
 dotenv.config();
 
 //load commands data for the formatter
 loadCommandsData();
+
+//main formatter
+const formatter = new Formatter();
+const logger = new Logger({ cluster: { id: "--" } } as any);
+
+//deploy commands
+deployCommands(logger, formatter);
 
 const manager = new ClusterManager(`${process.cwd()}/src/bot.${process.env.NODE_ENV === 'production' ? 'js' : 'ts'}`, {
 	totalShards: 'auto',
@@ -23,7 +35,7 @@ const manager = new ClusterManager(`${process.cwd()}/src/bot.${process.env.NODE_
 let spawnedClusters = 0; // To count the number of spawned clusters
 
 manager.on('clusterCreate', cluster => {
-	console.log(`Launched Cluster ${cluster.id}`);
+	logger.info(`Launched Cluster ${cluster.id}`);
 	spawnedClusters++;
 
 	if (spawnedClusters === manager.totalClusters) {
@@ -61,11 +73,13 @@ manager.spawn({ timeout: -1 });
 //prisma intervals
 const db = new PrismaClient();
 function startPrismaIntervals() {
-	encounterRecharge(db, manager);  
+	encounterRecharge(db, manager);
+	voteNotifications(db, manager);
 }
 
+//web server
 website.listen(process.env.PORT || 3000, () => {
-	console.log(`Website is running on port ${process.env.PORT || 3000}`);
+	logger.info(`Website is running on port ${process.env.PORT || 3000}`);
 });
 
-export { manager, db };
+export { manager, db, formatter };

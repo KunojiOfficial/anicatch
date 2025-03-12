@@ -27,6 +27,7 @@ interface DiscordInteraction extends
         args: any,
         fields: ModalSubmitFields,
         showModal: any,
+        tutorial: boolean,
         editReply: (options: string | MessagePayload | InteractionReplyOptions) => Promise<void>
 }
 

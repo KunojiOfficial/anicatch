@@ -1,16 +1,16 @@
 {
     "1": {
-        "title": "Input",
+        "title": "Input a number",
         "inputs": [{
-            "label": "Input",
-            "placeholder": "Input {custom_min} {custom_max}"
+            "label": "Number",
+            "placeholder": "An integral number between {custom_min} and {custom_max}."
         }]
     },
     "2": {
-        "title": "Input CARD ID",
+        "title": "Input a card ID",
         "inputs": [{
-            "label": "CARD ID",
-            "placeholder": "CARD ID"
+            "label": "Card ID",
+            "placeholder": "The ID of the selected card. (e.g. 'A-1')"
         }]
     },
     "4": {
@@ -26,8 +26,8 @@
     "4-1": {
         "title": "Add card to offer",
         "inputs": [{
-            "label": "Card Id",
-            "placeholder": "id"
+            "label": "Card ID",
+            "placeholder": "The ID of the selected card. (e.g. 'A-1')"
         }]
     },
     "4-2": {
@@ -36,7 +36,7 @@
             "label": "Item Id",
             "placeholder": "id"
         }, {
-            "label": "Count",
+            "label": "Item Amount",
             "placeholder": "number"
         }]
     }

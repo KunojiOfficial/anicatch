@@ -1,6 +1,8 @@
 import { InteractionReplyOptions } from "discord.js";
 import Interactable from "../../classes/Interactable";
 
+import rarities from "../../data/rarities.json";
+
 export default new Interactable({
     id: 7,
     async execute(interaction): Promise<InteractionReplyOptions> {
@@ -14,7 +16,7 @@ export default new Interactable({
         if (animon.status !== "IDLE") throw 18;
         if (animon.favorite) throw 19;
 
-        const rarity = client.data.rarities[animon.rarity.toString() as keyof typeof client.data.rarities];
+        const rarity = rarities[animon.rarity.toString() as keyof typeof rarities];
 
         await client.db.$transaction(async tx => {
             await tx.cardInstance.delete({where: { id: animon.id } });

@@ -18,11 +18,11 @@ export default class Player {
     }
 
     public getBalance(): string {
-        return `**Balance:**\u2800{emoji_smallCoin} {number_${this.data.coins}}\u2800{emoji_smallGem} {number_${this.data.gems}}`
+        return `**{locale_main_balance}:**\u2800{emoji_smallCoin} {number_${this.data.coins}}\u2800{emoji_smallGem} {number_${this.data.gems}}`
     }
     
     public getEncounters(): string {
-        return `**Encounters:**\u2800{number_${this.data.encounters}}`;
+        return `**{locale_main_encounterss}:**\u2800{number_${this.data.encounters}}`;
     }
 
     public async refreshEncounters(client: Client) {

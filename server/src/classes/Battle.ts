@@ -4,15 +4,11 @@ import Card from "./Card";
 import { manager, db } from "../../index";
 import { BaseMessage } from "discord-hybrid-sharding";
 import { numberWithCommas, parseColor } from "src/helpers/utils";
-import rarities from "../data/rarities.json";
 import types from "../data/types.json";
-import Client from "./Client";
 import consumable from "src/mechanics/consumable";
 
 import locale from "../locale/items/en-US.json";
 import { calculateAtk, calculateDmg, calculateDroppedExp } from "src/mechanics/statsCalculator";
-
-const fakeClient = { data: { rarities, types } } as Client;
 
 function rev(i: number) { return i === 0 ? 1 : 0; }
 
@@ -212,7 +208,7 @@ class Battle {
 
     private async item(cardId: number, itemId: number, userId: number): Promise<HistoryElement> {
         try {
-            const itemData = await consumable({ client: {...fakeClient, db}, player: { data: { id: userId } } } as any, itemId, cardId, 1, true);
+            const itemData = await consumable({ client: {db}, player: { data: { id: userId } } } as any, itemId, cardId, 1, true);
             if (cardId === this.battle.cardId1 || cardId === this.battle.cardId2) await this.setActiveCards();
             return { userId, cardId, type: "item", itemId, itemData: { name: locale[itemData.item.name].name } };
         } catch (e) {

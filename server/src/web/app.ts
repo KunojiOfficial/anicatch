@@ -61,6 +61,7 @@ app.post("/vote", async (req, res) => {
         
         res.status(200).send("Vote processed");
     } catch (e) {
+        console.error(e)
         res.status(500).send("Error processing vote");
     }
 });

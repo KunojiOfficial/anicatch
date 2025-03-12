@@ -11,6 +11,8 @@ function toUpperCamelCase (text: string): string {
 }
 
 function getTextBetweenTwoStrings(string: String, start: string, end: string) {
+    if (typeof string !== 'string') string = string.toString();
+    
     const matches = string.match(new RegExp(`${start}(.*?)${end}`, 'g')) || []; 
     return [ matches, matches.map(match => match.slice(start.length, -end.length)) ]
 }
@@ -62,7 +64,7 @@ function getRandomNumber(x: number, y: number) {
     return Math.floor(Math.random() * (y - x + 1)) + x;
 }
 
-async function loadFiles(collection: Collection<string, any>, directory: string) {
+async function loadFiles(collection: Collection<string, any>, directory: string): Promise<number> {
     const filePath: string = path.resolve(process.cwd(), directory);
     const files: string[] = readdirSync(filePath).filter(
         (file) => file.endsWith('.js') || file.endsWith('.ts')
@@ -77,7 +79,7 @@ async function loadFiles(collection: Collection<string, any>, directory: string)
         collection.set(name, command);
     }
 
-    console.log(`Loaded ${collection.size} from ${directory}!`);
+    return collection.size;
 }
 
 function unixDate(date: Date, format?: 'long' | 'short' | 'hours') {

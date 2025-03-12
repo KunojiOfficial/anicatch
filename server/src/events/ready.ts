@@ -26,7 +26,7 @@ function changeStatuses(client: DiscordClient, statuses: Array<Statuses>) {
 export default new Event({
     once: true,
     async execute(client: DiscordClient): Promise<void> {
-        console.log(`${client.user?.username} is ready!`)
+        client.logger.info(`Logged in as ${client.user?.tag}`);
 
         //set cycling statuses
         const statuses = await client.db.status.findMany();

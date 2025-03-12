@@ -21,14 +21,16 @@ export default class Logger {
     constructor(client: DiscordClient) {
         this.client = client;
 
-        this.webhooks = {
-            error: new WebhookClient({ url: client.config.webhooks.error })
+        if (client.config && client.user) {
+            this.webhooks = {
+                error: new WebhookClient({ url: client.config.webhooks.error })
+            }
+    
+            webhookDetails = {
+                username: client.user?.displayName,
+                avatarURL: client.user?.displayAvatarURL()
+            };
         }
-
-        webhookDetails = {
-            username: client.user?.displayName,
-            avatarURL: client.user?.displayAvatarURL()
-        };
     }
 
     error(err : Error) {
@@ -42,5 +44,9 @@ export default class Logger {
                 color: 0xff0000
             } ]
         }).catch(console.error)
+    }
+
+    info(message: string) {
+        logger.info(`[${this.client.cluster.id.toString().padStart(2,'0')}] ${message}`);
     }
 }

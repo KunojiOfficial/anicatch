@@ -61,24 +61,28 @@ export default new Interactable({
             launchActivity(interaction),
             interaction.message.edit({
                 embeds: [ interaction.components.embed({
-                    description: `Battle between <@${player.data.discordId}> and <@${enemyPlayer.discordId}> in progress...`,
+                    description: `{locale_main_battleInProgress}`,
                     fields: [
-                        { name: `${player.data.username}'s Team`, value: team1, inline: true },
+                        { name: `{locale_main_usersTeam}`, value: team1, inline: true },
                         { name: "\u2800", value: "\u2800", inline: true },
-                        { name: `${enemyPlayer.username}'s Team`, value: team2, inline: true }
+                        { name: `{locale_main_usersTeam}`, value: team2, inline: true }
                     ]
+                }, {
+                    user1: [ `<@${player.data.discordId}>`],
+                    user2: [ `<@${enemyPlayer.discordId}>`],
+                    username: [ player.data.username, enemyPlayer.username ]
                 }) ],
                 components: []
             }),
             interaction.message.reply({
                 content: `<@${enemyPlayer.discordId}>`,
                 embeds: [ interaction.components.embed({
-                    description: `Join the battle with {command_battle resume} or with the button below.`
+                    description: `{locale_main_joinTheBattle}`
                 })],
                 components: [ interaction.components.buttons([{
                     id: '19',
                     owner: '0',
-                    label: "Join Battle",
+                    label: "{locale_main_joinBattle}",
                     emoji: "wyes"
                 }]) ]
             })

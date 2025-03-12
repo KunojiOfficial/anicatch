@@ -16,8 +16,6 @@
   "glass": "<:glass:1343334843978878987>",
   "star": "<:star:1343334847313350707>",
   "empty": "<:empty:1343334849905426584>",
-  "coin": "<:coin:1343334852556099664>",
-  "smallCoin": "<:smallCoin:1343334855177670736>",
   "gem": "<:gem:1343334858231119992>",
   "smallGem": "<:smallGem:1343334860881924157>",
   "plus": "<:plus:1343334863671136379>",
@@ -71,7 +69,6 @@
   "REJECTED": "<:REJECTED:1343334997049737288>",
   "incoming": "<:incoming:1343335000157847643>",
   "outgoing": "<:outgoing:1343335002942869606>",
-  "coins": "<:coins:1343335005518172251>",
   "gems": "<:gems:1343335007191826526>",
   "chevron_single_left": "<:chevron_single_left:1343335010135965838>",
   "chevron_double_right": "<:chevron_double_right:1343335012887695495>",
@@ -80,6 +77,9 @@
   "none": "<:none:1345783046774853804>",
   "on": "<:on:1346070974411575327>",
   "off": "<:off:1346070983798165525>",
+  "smallCoin": "<:smallCoin:1348998429669462056>",
+  "coin": "<:coin:1348998464100499486>",
+  "coins": "<:coins:1348998481825501275>",
   "chevron": {
     "single": {
       "right": "<:chevron_single_right:1343334885691228231>",

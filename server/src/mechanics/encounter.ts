@@ -1,6 +1,8 @@
 import { getRandomNumber } from "../helpers/utils";
 import { DiscordInteraction } from "../types";
 
+import rarities from "../data/rarities.json";
+
 function getRandomRarity(rarities: any) {
     const randomNum = Math.random() * 100;
     let cumulativeChance = 0;
@@ -27,7 +29,8 @@ export default async function(interaction: DiscordInteraction) {
         const rowCount = await tx.cardCatalog.count();
         const randomOffset = Math.floor(Math.random() * rowCount);
 
-        const [result] = await tx.cardCatalog.findMany({ skip: randomOffset, take: 1, include: { character: true } });
+        const [result] = await tx.cardCatalog.findMany({ skip: randomOffset, take: 1, include: { character: { include: { series: { select: { english_title: true } } } } } });
+        // const [result] = await tx.cardCatalog.findMany({ where: { id: 1 }, include: { character: { include: { series: true } } } });
 
         let print, rarity;
         if (result.fledPrints.length) { // If there are fled prints, use them
@@ -37,7 +40,7 @@ export default async function(interaction: DiscordInteraction) {
 
             await tx.cardCatalog.update({ where: { id: result.id }, data: { fledPrints: { set: result.fledPrints } } });
         } else { // Otherwise, generate a new card
-            rarity = getRandomRarity(client.data.rarities);
+            rarity = getRandomRarity(rarities);
             print = result.count + 1;
 
             await tx.cardCatalog.updateMany({ where: { id: result.id }, data: { count: { increment: 1 } } });
@@ -62,7 +65,7 @@ export default async function(interaction: DiscordInteraction) {
         }, 1000 * 16);
 
         return {
-            rarity: client.data.rarities[rarity as keyof typeof client.data.rarities],
+            rarity: rarities[rarity as keyof typeof rarities],
             result: result,
             insert: card,
             timeout: timeoutId

@@ -18,6 +18,7 @@ enum UserStatus {
   NEW
   ACTIVE
   BANNED
+  TUTORIAL
 }
 
 model User {
@@ -69,9 +70,14 @@ model Config {
   locale        String            @default("en-US")
   
   isMobile      Boolean           @default(false)
+  
+  //privacy
   profile       Boolean           @default(true)
   trades        Boolean           @default(true)
+  
+  //notifications
   encounters    Boolean           @default(true)
+  votes         Boolean           @default(true)
   
   userId        Int               @unique
   user          User              @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -87,13 +93,26 @@ model Log {
   user          User?              @relation(fields: [userId], references: [id], onDelete: SetNull)
 }
 
+model Series {
+  mal_id          Int               @unique @id
+  english_title   String
+  japanese_title  String
+  url             String
+  genres          String[]
+  image           String
+
+  characters      Character[]
+}
+
 model Character {
   id            Int               @unique @id @default(autoincrement())
   mal           Int?
   name          String
   nicknames     String[] 
-  series        Int?
+  
+  seriesId      Int?
 
+  series        Series?            @relation(fields: [seriesId], references: [mal_id])
   cards         CardCatalog[]
 }
 
@@ -115,7 +134,7 @@ model CardCatalog {
 
   fledPrints    Json[]             @default([])
 
-  character     Character         @relation(fields: [characterId], references: [id])
+  character     Character         @relation(fields: [characterId], references: [id], onDelete: Cascade)
   instances     CardInstance[]
 }
 
@@ -303,4 +322,9 @@ model Move {
 
   type          CardType
   cards         CardInstance[]
+}
+
+model Tutorial {
+  userId        Int             @unique @id
+  step          Int             @default(0)
 }

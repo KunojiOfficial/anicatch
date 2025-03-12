@@ -66,7 +66,9 @@ export default new Interactable({
         } else {
             await interaction.channel.send({
                 embeds: [ interaction.components.embed({
-                    description: `${player.user}, you are already in a battle!\nProceeding with the current battle...`
+                    description: `{locale_main_warningInBattle}`
+                }, {
+                    user: [ `${player.user}` ]
                 }) ]
             });
         }

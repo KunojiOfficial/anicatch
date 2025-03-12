@@ -66,7 +66,7 @@ export default new Interactable({
                 { 
                     ...interaction?.message?.embeds[0].data,
                     image: { url: "attachment://card.jpg" },
-                    footer: { icon_url: client.getEmojiUrl("gem"), text: "{locale_main_secondChance}" }
+                    footer: { icon_url: client.getEmojiUrl("gem"), text: client.formatText("{locale_main_secondChance}", interaction.locale) }
                 }
             ],
             components: components

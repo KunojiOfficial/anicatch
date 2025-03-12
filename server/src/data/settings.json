@@ -17,5 +17,8 @@
     "notifications": [{
         "name": "encounters",
         "type": "switch"
+    }, {
+        "name": "votes",
+        "type": "switch"
     }]
 }

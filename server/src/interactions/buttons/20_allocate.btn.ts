@@ -27,8 +27,11 @@ export default new Interactable({
         return {
             ...panel,
             embeds: [ ...panel.embeds, interaction.components.embed({
-                description: `{emoji_yes}\u2800You have successfully allocated ${points} points to **{locale_main_stats_${stat}}**.`,
+                description: `{emoji_yes}\u2800{locale_main_allocateSuccess}`,
                 color: "#00FF00"
+            }, {
+                points: [`**${points}**`],
+                stat: [ `**{locale_main_stats_${stat}}**` ]
             }) ]
         };
     }

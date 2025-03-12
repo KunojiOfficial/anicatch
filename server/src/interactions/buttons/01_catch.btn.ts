@@ -2,6 +2,8 @@ import { InteractionReplyOptions } from "discord.js";
 import Interactable from "../../classes/Interactable";
 import _catch from "../../mechanics/catch";
 
+import rarities from "../../data/rarities.json";
+
 export default new Interactable({
     id: 1,
     async execute(interaction): Promise<InteractionReplyOptions> {
@@ -23,7 +25,7 @@ export default new Interactable({
 
         const components = interaction.message?.components;
         const newComponents = [];
-        const rarity = client.data.rarities[card.rarity.toString() as keyof typeof client.data.rarities];
+        const rarity = rarities[card.rarity.toString() as keyof typeof rarities];
         
         if (components.length) {
             for (const [index, component] of components.entries()) {

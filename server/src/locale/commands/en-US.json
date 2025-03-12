@@ -1,0 +1,15 @@
+{
+    "anidex": {
+        "name": "anidex",
+        "description": "View the details of a specific Animon or browse through all of them!",
+        "options": {
+            "id": {
+                "name": "id",
+                "description": "The ID(s) of the selected Animon(s). Max 5, separated by commas."
+            }
+        }
+    },
+    "animon": {
+        "name": "animon"
+    }
+}

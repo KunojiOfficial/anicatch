@@ -39,6 +39,8 @@ export default class Formatter {
     private custom(path: string[], locale: string = 'en-US', variables?: object): string {
         let replacement = deepValue(variables, path.join("."));
 
+        if (!replacement) return path.join(".");
+        
         if (replacement.length > 1) {
             replacement = replacement.reverse();
             replacement = replacement.pop();

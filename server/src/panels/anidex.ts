@@ -4,6 +4,9 @@ import Panel from "../classes/Panel";
 import Card from "../classes/Card";
 import { CardInstance } from "@prisma/client";
 
+import _rarities from "../data/rarities.json";
+import types from "../data/types.json";
+
 export default new Panel({
     name: "anidex",
     async execute(interaction: DiscordInteraction, page: number | string = 1, rarity = 1): Promise<InteractionReplyOptions> {
@@ -17,15 +20,15 @@ export default new Panel({
         if (mode === "page" && typeof page === 'number') {
             if (page < 1) page = count;
             else if (page > count) page = 1;
-            card = await client.db.cardCatalog.findFirst({ where: { id: page }, include: { character: true, instances: { where: { status: { in: ["IDLE", "FIGHT"] } } } } });
+            card = await client.db.cardCatalog.findFirst({ where: { id: page }, include: { character: { include: { series: true } }, instances: { where: { status: { in: ["IDLE", "FIGHT"] } } } } });
         } else if (typeof page === 'string') {
-            card = await client.db.cardCatalog.findFirst({ where: { id: client.getIdReverse(page) }, include: { character: true, instances: { where: { status: { in: ["IDLE", "FIGHT"] } } } } });
+            card = await client.db.cardCatalog.findFirst({ where: { id: client.getIdReverse(page) }, include: { character: { include: { series: true } }, instances: { where: { status: { in: ["IDLE", "FIGHT"] } } } } });
         }
 
         if (!card) return await client.panels.get("anidex")!.execute!(interaction);
         if (typeof page === 'string') page = card.id as number;
 
-        const type = client.data.types[card.type.toString() as keyof typeof client.data.types];
+        const type = types[card.type.toString() as keyof typeof types];
 
         const cardC = new Card({ card: { rarity: rarity } as CardInstance, parent: card });
         const attachment = await cardC.generateImage();
@@ -33,8 +36,8 @@ export default new Panel({
         const defaults = { id: '0', args: { path: "anidex", page: page, rarity: rarity } };
 
         const rarities: Button[] = [];
-        for (const key of Object.keys(client.data.rarities)) {
-            let data = client.data.rarities[key as keyof typeof client.data.rarities];
+        for (const key of Object.keys(_rarities)) {
+            let data = _rarities[key as keyof typeof _rarities];
             rarities.push({
                 id: "0",
                 hardEmoji: data.emoji.short,
@@ -52,9 +55,9 @@ export default new Panel({
         return {
             embeds: [ interaction.components.embed({
                 fields: [
-                    { name: "\u2800", value: `-# Name\n${card.character.name}\n-# Type\n${type.name} ${type.emoji}`, inline: true },
+                    { name: "\u2800", value: `-# Name\n${card.character.name}\n${card.character.series ? `-# Series\n${card.character.series.english_title}\n` : ""}-# Type\n${type.name} ${type.emoji}`, inline: true },
                     { name: "\u2800", value: `-# ID\n\`${client.getId(card.id).padEnd(3, " ")}\``, inline: true },
-                    { name: "\u2800", value: `-# Total Caught: **${card.instances.length}**\n-# ` + [...new Set(card.instances.map(c => c.rarity))].map(r => `${client.data.rarities[r.toString() as keyof typeof client.data.rarities].emoji.short} **${card.instances.filter((c:any) => c.rarity === r).length}**`).join(" ") + "\u2800" }
+                    { name: "\u2800", value: `-# Total Caught: **${card.instances.length}**\n-# ` + [...new Set(card.instances.map(c => c.rarity))].map(r => `${_rarities[r.toString() as keyof typeof _rarities].emoji.short} **${card.instances.filter((c:any) => c.rarity === r).length}**`).join(" ") + "\u2800" }
                 ],
                 image: "attachment://card.jpg",
                 color: cardC.getRarity()?.color

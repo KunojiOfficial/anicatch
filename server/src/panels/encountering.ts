@@ -5,6 +5,8 @@ import Panel from "../classes/Panel";
 import encounter from '../mechanics/encounter';
 import Card from "../classes/Card";
 
+import types from "../data/types.json";
+
 export default new Panel({
     name: "encountering",
     async execute(interaction: DiscordInteraction): Promise<InteractionReplyOptions> {
@@ -72,14 +74,22 @@ export default new Panel({
         //get image
         const attachment = await card.generateImage();
 
-        const type = client.data.types[data.result.type.toString() as keyof typeof client.data.types];
+        const type = types[data.result.type.toString() as keyof typeof types];
         const escapeTime = new Date();
         escapeTime.setSeconds(escapeTime.getSeconds() + 15);
 
+        let text = "";
+        text += `🍃 {locale_main_wildAppeared}`;
+        if (data.result.character.series) text += `\n🍃 {locale_main_wildAppeared2}\n`;
+        text += `\n{locale_main_wildAppeared3}`;
+        text += `\n\n{locale_main_wildAppeared4}`;
+        text += `\n{locale_main_wildAppeared5}`;
+        text += `\n\n-# {locale_main_escapes}`;
+
         const embed = {
-            description: `-# ${client.getId(data.insert.cardId, data.insert.print)}\n\n🍃 A wild **${data.result.character.name}** has appeared!\nIt's a **${type.emoji} ${type.name}** type!\n\nYou got the **${data.rarity.emoji.short} ${data.rarity.name}** rarity\nwith a **${data.rarity.chance}%** encounter rate!\n\n-# Escapes ${client.unixDate(escapeTime)}...`,
+            description: `-# ${client.getId(data.insert.cardId, data.insert.print)}\n\n${text}`,
             image: "attachment://card.jpg",
-            color: data.rarity.color
+            color: data.rarity.color,
         };
 
         let followUp:any;
@@ -136,7 +146,14 @@ export default new Panel({
         //send message
         followUp = await interaction.followUp({
             content: `${user}`,
-            embeds: [interaction.components.embed(embed)],
+            embeds: [interaction.components.embed(embed, {
+                name: [`**${data.result.character.name}**`],
+                series: [`**${data.result.character?.series?.english_title}**`],
+                type: [`**${type.emoji} ${type.name}**`],
+                rarity: [`**${data.rarity.emoji.short} ${data.rarity.name}**`],
+                rate: [`**${data.rarity.chance}%**`],
+                date: [`${client.unixDate(escapeTime)}`]
+            })],
             files: [attachment!],
             components: components.length ? components as any : []
         });

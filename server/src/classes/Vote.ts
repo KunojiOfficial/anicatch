@@ -1,4 +1,4 @@
-import { db, manager } from "index";
+import { db, manager, formatter } from "index";
 import { addHours, parseColor, unixDate } from "src/helpers/utils";
 
 import votesData from "../config/vote.json";
@@ -18,7 +18,7 @@ export default class Vote {
     }
 
     public async process() {
-        const user = await db.user.findFirst({ where: { discordId: this.discordId }, include: { stats: true } });
+        const user = await db.user.findFirst({ where: { discordId: this.discordId }, include: { stats: true, config: true } });
         if (!user) return;
 
         const votes = user.stats.votes as any;
@@ -38,30 +38,35 @@ export default class Vote {
         }
 
         const reward = this.rewardCalculator(newStreak, votesData[this.website].base);
-        votes[this.website] = { lastVoted: new Date(), streak: newStreak };
+        votes[this.website] = { lastVoted: new Date(), streak: newStreak, notified: false };
 
-        let message = {};
-
+        let text = "";
         if (newStreak > streak && streak > 0) {
             //continue streak
-            message = {
-                embeds: [ {
-                    description: `### Your streak continues! 🎉\nYou voted **${newStreak}** times in a row!\n\nToday, you receive **${reward} coins**!\nVote again before ${unixDate(addHours(lastVotedDate, 24+votesData[this.website].cooldown), "long")} to increase your streak and receive ${this.rewardCalculator(newStreak+1, votesData[this.website].base)}!`,
-                    color: parseColor(config.defaults.embed.color)
-                } ]
-            };
+            text += `### {locale_main_yourVoteStreakContinues}\n{locale_main_youVotedTimes}`;
         } else if (newStreak < streak) {
             //streak reset
-            message = { content: `Your streak has been reset!` };
+            text += "### {locale_main_streakResetTitle}\n{locale_main_streakReset}";
         } else {
             //first vote
-            message = { content: `You have voted for the first time!` };
+            text += `### {locale_main_voteFirst}\n{locale_main_voteFirstText}`;
         }
 
-        console.log(message)
+        text += `\n### {locale_main_youHaveReceived}:\n`;
+        text += `* {emoji_smallCoin} **{number_${reward}}**`;
+        text += `\n\n{locale_main_voteAgain}\n\n{locale_main_voteThanks} {emoji_favorite}`;
 
         for (const [_, cluster] of manager.clusters) {
-            const answer = await cluster.request({ action: 'directMessage', user: user.discordId, content: message });
+            const answer = await cluster.request({ action: 'directMessage', user: user.discordId, content: {
+                embeds: [ {
+                    description: formatter.f(text, user.config.locale, {
+                        count: [newStreak],
+                        date: [unixDate(addHours(new Date(), 24 + votesData[this.website].cooldown), "long")]
+                    }),
+                    color: parseColor(config.defaults.embed.color),
+                    image: { url: config.imgs.vote }
+                } ]
+            } });
             if ((answer as any).found) break;
         }
 

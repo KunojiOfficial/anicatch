@@ -18,9 +18,10 @@ export default new Interactable({
         if (!animon) throw 59;
         if (animon.status !== "IDLE") throw 18;
 
-        let desc = "";
+        let desc = "", variables = {};
         if (animon.moves.find(move => move.id === moveId) && action === "remove") {
-            desc = `You have successfully removed **${animon.moves[slot-1].name}** from slot ${slot}.`;
+            desc = `{locale_main_removedMove}`;
+            variables = { move: [`**${animon.moves[slot-1].name}**`], slot: [slot] };
             await client.db.cardInstance.update({ where: { id: cardId }, data: { moves: { disconnect: { id: animon.moves.find(move => move.id === moveId).id } } } });
         } else if (action === "learn") {
             const move = await client.db.move.findFirst({ where: { id: moveId } });
@@ -45,7 +46,8 @@ export default new Interactable({
 
             interaction.player.data[currency] -= move[currency];
 
-            desc = `You have successfully taught **${move.name}** to your Animon.`;
+            desc = `{locale_main_taughtMove}`;
+            variables = { move: [`**${move.name}**`] };
         }
 
         const panel = await client.panels.get("moves")!.execute!(interaction, cardId, slot);

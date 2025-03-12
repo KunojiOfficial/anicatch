@@ -36,8 +36,10 @@ export default new Event({
 
         await user.send({
             embeds: [ components.embed({
-                description: `### Thanks for your purchase! ❤️\nYou’ve successfully acquired **${data.gems} {locale_main_${data.type}}**.\nWe hope you enjoy your new goodies!\n\nIf you haven't received your goods, hop into our [support server]({config_urls_support})!`,
+                description: `### {locale_main_thanksForPurchase} ❤️\n{locale_main_successfullyAcquired}\n{locale_main_hopeYouEnjoy}\n\n{locale_main_purchaseHelp}`,
                 thumbnail: client.getEmojiUrl("gem")
+            }, {
+                name: [`**${data.gems} {locale_main_${data.type}}**`]
             }) ]
         });
     }

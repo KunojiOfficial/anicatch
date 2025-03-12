@@ -140,7 +140,7 @@ export default class Card {
         return bar;
     }
 
-    async generateCanvas(noRarity: boolean = false) {
+    async generateCanvas(noRarity: boolean = false, noType: boolean = false) {
         if (!this.parent) return;
 
         const canvas = createCanvas(270, 340);
@@ -155,10 +155,22 @@ export default class Card {
         ctx.drawImage(cardImage, -5, -5, 225, 350);
         ctx.restore();
 
+        // Draw rounded outline around the cardImage
+        ctx.lineWidth = 2;
+        ctx.strokeStyle = this.rarity?.color || "black";
+        ctx.beginPath();
+        ctx.roundRect(0, 0, 215, 340, 20);
+        ctx.stroke();
+
         if (!noRarity) {
             const starImage = await loadImage(`./src/assets/rarities/${this.card.rarity}.png`);
-            for (let i = 0; i < this.card.rarity; i++) ctx.drawImage(starImage, 230, /*70+*/(i*40), 40, 40);
+            for (let i = 0; i < this.card.rarity; i++) ctx.drawImage(starImage, 230, /*60+24+*/18+(i*40), 40, 40);
         }
+
+        // if (!noType) {
+        //     const typeImage = await loadImage(`./src/assets/types/${this.parent.type}.png`);
+        //     ctx.drawImage(typeImage, 230, 18, 40, 40);
+        // }
 
         return canvas;
     }

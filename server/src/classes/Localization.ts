@@ -4,7 +4,7 @@ import path from "path";
 type Translations = Record<string, any>;
 
 export default class Localization {
-    private locales: Record<string, Translations> = {};
+    public locales: Record<string, Translations> = {};
     private defaultLocale = "en-US";
   
     constructor() {
@@ -38,6 +38,9 @@ export default class Localization {
   
         for (const k of keys) {
             if (translation[k] === undefined) {
+                let englishTranslation = this.locales[this.defaultLocale][key];
+                
+                if (englishTranslation) return englishTranslation; //return original english translation if not found
                 return key; // Fallback to key if not found
             }
         

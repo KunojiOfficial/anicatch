@@ -6,7 +6,7 @@
     },
     "defaults": {
         "embed": {
-            "color": "#609966"
+            "color": "#aeb0e8"
         }
     },
     "urls": {
@@ -20,5 +20,8 @@
     },
     "webhooks": {
         "error": "https://discord.com/api/webhooks/1285557612758437958/J2VIVBfP7rC8aqPryBGEicWqLAaPI56f6gU0KIGaHfQ6sSoXW39PLI-Uma9pnL-YEknR"
+    },
+    "imgs": {
+        "vote": "https://i.imgur.com/3DDOr19.gif"
     }
 }
