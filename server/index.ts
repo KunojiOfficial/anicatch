@@ -11,6 +11,7 @@ import deployCommands from "src/helpers/deployCommands";
 
 import Formatter from "src/classes/Formatter";
 import Logger from "src/classes/Logger";
+import redeemEntitlements from "src/intervals/redeemEntitlements";
 
 dotenv.config();
 
@@ -46,6 +47,7 @@ manager.on('clusterCreate', async cluster => {
 	if (spawnedClusters === manager.totalClusters) {
 		encounterRecharge(db, manager);
 		voteNotifications(db, manager);
+		redeemEntitlements(db, manager);
 	}
 });
 

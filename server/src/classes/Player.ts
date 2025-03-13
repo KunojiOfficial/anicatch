@@ -22,7 +22,7 @@ export default class Player {
     }
     
     public getEncounters(): string {
-        return `**{locale_main_encounterss}:**\u2800{number_${this.data.encounters}}`;
+        return `**{locale_main_encounterss}:**\u2800{emoji_encounters} {number_${this.data.encounters}}`;
     }
 
     public async refreshEncounters(client: Client) {

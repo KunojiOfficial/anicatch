@@ -7,7 +7,7 @@ export default new Interactable({
     async execute(interaction): Promise<InteractionReplyOptions> {
         const { client, player } = interaction;
 
-        const offer = await client.db.trade.findFirst({ where: { offererId: player.data.id, status: "CREATING" }, include: { users: true } });
+        const offer = await client.db.trade.findFirst({ where: { offererId: player.data.id, status: "CREATING" }, include: { users: { include: { config: true } } } });
         if (!offer) throw 42;
         if (!offer.offered.length) throw 52;
 

@@ -7,7 +7,6 @@ export default new Panel({
     name: "tradeOffer",
     async execute(interaction: DiscordInteraction, offerId: number | string, side: "offered" | "requested" = "offered"): Promise<InteractionReplyOptions> {
         const { client, player } = interaction;
-
         if (typeof offerId === "string") offerId = parseInt(offerId);
 
         const offer = await client.db.trade.findFirst({ where: { id: offerId, OR: [{ offererId: player.data.id }, { recipientId: player.data.id }] }, include: { users: true } });

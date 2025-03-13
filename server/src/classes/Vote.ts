@@ -55,6 +55,7 @@ export default class Vote {
 
         text += `\n### {locale_main_youHaveReceived}:\n`;
         text += `* {emoji_smallCoin} **{number_${reward}}**`;
+        if (votesData[this.website].encounters) text += `\n* {emoji_encounters} **{number_${votesData[this.website].encounters}}**`;
         text += `\n\n{locale_main_voteAgain}\n\n{locale_main_voteThanks} {emoji_favorite}`;
 
         for (const [_, cluster] of manager.clusters) {
@@ -73,7 +74,7 @@ export default class Vote {
 
         await db.user.update({ 
             where: { discordId: this.discordId }, 
-            data: { coins: { increment: reward }, stats: { update: { votes: votes } } }
+            data: { coins: { increment: reward }, encounters: { increment: votesData[this.website].encounters||0 }, stats: { update: { votes: votes } } }
         });
     }
 }

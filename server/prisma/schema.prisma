@@ -54,6 +54,9 @@ model Role {
   id            Int               @unique @id @default(autoincrement())
   name          String
   emoji         String?
+  color         String?
+
+  skuId         String?
 
   maxEncounters Int
   rechargeTime  Int

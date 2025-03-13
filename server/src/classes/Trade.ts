@@ -1,6 +1,9 @@
 import { Trade as TradeDB, User } from "@prisma/client";
 import { DiscordInteraction, TradeIncluded } from "../types";
 import Card from "./Card";
+import Player from "./Player";
+import Components from "./Components";
+import { parseColor } from "src/helpers/utils";
 
 type ItemType = "currencies" | "cards" | "items";
 type Side = "offered" | "requested";
@@ -143,8 +146,27 @@ export default class Trade {
                 }
 
             }
+
             await tx.trade.update({ where: { id: this.offer.id }, data: { status: "ACTIVE" } });
         });
+
+        //send DM
+        const dm = await client.users.fetch(recipient.discordId);
+        const theirPlayer = new Player(dm, recipient, undefined, (recipient as any).config);
+
+        this.interaction.player = theirPlayer;
+        this.interaction.locale = (recipient as any)?.config?.locale;
+        this.interaction.user = dm;
+        this.interaction.components = new Components(this.interaction.client, (recipient as any).config.locale, theirPlayer);
+
+        const panel = await client.panels.get("tradeOffer").execute(this.interaction, this.offer.id, "offered");
+
+        await dm.send({
+            ...panel as any,
+            embeds: [ this.interaction.components.embed({
+                description: `{locale_main_newTradeOffer}`
+            }), ...panel.embeds ]
+        })
     }
 
     /**
@@ -243,6 +265,25 @@ export default class Trade {
             await tx.trade.update({ where: { id: this.offer.id }, data: { status: "ACCEPTED", updatedAt: new Date() } });
         });
 
+        //send DM
+        const dm = await client.users.fetch(offerer.discordId);
+        const locale = (offerer as any).config.locale;
+
+        await dm.send({
+            embeds: [{
+                description: client.formatText(`{emoji_yes}\u2800{locale_main_tradeAccepted}`, locale, {
+                    id: [this.offer.id],
+                }),
+                color: parseColor("#00ff00")
+            }],
+            components: [ this.interaction.components.buttons([{
+                owner: "0",
+                label: client.formatText("{locale_main_viewDetails}", locale),
+                emoji: "info",
+                args: { path: "tradeOffer", offerId: this.offer.id }
+            }]) ]
+        });
+
     }
 
     /**
@@ -286,5 +327,23 @@ export default class Trade {
             await tx.trade.update({ where: { id: this.offer.id }, data: { status: "REJECTED", updatedAt: new Date() } });
         });
 
+        //send DM
+        const dm = await client.users.fetch(offerer.discordId);
+        const locale = (offerer as any).config.locale;
+        
+        await dm.send({
+            embeds: [{
+                description: client.formatText(`{emoji_no}\u2800{locale_main_tradeRejected}`, locale, {
+                    id: [this.offer.id],
+                }),
+                color: parseColor("#ff0000")
+            }],
+            components: [ this.interaction.components.buttons([{
+                owner: "0",
+                label: client.formatText("{locale_main_viewDetails}", locale),
+                emoji: "info",
+                args: { path: "tradeOffer", offerId: this.offer.id }
+            }]) ]
+        });
     }
 }

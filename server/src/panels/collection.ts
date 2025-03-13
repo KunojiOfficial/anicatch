@@ -105,8 +105,9 @@ export default new Panel({
         return {
             embeds: [ interaction.components.embed({
                 author: { name: `${owner.displayName}'s Collection`, iconUrl: owner.displayAvatarURL() },
-                description: (userData.roleId>1?`### ${userData.role.emoji||""}\u2800${userData.role.name}\u2800${userData.role.emoji||""}\n`:``) + `**Sort by:** rarity (desc.)\n-# View details of an Animon by using the {command_animon} command or the select menu below.\n` + "\u2800".repeat(47),
+                description: (userData.roleId>1?`### ${userData.role.name}\u2800${userData.role.emoji||""}\n\n`:``) + `**Sort by:** rarity (desc.)\n-# View details of an Animon by using the {command_animon} command or the select menu below.\n` + "\u2800".repeat(47),
                 fields: fields,
+                color: (userData.roleId>1&&userData.role.color) ? userData.role.color : undefined
             }) ],
             components: components
         }

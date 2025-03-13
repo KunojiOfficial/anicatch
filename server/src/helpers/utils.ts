@@ -5,6 +5,7 @@ import { pathToFileURL } from "url";
 
 import config from "../config/main.json";
 import emoji from "../config/emoji.json";
+import { Role } from "@prisma/client";
 
 function toUpperCamelCase (text: string): string {
     return text.replace(/(?:^\w|[A-Z]|\b\w)/g, (word) => word.toUpperCase());
@@ -94,4 +95,16 @@ function unixDate(date: Date, format?: 'long' | 'short' | 'hours') {
     return (`<t:${parseInt((date.getTime() / 1000).toFixed(0))}:${type}>`);
 }
 
-export { getRandomNumber, toUpperCamelCase, getTextBetweenTwoStrings, deepValue, numberWithCommas, randomElement, addHours, base10ToBase26, base26ToBase10, parseColor, loadFiles, unixDate };
+function getBenefits(role: Role) {
+    let text = "";
+    
+    text += `* {emoji_encounters} {locale_main_encountersCap}: **{number_${role.maxEncounters}}**`;
+    text += `\n* {emoji_time} {locale_main_encountersRecharge}: **${Math.round(role.rechargeTime/60)} minutes**`;
+    if (role.expShare>0) text += `\n* {emoji_exp} {locale_main_expShare}`;
+    if (role.emoji&&role.color) text += `\n* ${role.emoji} {locale_main_collectionLooks}`;
+    text += `\n* {emoji_discord} {locale_main_specialRole}`;
+    
+    return {text, variables: { value: [ `**${role.expShare*100}%**` ] }};
+}
+
+export { getRandomNumber, toUpperCamelCase, getTextBetweenTwoStrings, deepValue, numberWithCommas, randomElement, addHours, base10ToBase26, base26ToBase10, parseColor, loadFiles, unixDate, getBenefits };

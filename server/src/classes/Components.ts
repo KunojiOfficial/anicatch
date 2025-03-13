@@ -81,7 +81,7 @@ export default class Components {
      * Generates Discord buttons components
      * @param buttons 
      */
-    buttons(buttons: Array<Button>) {
+    buttons(buttons: Array<Button>, replace?: object) {
         
         const buttonsArray = []
 
@@ -112,13 +112,13 @@ export default class Components {
             let color = 2;
             if (button.url) {
                 color = 5;
-                buttonRow.setURL(this.client.formatText(button.url, this.locale))
+                buttonRow.setURL(this.client.formatText(button.url, this.locale, replace))
             }
             else if (button.style) color = BUTTON_COLORS[button.style];
            
             if (button.hardEmoji) buttonRow.setEmoji(button.hardEmoji);
             if (button.emoji) buttonRow.setEmoji(deepValue(emojis, button.emoji) || button.emoji);
-            if (button.label) buttonRow.setLabel(this.client.formatText(button.label, this.locale));
+            if (button.label) buttonRow.setLabel(this.client.formatText(button.label, this.locale, replace));
             if (button.disabled) buttonRow.setDisabled(true);
             if (button.skuId) buttonRow.setSKUId(button.skuId);
 
