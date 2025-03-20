@@ -97,7 +97,7 @@
     },
     "redeem": {
         "name": "redeem",
-        "description": "Redeem purchased items if they are not automatically added to your inventory."
+        "description": "Redeem purchased items if they are not automatically added."
     },
     "server": {
         "name": "server",
@@ -137,7 +137,7 @@
     },
     "types": {
         "name": "types",
-        "description": "Display a chart showing the strengths and weaknesses of each Animon type!"
+        "description": "Display a chart showing the strengths and weaknesses of each type!"
     },
     "vote": {
         "name": "vote",

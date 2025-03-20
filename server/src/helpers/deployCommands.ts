@@ -26,6 +26,10 @@ function localizeOptions(options: any[], command: any, formatter: Formatter, lan
             if (value.includes("commands.")) continue;
 
             option[`${key}_localizations`][language] = parseLocalization(value, key, option.type === 1 ? command.emoji[option.name] : undefined);
+            
+            if (language === "en-US" && key === "description") {
+                option[key] = parseLocalization(value, key, option.type === 1 ? command.emoji[option.name] : undefined);
+            }
         }
 
         if (option.options) {
@@ -54,10 +58,6 @@ function handleCommand(command: any, formatter: Formatter) {
             if (value.includes("commands.")) continue;
             
             command.data[`${key}_localizations`][language] = parseLocalization(value, key, command.emoji);
-
-            if (language === "en-US") {
-                command.data[key] = command.data[`${key}_localizations`][language];
-            }
         }
 
         localizeOptions(command.data.options, command, formatter, language);
