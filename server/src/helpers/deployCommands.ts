@@ -54,6 +54,10 @@ function handleCommand(command: any, formatter: Formatter) {
             if (value.includes("commands.")) continue;
             
             command.data[`${key}_localizations`][language] = parseLocalization(value, key, command.emoji);
+
+            if (language === "en-US") {
+                command.data[key] = command.data[`${key}_localizations`][language];
+            }
         }
 
         localizeOptions(command.data.options, command, formatter, language);
