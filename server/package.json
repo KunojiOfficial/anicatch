@@ -7,7 +7,7 @@
   "scripts": {
     "start": "npx tsc-watch --outDir ./dist --onSuccess \"ts-node ./scripts/run\"",
     "db": "npx prisma migrate dev --name dev && npx prisma studio",
-    "build": "tsc && cpy --cwd=src '*.json' '../dist/' && cp -r src/assets dist/assets && cp -r src/locale dist/locale && cp -r src/web/views dist/web/views",
+    "build": "tsc && cpy --cwd=src '*.json' '../dist/' && cp -r src/assets dist/assets && cp -r src/locale dist/locale && cp -r src/web/views dist/web",
     "dev": "nodemon --ignore src/assets --exec tsx ./index.ts",
     "emojis": "tsx ./src/helpers/setupEmojis.ts"
   },
