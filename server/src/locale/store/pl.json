@@ -1,0 +1,16 @@
+{
+    "categories": {
+        "BALL": {
+            "name": "AniBalle",
+            "description": "Aniballe zwiększają szanse na złapanie dowolnego Animona, od podstawowego do legendarnego!"
+        },
+        "ENCOUNTER": {
+            "name": "Tokeny Spotkań",
+            "description": "Te tokeny zapewniają dodatkowe szanse na spotkanie dzikich Animonów."
+        },
+        "CONSUMABLE": {
+            "name": "Słodycze",
+            "description": "Poczęstuj swojego Animona! Użyj tych przedmiotów, aby zwiększyć jego statystyki, uleczyć go lub odblokować różne efekty!"
+        }
+    }
+}

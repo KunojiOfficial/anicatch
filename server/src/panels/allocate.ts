@@ -29,14 +29,14 @@ export default new Panel({
         const components = [ interaction.components.selectMenu({
             ...defaults,
             id: 0,
-            placeholder: "⭐\u2800Select an attribute...",
+            placeholder: "⭐\u2800{locale_main_selectAttribute}",
             options: keys.map(k => ({
                 label: `{locale_main_stats_${k}}`,
                 value: `3:${k}`,
                 default: k === stat
             })),
         }), interaction.components.buttons([{
-            label: "Back",
+            label: "{locale_main_back}",
             emoji: "back",
             ...defaults,
             args: { path: "animon", cardId: cardId, userAccess: false, page: "stats" }
@@ -54,7 +54,7 @@ export default new Panel({
             args: { ...defaults.args, points: points + 1 }
         }, {
             id: "20",
-            label: "Allocate",
+            label: "{locale_main_allocate}",
             style: "green",
             emoji: "wyes",
             args: { cardId: cardId, points: points, stat: stat },

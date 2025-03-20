@@ -17,10 +17,10 @@
         "title": "Add currencies to offer",
         "inputs": [{
             "label": "Coins",
-            "placeholder": "coins"
+            "placeholder": "The amount of coins"
         }, {
             "label": "Gems",
-            "placeholder": "Gems"
+            "placeholder": "The amount of gems"
         }]
     },
     "4-1": {
@@ -34,10 +34,10 @@
         "title": "Add items to offer",
         "inputs": [{
             "label": "Item Id",
-            "placeholder": "id"
+            "placeholder": "The ID of the item (you can check it in the offer creator)"
         }, {
             "label": "Item Amount",
-            "placeholder": "number"
+            "placeholder": "An integral number"
         }]
     }
 }

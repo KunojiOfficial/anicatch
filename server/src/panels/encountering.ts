@@ -23,13 +23,19 @@ export default new Panel({
                 }) ],
                 components: [ interaction.components.buttons([{
                     id: "0F",
-                    label: "Visit Store",
-                    emoji: "smallCoin",
-                    args: { path: "store" }
+                    label: "\u2800{locale_main_visitStore}",
+                    emoji: "coin",
+                    args: { path: "store", page: "ENCOUNTER" }
                 }, {
-                    label: "Vote"
+                    id: "0F",
+                    label: "\u2800{locale_main_vote}",
+                    emoji: "sparkles",
+                    args: { path: "vote" }
                 }, {
-                    label: "Become a Patron"
+                    id: "0F",
+                    label: "\u2800{locale_main_getPremium}",
+                    emoji: "gem",
+                    args: { path: "premium" }
                 }]) ]
             };
 
@@ -53,7 +59,7 @@ export default new Panel({
                 }) ],
                 components: [ interaction.components.buttons([{
                     id: "0F",
-                    label: "Visit Store",
+                    label: "{locale_main_visitStore}",
                     emoji: "smallCoin",
                     args: { path: "store", page: "BALL" }
                 }]) ]
@@ -129,14 +135,14 @@ export default new Panel({
 
         components.push(interaction.components.buttons([{
             // id: "10",
-            label: `Battle!`,
+            label: `{locale_main_battle}!`,
             emoji: "fight",
             args: { id: timeOutId, id2: data.timeout, cardId: card.card.id },
             id: "17",
             style: "red"
         }, {
             id: '2',
-            label: `Next (${player.data.encounters-1})`,
+            label: `{locale_main_next} (${player.data.encounters-1})`,
             emoji: "next",
             cooldown: { id: "next", time: 2 },
             args: { id: timeOutId },

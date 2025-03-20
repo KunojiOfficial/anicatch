@@ -3,17 +3,18 @@ import { ClusterManager } from "discord-hybrid-sharding";
 import { parseColor } from "../helpers/utils";
 
 import config from "../config/main.json";
+import { formatter } from "index";
 
 export default function (db: PrismaClient, manager: ClusterManager) {
     setInterval(async () => {
-        const users = await db.user.findMany({ where: { nextNotify: { lte: new Date() }, config: { encounters: true } } });
+        const users = await db.user.findMany({ where: { nextNotify: { lte: new Date() }, config: { encounters: true } }, include: { config: true } });
         
         for (const user of users) {
           await db.user.updateMany({ where: { id: user.id }, data: { nextNotify: null } });
           for (const [_, cluster] of manager.clusters) {
             const answer = await cluster.request({ action: 'directMessage', user: user.discordId, content: {
               embeds: [ {
-                description: `### Your encounters have been recharged! ✨\nReturn to **${config.bot.name}** and collect your favorite anime characters! 🎉\n\n-# You can disable these notifications in your {command_settings}.`,
+                description: formatter.f(`### {locale_main_encountersRecharged}\n{locale_main_encountersRechargedText}\n\n-# {locale_main_disableNotifications}`, user.config.locale),
                 color: parseColor(config.defaults.embed.color)
               } ]
             } });

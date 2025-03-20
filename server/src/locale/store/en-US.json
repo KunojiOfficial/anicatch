@@ -12,12 +12,5 @@
             "name": "Sweets",
             "description": "Give your Animon a treat! Use these items to boost their stats, heal them or unlock various effects!"
         }
-    },
-    "vouchers": {
-        "20-gems": "20 Gems Voucher",
-        "60-gems": "60 Gems Voucher",
-        "125-gems": "125 Gems Voucher",
-        "380-gems": "380 Gems Voucher",
-        "640-gems": "640 Gems Voucher"
     }
 }

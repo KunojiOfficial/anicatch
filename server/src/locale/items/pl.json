@@ -1,0 +1,70 @@
+{
+    "aniball": {
+        "name": "AniBall",
+        "description": "Podstawowa, ale niezawodna dla zwykłych Animonów."
+    },
+    "starball": {
+        "name": "StarBall",
+        "description" : "Lśni gwiezdną mocą, świetna dla odważnych i potężnych Animonów."
+    },
+    "megaball": {
+        "name": "MegaBall",
+        "description": "Wzmocniona dla trudniejszych Animonów, które opierają się standardowym próbom złapania."
+    },
+    "prismball": {
+        "name": "PrismBall",
+        "description": "Stworzona do rzadkich Animonów, które trudno znaleźć i schwytać."
+    },
+    "hyperball": {
+        "name": "HyperBall",
+        "description": "Supernaładowana, aby schwytać nawet najtwardsze Animony."
+    },
+    "abyssball": {
+        "name": "AbyssBall",
+        "description": "Wykuta z otchłani, łapie najtrudniejsze do złapania Animony."
+    },
+    "omniball": {
+        "name": "OmniBall",
+        "description": "Najpotężniejsza AniBall – łapie każdego Animona bez wyjątku i bezbłędnie."
+    },
+    "forestToken": {
+        "name": "Leśny Token",
+        "description": "Ten token zapewnia {item_encounters} dodatkowych szans na spotkanie dzikich Animonów."
+    },
+    "adventureToken": {
+        "name": "Token Przygody",
+        "description": "Ten token daje {item_encounters} spotkań, aby odkrywać ukryte Animony."
+    },
+    "mysticToken": {
+        "name": "Mistyczny Token",
+        "description": "Przesiąknięty starożytną magią, pozwala na {item_encounters} dodatkowych spotkań."
+    },
+    "legendaryToken": {
+        "name": "Legendarny Token",
+        "description": "Ten słynny token zapewnia imponujące {item_encounters} spotkań."
+    },
+    "cake": {
+        "name": "Ciasto",
+        "description": "Tak pyszne, że po jednym kęsie każdy Animon natychmiast zdobywa poziom!"
+    },
+    "cupcake": {
+        "name": "Babeczka",
+        "description": "Tak słodka, że przywraca do życia każdego omdlałego Animona!"
+    },
+    "snowdriftDonut": {
+        "name": "Śnieżny Pączek",
+        "description": "Przywraca {item_value} HP dzięki swojej delikatnej białej polewie."
+    },
+    "roseglowDonut": {
+        "name": "Różany Pączek",
+        "description": "Leczy {item_value} HP swoim słodkim, różowym urokiem."
+    },
+    "verdantDonut": {
+        "name": "Szmaragdowy Pączek",
+        "description": "Regeneruje {item_value} HP dzięki swojej orzeźwiającej zielonej polewie."
+    },
+    "skyshadeDonut": {
+        "name": "Niebiański Pączek",
+        "description": "Uzupełnia {item_value} HP swoją spokojną, niebieską polewą."
+    }
+}

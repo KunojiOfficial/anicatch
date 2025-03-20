@@ -23,13 +23,13 @@ async function main(interaction: DiscordInteraction) {
 
     return {
         embeds: [ interaction.components.embed({
-            author: { name: `${player.user.displayName} - Store`, iconUrl: player.user.displayAvatarURL() },
-            description: player.getBalance() + `\nSelect a category of the items you would like to buy.\n` + `\u2800`.repeat(36),
+            author: { name: `${player.user.displayName} - {locale_main_store}`, iconUrl: player.user.displayAvatarURL() },
+            description: player.getBalance() + `\n{locale_main_storeText}\n` + `\u2800`.repeat(36),
             fields: fields
         }) ],
         components: [ interaction.components.selectMenu({
             id: 0,
-            placeholder: "🛍️\u2800Select a category!",
+            placeholder: "🛍️\u2800{locale_main_selectCategory}",
             options: categories.map(c => ({ 
                 label: `{locale_store_categories_${c}_name}`, 
                 description: `{locale_store_categories_${c}_description}`, 
@@ -57,8 +57,8 @@ async function category(interaction: DiscordInteraction, category: ItemType, ite
     
         let desc = [client.formatText(`{locale_items_${item.name}_description}`, interaction.locale, item.properties as object) || "\u2800"];
 
-        if (coinPrice) desc.push(`-# Coin Price: {emoji_smallCoin} ${coinPrice}`);
-        if (gemPrice) desc.push(`-# Gem Price: {emoji_smallGem} ${gemPrice}`);
+        if (coinPrice) desc.push(`-# {locale_main_coinPrice}: {emoji_smallCoin} ${coinPrice}`);
+        if (gemPrice) desc.push(`-# {locale_main_gemPrice}: {emoji_smallGem} ${gemPrice}`);
 
         let itemData = {
             ...item,
@@ -80,7 +80,7 @@ async function category(interaction: DiscordInteraction, category: ItemType, ite
     
     let components = [ interaction.components.selectMenu({
         id: 0,
-        placeholder: "🛍️\u2800Select an item!",
+        placeholder: "🛍️\u2800{locale_main_selectItem}",
         options: data.map(i => ({ 
             label: `${i.name}`, 
             description: `${i.desc[0]}`, 
@@ -122,7 +122,7 @@ async function category(interaction: DiscordInteraction, category: ItemType, ite
 
         if (item.priceCoin) buttons.push({
             emoji: "smallCoin",
-            label: player.data.coins >= costCoin ? `Buy (-{number_${costCoin}})` : `Too expensive! ({number_${costCoin}})`,
+            label: player.data.coins >= costCoin ? `{locale_main_buy} (-{number_${costCoin}})` : `{locale_main_tooExpensive} ({number_${costCoin}})`,
             style: player.data.coins >= costCoin ? "green" : "red",
             disabled: player.data.coins < costCoin,
             id: '4',
@@ -132,7 +132,7 @@ async function category(interaction: DiscordInteraction, category: ItemType, ite
 
         if (item.priceGem) buttons.push({
             emoji: "smallGem",
-            label: player.data.gems >= costGem ? `Buy (-{number_${costGem}})` : `Too expensive! ({number_${costGem}})`,
+            label: player.data.gems >= costGem ? `{locale_main_buy} (-{number_${costGem}})` : `{locale_main_tooExpensive} ({number_${costGem}})`,
             style: player.data.gems >= costGem ? "blurple" : "red",
             disabled: player.data.gems < costGem,
             id: '4',
@@ -145,18 +145,18 @@ async function category(interaction: DiscordInteraction, category: ItemType, ite
     
     return {
         embeds: [ interaction.components.embed({
-            author: { name: `${player.user.displayName} - Store`, iconUrl: player.user.displayAvatarURL() },
+            author: { name: `${player.user.displayName} - {locale_main_store}`, iconUrl: player.user.displayAvatarURL() },
             description: `${player.getBalance()}\n\n**${items[0].emoji} {locale_store_categories_${category}_name}**\n{locale_store_categories_${category}_description}` + "\n\u2800",
             fields: fields
         }) ],
         components: [...components, interaction.components.buttons([{
             id: '0',
-            label: "Back",
+            label: "{locale_main_back}",
             emoji: "back",
             args: { path: 'store', page: 'main' }
         }, {
             id: "0F",
-            label: "Get more Gems",
+            label: "{locale_main_getMoreGems}",
             emoji: "getGems",
             args: { path: "gems" }
         }])]

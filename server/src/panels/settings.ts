@@ -30,14 +30,14 @@ export default new Panel({
                 if (!selection.includes("/")) {
                     secondMenu = true;
                     if (selection === "locale") {
-                        const languages = client.locales.main;
+                        const languages = client.formatter.localization.locales;
                         const names = Object.keys(languages);
 
                         for (const name of names) {
                             miniOptions.push({
-                                label: languages[name].name,
+                                label: languages[name]?.main?.name,
                                 value: `2:${setting.name}/${name}`,
-                                hardEmoji: languages[name].emoji,
+                                hardEmoji: languages[name]?.main?.emoji,
                                 default: player.config[setting.name] === name
                             });
                         }
@@ -85,7 +85,7 @@ export default new Panel({
 
         const components = [ interaction.components.selectMenu({
             id: 0,
-            placeholder: "🔧\u2800Select a setting...",
+            placeholder: "🔧\u2800{locale_main_selectSetting}",
             options: options,
             args: { path: "settings", category: category },
             cooldown: { id: "settings", time: 2 }
@@ -94,7 +94,7 @@ export default new Panel({
         if (secondMenu) {
             components.push(interaction.components.selectMenu({
                 id: 0,
-                placeholder: "🔧\u2800Select an option...",
+                placeholder: "🔧\u2800{locale_main_selectOption}",
                 options: miniOptions,
                 args: { path: "settings", category: "0" },
                 cooldown: { id: "settings", time: 2 }

@@ -19,7 +19,7 @@ export default new Interactable({
             text = "{locale_main_tradeAccept}"
             await trade.accept();
         } else {
-            text = "{loacle_trade_tradeReject}"
+            text = "{locale_main_tradeReject}"
             await trade.reject();
         }
 

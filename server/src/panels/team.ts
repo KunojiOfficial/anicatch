@@ -18,7 +18,7 @@ export default new Panel({
             let animon = animons.find(a => a.team === i);
             
             if (!animon) {
-                fields.push({ name: `{emoji_emptyball} Empty Slot #${i}`, value: "-# *Empty slot for*\n-# *your Animon.*", inline: true });
+                fields.push({ name: `{emoji_emptyball} {locale_main_emptySlot} #${i}`, value: "{locale_main_emptySlotText}", inline: true });
                 options.push({ label: `Slot #${i}`, emoji: "emptyball", description: "Empty slot", value: `1:${i}`, default: i == slot });
                 continue;
             }
@@ -39,7 +39,7 @@ export default new Panel({
         const components = [interaction.components.selectMenu({
             id: 0,
             options: options,
-            placeholder: `💿\u2800Select a slot...`,
+            placeholder: `💿\u2800{locale_main_selectSlot}`,
             args: { path: "team" }
         })];
 
@@ -55,7 +55,7 @@ export default new Panel({
                     args: { path: "animon", cardId: animon.id }
                 }, {
                     id: "12",
-                    label: "Clear Slot",
+                    label: "{locale_main_clearSlot}",
                     emoji: "wno",
                     style: "red",
                     args: { action: "clear", slot: slot, where: "team", data: slot }
@@ -63,7 +63,7 @@ export default new Panel({
             } else {
                 buttons = [{
                     id: "3",
-                    label: "Add Animon",
+                    label: "{locale_main_addAnimon}",
                     emoji: "plus",
                     style: "green",
                     args: { modal: 2, slot: slot }
@@ -75,8 +75,8 @@ export default new Panel({
 
         return {
             embeds: [ interaction.components.embed({
-                author: { name: `${player.user.displayName} - Team`, iconUrl: player.user.displayAvatarURL() },
-                description: `Edit your team by using the menu below.\n-# The order of your slots determines which Animon will enter battle first.\n` + `\u2800`.repeat(40),
+                author: { name: `${player.user.displayName} - {locale_main_team}`, iconUrl: player.user.displayAvatarURL() },
+                description: `{locale_main_teamText}\n` + `\u2800`.repeat(40),
                 fields: fields,
             }) ],
             components: components

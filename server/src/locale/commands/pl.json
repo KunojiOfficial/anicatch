@@ -1,30 +1,146 @@
 {
     "anidex": {
         "name": "anidex",
-        "description": "Wyświetl szczegóły określonego Animona lub przeglądaj wszystkie!",
+        "description": "Zobacz szczegóły wybranego Animona lub przeglądaj wszystkie!",
         "options": {
             "id": {
                 "name": "id",
-                "description": "ID wybranego Animona(ów). Maksymalnie 5, oddzielone przecinkami."
+                "description": "ID wybranego Animona (maks. 5, oddzielone przecinkami)."
             }
         }
     },
     "animon": {
-        "name": "animon"
+        "name": "animon",
+        "description": "Zobacz szczegóły wybranego Animona!",
+        "options": {
+            "id": {
+                "name": "id",
+                "description": "ID wybranego Animona (maks. 5, oddzielone przecinkami)."
+            }
+        }
+    },
+    "card": {
+        "name": "karta",
+        "description": "Zobacz szczegóły wybranej karty!",
+        "options": {
+            "id": {
+                "name": "id",
+                "description": "ID wybranego Animona (maks. 5, oddzielone przecinkami)."
+            }
+        }
     },
     "battle": {
         "name": "walka",
+        "description": "Walcz z innym użytkownikiem lub losowym Animona!",
         "options": {
             "start": {
                 "name": "start",
-                "description": "Rozpocznij nową waleczkę!",
+                "description": "Rozpocznij nową bitwę!",
                 "options": {
                     "user": {
                         "name": "użytkownik",
-                        "description": "Użytkownik, z którym chcesz walczyć (musi być na serwerze)."
+                        "description": "Użytkownik, z którym chcesz się zmierzyć (musi być na tym serwerze)."
                     }
                 }
+            },
+            "resume": {
+                "name": "wznów",
+                "description": "Wznów trwającą bitwę!"
             }
         }
+    },
+    "catch": {
+        "name": "złap",
+        "description": "Łap Waifu/Husbando (Animony), aby dodać je do swojej kolekcji!"
+    },
+    "collection": {
+        "name": "kolekcja",
+        "description": "Zobacz i przeglądaj swoją kolekcję Animona!",
+        "options": {
+            "user": {
+                "name": "użytkownik",
+                "description": "Użytkownik, którego kolekcję chcesz zobaczyć."
+            }
+        }
+    },
+    "daily": {
+        "name": "nagrody",
+        "description": "Odbierz swoje darmowe codzienne AniBalle i inne nagrody!"
+    },
+    "gems": {
+        "name": "klejnoty",
+        "description": "Kupuj Klejnoty, aby ulepszyć swoją przygodę!"
+    },
+    "guide": {
+        "name": "poradnik",
+        "description": "Zobacz przewodnik, aby dowiedzieć się więcej o grze!"
+    },
+    "help": {
+        "name": "pomoc",
+        "description": "Zobacz listę komend i inne przydatne informacje!"
+    },
+    "inventory": {
+        "name": "ekwipunek",
+        "description": "Łatwo przeglądaj i zarządzaj swoimi przedmiotami!"
+    },
+    "invite": {
+        "name": "zaproś",
+        "description": "Zaproś bota na swój serwer!"
+    },
+    "ping": {
+        "name": "ping",
+        "description": "Pong!"
+    },
+    "premium": {
+        "name": "premium",
+        "description": "Uzyskaj premium dla bota i odblokuj ekskluzywne funkcje!"
+    },
+    "redeem": {
+        "name": "odbierz",
+        "description": "Odbierz zakupione przedmioty, jeśli nie zostały automatycznie dodane."
+    },
+    "server": {
+        "name": "serwer",
+        "description": "Dołącz do naszego serwera, aby być na bieżaco!"
+    },
+    "settings": {
+        "name": "ustawienia",
+        "description": "Edytuj swoje ustawienia, takie jak tryb mobilny i język."
+    },
+    "store": {
+        "name": "sklep",
+        "description": "Zobacz sklep, aby kupować przedmioty i inne gadżety!"
+    },
+    "team": {
+        "name": "drużyna",
+        "description": "Ustaw i zarządzaj swoją drużyną Animona!"
+    },
+    "trade": {
+        "name": "wymiana",
+        "description": "Handluj z innymi użytkownikami!",
+        "options": {
+            "new": {
+                "name": "nowa",
+                "description": "Zainicjuj nową ofertę wymiany!",
+                "options": {
+                    "user": {
+                        "name": "użytkownik",
+                        "description": "Użytkownik, z którym chcesz handlować (musi być na tym serwerze)."
+                    }
+                }
+            },
+            "list": {
+                "name": "lista",
+                "description": "Przeglądaj swoje aktywne i zakończone oferty wymiany."
+            }
+        }
+    },
+    "types": {
+        "name": "typy",
+        "description": "Wyświetl tabelę przedstawiającą mocne i słabe strony każdego typu!"
+    },
+    "vote": {
+        "name": "głosuj",
+        "description": "Głosuj na bota, aby otrzymać nagrody!"
     }
 }

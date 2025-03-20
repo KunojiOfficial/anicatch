@@ -1,0 +1,43 @@
+{
+    "1": {
+        "title": "Wprowadź liczbę",
+        "inputs": [{
+            "label": "Liczba",
+            "placeholder": "Liczba całkowita między {custom_min} a {custom_max}."
+        }]
+    },
+    "2": {
+        "title": "Wprowadź ID karty",
+        "inputs": [{
+            "label": "ID karty",
+            "placeholder": "ID wybranej karty. (np. 'A-1')"
+        }]
+    },
+    "4": {
+        "title": "Dodaj waluty do oferty",
+        "inputs": [{
+            "label": "Monety",
+            "placeholder": "Ilość monet"
+        }, {
+            "label": "Klejnoty",
+            "placeholder": "Ilość klejnotów"
+        }]
+    },
+    "4-1": {
+        "title": "Dodaj kartę do oferty",
+        "inputs": [{
+            "label": "ID karty",
+            "placeholder": "ID wybranej karty. (np. 'A-1')"
+        }]
+    },
+    "4-2": {
+        "title": "Dodaj przedmioty do oferty",
+        "inputs": [{
+            "label": "ID przedmiotu",
+            "placeholder": "ID przedmiotu (możesz je sprawdzić w kreatorze oferty)"
+        }, {
+            "label": "Ilość przedmiotów",
+            "placeholder": "Liczba całkowita"
+        }]
+    }
+}

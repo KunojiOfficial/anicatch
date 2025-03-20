@@ -55,9 +55,9 @@ export default new Panel({
         return {
             embeds: [ interaction.components.embed({
                 fields: [
-                    { name: "\u2800", value: `-# Name\n${card.character.name}\n${card.character.series ? `-# Series\n${card.character.series.english_title}\n` : ""}-# Type\n${type.name} ${type.emoji}`, inline: true },
-                    { name: "\u2800", value: `-# ID\n\`${client.getId(card.id).padEnd(3, " ")}\``, inline: true },
-                    { name: "\u2800", value: `-# Total Caught: **${card.instances.length}**\n-# ` + [...new Set(card.instances.map(c => c.rarity))].map(r => `${_rarities[r.toString() as keyof typeof _rarities].emoji.short} **${card.instances.filter((c:any) => c.rarity === r).length}**`).join(" ") + "\u2800" }
+                    { name: "\u2800", value: `-# {locale_main_nameCard}\n${card.character.name}\n${card.character.series ? `-# {locale_main_series}\n${card.character.series.english_title}\n` : ""}-# {locale_main_type}\n${type.name} ${type.emoji}`, inline: true },
+                    { name: "\u2800", value: `-# {locale_main_id}\n\`${client.getId(card.id).padEnd(3, " ")}\``, inline: true },
+                    { name: "\u2800", value: `-# {locale_main_totalCaught}: **${card.instances.length}**\n-# ` + [...new Set(card.instances.map(c => c.rarity))].map(r => `${_rarities[r.toString() as keyof typeof _rarities].emoji.short} **${card.instances.filter((c:any) => c.rarity === r).length}**`).join(" ") + "\u2800" }
                 ],
                 image: "attachment://card.jpg",
                 color: cardC.getRarity()?.color

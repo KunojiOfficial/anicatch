@@ -36,9 +36,9 @@ export default new Panel({
         let components = [interaction.components.selectMenu({
             ...defaults,
             id: 0,
-            placeholder: "⭐\u2800Select a slot...",
+            placeholder: "⭐\u2800{locale_main_selectSlot}",
             options: [...Array(4).keys()].map(i => ({ 
-                label: animon.moves[i] ? animon.moves[i].name : `Empty Move ${i+1}`, 
+                label: animon.moves[i] ? animon.moves[i].name : `{locale_main_emptyMove} ${i+1}`, 
                 value: `2:${i+1}`,
                 emoji: animon.moves[i] ? animon.moves[i].type.toLowerCase() : "no",
                 default: i+1 == slot 
@@ -51,7 +51,7 @@ export default new Panel({
                 interaction.components.selectMenu({
                     ...defaults,
                     id: 0,
-                    placeholder: "⭐\u2800Select a move type...",
+                    placeholder: "⭐\u2800{locale_main_selectMoveType}",
                     options: moveTypes.map((mType, i) => ({ 
                         label: `{locale_main_${mType}}`, 
                         value: `3:${mType}`, 
@@ -63,13 +63,13 @@ export default new Panel({
                 interaction.components.selectMenu({
                     ...defaults,
                     id: 0,
-                    placeholder: "⭐\u2800Select a move...",
+                    placeholder: "⭐\u2800{locale_main_selectMove}",
                     options: availableMoves.filter(move => move.moveType === type).map((move, i) => ({ 
                         label: move.name, 
                         emoji: move.type.toLowerCase(), 
                         value: `4:${move.id}`, 
                         default: move.id === moveId,
-                        description: `Power: ${move.power} | Accuracy: ${move.accuracy}% | Limit: ${move.pp}`
+                        description: `{locale_main_power}: ${move.power} | {locale_main_accuracy}: ${move.accuracy}% | {locale_main_limit}: ${move.pp}`
                     })),
                     args: {...defaults.args, moveId: "1" }
                 })
@@ -81,14 +81,14 @@ export default new Panel({
                 components = [...components,
                     interaction.components.buttons([{
                         id: "21",
-                        label: "\u2800Learn for Coins " + `(-{number_${move.coins}})`,
+                        label: "\u2800{locale_main_learnForCoins} " + `(-{number_${move.coins}})`,
                         // style: "green",
                         emoji: "smallCoin",
                         args: { action: "learn", cardId: cardId, slot: slot, moveId: moveId, currency: "coins" },
                         cooldown: { id: "learn", time: 2 }
                     }, {
                         id: "21",
-                        label: "\u2800Learn for Gems " + `(-{number_${move.gems}})`,
+                        label: "\u2800{locale_main_learnForGems} " + `(-{number_${move.gems}})`,
                         // style: "blurple",
                         emoji: "smallGem",
                         args: { action: "learn", cardId: cardId, slot: slot, moveId: moveId, currency: "gems" },
@@ -100,7 +100,7 @@ export default new Panel({
             components = [...components,
                 interaction.components.buttons([{
                     id: "21",
-                    label: "Unlearn",
+                    label: "{locale_main_unlearn}",
                     style: "red",
                     emoji: "wno",
                     args: { action: "remove", cardId: cardId, slot: slot, moveId: animon.moves[slot-1].id }
@@ -111,7 +111,7 @@ export default new Panel({
         return {
             ...panel,
             components: [...components, interaction.components.buttons([{
-                label: "Back",
+                label: "{locale_main_back}",
                 emoji: "back",
                 id: "0",
                 args: { path: "animon", cardId: cardId, userAccess: false, page: "moves" }

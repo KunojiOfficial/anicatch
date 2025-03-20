@@ -17,7 +17,7 @@ export default new Panel({
         let currentTier = premiumRoles[tier];
         if (!currentTier) currentTier = premiumRoles[0];
         
-        const benefits = getBenefits(currentTier);
+        const benefits = await getBenefits(currentTier, client.db);
 
         return {
             embeds: [ interaction.components.embed({

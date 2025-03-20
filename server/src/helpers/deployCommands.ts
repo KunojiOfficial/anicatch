@@ -73,6 +73,7 @@ export default async function deployCommands(logger: Logger, formatter: Formatte
     const route = process.env.NODE_ENV === "development" ? Routes.applicationGuildCommands(process.env.DISCORD_CLIENT_ID, process.env.DEV_GUILD_ID) : Routes.applicationCommands(process.env.DISCORD_CLIENT_ID);
 
     const jsonCommands: Array<{data: any, emoji: any}> = commands.map(cmd => ({data: cmd.data.toJSON(), emoji: cmd.emoji}));
+    
     for (let command of jsonCommands) {
         handleCommand(command, formatter);
     }

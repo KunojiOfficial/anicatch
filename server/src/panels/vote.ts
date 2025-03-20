@@ -21,7 +21,7 @@ export default new Panel({
                 description: `{locale_main_voteText}\n### {locale_main_availableVotes}`,
                 fields: Object.keys(votesData).map(website => ({
                     name: `${website.charAt(0).toUpperCase()}${website.slice(1)}`,
-                    value: `{locale_main_extraEncounters}: **${votesData[website].encounters||0}**\n{locale_main_voteStreak}: **${votes[website]?.streak||0}**\n**${addHours(new Date(votes[website]?.lastVoted), votesData[website].cooldown) < new Date() ? "{locale_main_voteNow}":`{locale_main_voteIn}`}**`
+                    value: `{locale_main_extraEncounters}: **${votesData[website].encounters||0}**\n{locale_main_voteStreak}: **${votes[website]?.streak||0}**\n**${!votes[website]?.lastVoted || (addHours(new Date(votes[website]?.lastVoted), votesData[website].cooldown) < new Date()) ? "{locale_main_voteNow}":`{locale_main_voteIn}`}**`
                 })),
                 thumbnail: client.user.displayAvatarURL()
             }, {

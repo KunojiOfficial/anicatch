@@ -41,7 +41,7 @@ export default new Panel({
 
         buttons = [{
             ...defaults,
-            label: "Back",
+            label: "{locale_main_back}",
             emoji: "back",
             args: { path: "animon", cardId: cardId }
         }];
@@ -62,7 +62,7 @@ export default new Panel({
             args: { ...defaults.args, count: count+1 }
         }, {
             id: '13',
-            label: "Use",
+            label: "{locale_main_use}",
             emoji: "wyes",
             style: "green" as "green",
             args: { cardId: cardId, itemId: itemId, count: count },
@@ -85,7 +85,7 @@ export default new Panel({
             components: [ interaction.components.selectMenu({
                 id: 0,
                 options: options,
-                placeholder: "🧸\u2800Select an item to use!",
+                placeholder: "🧸\u2800{locale_main_selectAnItem}",
                 args: { path: "fastUse", cardId: cardId, itemId: 0, count: 1 }
             }), interaction.components.buttons(buttons) ]
         };

@@ -7,7 +7,7 @@ export default new Panel({
     async execute(interaction: DiscordInteraction): Promise<InteractionReplyOptions> {
         const { client } = interaction;
 
-        let text = "-# **`ID `**\u2800{emoji_empty}\u2800**NAME**\n\n";
+        let text = "-# **`{locale_main_id} `**\u2800{emoji_empty}\u2800**{locale_main_NAME}**\n\n";
         const items = await client.db.item.findMany({ orderBy: { id: "asc" } });
         for (const item of items) {
             text += `-# \`${item.id.toString().padEnd(3, " ")}\`\u2800${item.emoji}\u2800{locale_items_${item.name}_name}\n`;

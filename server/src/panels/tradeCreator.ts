@@ -24,7 +24,7 @@ export default new Panel({
                 const msg = await this.execute!(interaction);
                 return {
                     ...msg,
-                    content: "You are already in process of creating a trade offer. Redirecting to that offer instead.",
+                    content: client.formatText("{locale_main_alreadyCreatingTrade}", interaction.locale),
                 };
             }
 
@@ -55,46 +55,48 @@ export default new Panel({
         let msgComponents = [ components.selectMenu({
             id: 0,
             options: [
-                { label: "⬅️\u2800Edit offered items", value: "1:offered", default: side === "offered" },
-                { label: "➡️\u2800Edit requested items", value: "1:requested", default: side === "requested" }
+                { label: "⬅️\u2800{locale_main_editItems+offered}", value: "1:offered", default: side === "offered" },
+                { label: "➡️\u2800{locale_main_editItems+requested}", value: "1:requested", default: side === "requested" }
             ],
             args: { path: "tradeCreator" }
         }), components.selectMenu({
             id: 3,
-            placeholder: "➕\u2800Choose an item you wish to add...",
+            placeholder: "➕\u2800{locale_main_chooseItemToAdd}",
             options: types.map((t, i) => ({ label: `{locale_main_${t}}`, value: t, emoji: emojis[i] })),
             args: { side: side }
         }) ]
         
         if (items.length) msgComponents.push(components.selectMenu({
             id: 4,
-            placeholder: "➖\u2800Choose an item you wish to remove...",
+            placeholder: "➖\u2800{locale_main_chooseItemToRemove}",
             options: options as any,
             args: { side: side }
         }));
         
-        if (text.length < 1) text = "\n*No items have been added...*\n\u2800";
+        if (text.length < 1) text = "\n*{locale_main_noItems}*\n\u2800";
 
         return {
             embeds: [ components.embed({
-                author: { name: `Edit ${side} items - ${user.displayName}`, iconUrl: user.displayAvatarURL() },
+                author: { name: `{locale_main_editItems+${side}} - ${user.displayName}`, iconUrl: user.displayAvatarURL() },
                 description: `**${playerData.user.displayName}'s** ${playerData.getBalance()}\n{locale_main_tradeCreatorDescription+${side}}\n${text}\u2800`,
-                footer: { text: `Trading with ${recipient.displayName}`, iconUrl: recipient.displayAvatarURL() }
+                footer: { text: `{locale_main_tradingWith}`, iconUrl: recipient.displayAvatarURL() }
+            }, {
+                user: [recipient.displayName]
             }) ],
             components: [ ...msgComponents, components.buttons([{
                 id: "15",
-                label: "Send",
+                label: "{locale_main_send}",
                 emoji: "wyes",
                 style: "green",
                 cooldown: { id: "tradeSend", time: 10 }
             }, {
                 id: "14",
-                label: "Cancel",
+                label: "{locale_main_cancel}",
                 emoji: "wno",
                 style: "red"
             }, {
                 id: "0F",
-                label: "Item IDs",
+                label: "{locale_main_itemIds}",
                 emoji: "code",
                 args: { path: "itemList" }
             }])]

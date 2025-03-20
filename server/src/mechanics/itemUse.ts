@@ -19,7 +19,7 @@ export default async function(interaction: DiscordInteraction, item: Inventory, 
 
                 await interaction.showModal(interaction.components.modal({
                     id: "3",
-                    title: "test",
+                    title: "{locale_main_useItem}",
                     inputs: [{
                         style: "Short",
                         label: "ID",

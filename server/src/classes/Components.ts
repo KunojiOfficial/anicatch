@@ -155,7 +155,7 @@ export default class Components {
         maxValues?: number,
         cooldown?: { id: string, time: number },
         followUp?: boolean
-    }) {
+    }, replace?: object) {
         const customId = [];
         if (object.id !== undefined) customId.push(object.id + (object.followUp ? "F" : ""));
         else customId.push(0);
@@ -179,14 +179,14 @@ export default class Components {
         const menu = new StringSelectMenuBuilder();
         menu.setCustomId(customId.join(';'));
 
-        if (object.placeholder) menu.setPlaceholder(object.placeholder);
+        if (object.placeholder) menu.setPlaceholder(this.client.formatText(object.placeholder, this.locale, replace));
         if (object.options) {
             const options = [];
             for (const o of object.options) {
                 options.push({
                     ...o,
-                    label: this.client.formatText(o.label, this.locale)?.substring(0,100), 
-                    description: o.description ? this.client.formatText(o.description || "", this.locale)?.substring(0,100) : undefined,
+                    label: this.client.formatText(o.label, this.locale, replace)?.substring(0,100), 
+                    description: o.description ? this.client.formatText(o.description || "", this.locale, replace)?.substring(0,100) : undefined,
                     emoji: o.hardEmoji ? o.hardEmoji : o.emoji ? deepValue(emojis, o.emoji) : undefined
                 })
             }

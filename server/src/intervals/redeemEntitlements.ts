@@ -72,7 +72,7 @@ export default async function redeemEntitlements(db: PrismaClient, manager: Clus
             const role = premiumRoles.find(r => r.skuId === subscription.sku_id);
             if (!role) continue; //no role
 
-            const benefits = getBenefits(role);
+            const benefits = await getBenefits(role, db);
 
             await db.user.update({ where: { id: user.id }, data: { roleId: data.roleId } });
             await send(manager, user.discordId, {
@@ -99,7 +99,7 @@ export default async function redeemEntitlements(db: PrismaClient, manager: Clus
             const role = premiumRoles.find(r => r.skuId === subscription.sku_id);
             if (!role) continue; //no role
 
-            const benefits = getBenefits(role);
+            const benefits = await getBenefits(role, db);
 
             await db.user.update({ where: { id: user.id }, data: { roleId: data.roleId } });
             await send(manager, user.discordId, {
@@ -113,5 +113,5 @@ export default async function redeemEntitlements(db: PrismaClient, manager: Clus
                 } ]
             });
         }
-    }, 10000 );
+    }, 60000 );
 }

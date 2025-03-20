@@ -7,11 +7,9 @@ import Player from "../classes/Player";
 
 function getDesc(card: CardInstance, player: Player) {
     if (card.userId !== player.data.id) return undefined;
+    if (card.status === "IDLE") return undefined;
 
-    if (card.status === "DEAD") return `-# This Animon is unconscious.\n-# Revive it using items from {command_store}.`;
-    else if (card.status === "TRADE") return `-# This Animon is present in active trade offer.\n-# To manage it, first reject the offer with {command_trade list}.`;
-    else if (card.status === "FIGHT") return `-# This Animon is currently in a fight.\n-# You can't manage it until the fight is over.`;
-    else return undefined;
+    return `{locale_main_statusInfo_${card.status}}`;
 }
 
 async function moves(interaction: DiscordInteraction, where: any) {
@@ -23,21 +21,21 @@ async function moves(interaction: DiscordInteraction, where: any) {
     const fields = [];
     for (let i = 0; i < 4; i++) {
         const move = animon.moves[i];
-        if (!move) fields.push({ name: `Empty Move ${i+1}`, value: `-# Teach your Animon a move to fill this slot.` });
-        else fields.push({ name: `{emoji_${move.type.toLowerCase()}}\u2800${move.name}`, value: `-# **Power:** ${move.power}\u2800**Accuracy:** ${move.accuracy}%\u2800**Limit:** ${move.pp}\n-# {locale_main_${move.moveType}}` });
+        if (!move) fields.push({ name: `{locale_main_emptyMove} ${i+1}`, value: `-# {locale_main_emptyMoveText}` });
+        else fields.push({ name: `{emoji_${move.type.toLowerCase()}}\u2800${move.name}`, value: `-# **{locale_main_power}:** ${move.power}\u2800**{locale_main_accuracy}:** ${move.accuracy}%\u2800**{locale_main_limit}:** ${move.pp}\n-# {locale_main_${move.moveType}}` });
     }
 
     const card = new Card({card: animon, parent: animon.card });
 
     return [{
         embeds: [ interaction.components.embed({
-            description: `${player.getBalance()}\nManage your Animon's moves using the menu below.\n-# Moves are used during battles to deal damage or apply effects.\n\u2800`,
+            description: `${player.getBalance()}\n{locale_main_manageMoves}\n\u2800`,
             fields: fields,
             color: card.getRarity()?.color,
             thumbnail: "attachment://card.jpg"
         }) ],
         components: [interaction.components.buttons([{
-            label: "Edit Moves",
+            label: "{locale_main_editMoves}",
             emoji: "plus",
             style: "green",
             args: { path: "moves", cardId: animon.id }
@@ -62,23 +60,23 @@ async function main(interaction: DiscordInteraction, where: any, userAccess: boo
     let components = [];
     if (isOwner && (animon.status === "IDLE" || animon.status === "DEAD")) components = [...components, interaction.components.buttons([{
         id: '6',
-        label: animon.favorite ? "\u2800Un-Favorite" : "\u2800Favorite",
+        label: animon.favorite ? "\u2800{locale_main_unFav}" : "\u2800{locale_main_fav}",
         emoji: animon.favorite ? "favorite2" : "unfavorite",
         args: { cardId: animon.id },
         cooldown: { id: "fav", time: 2 }
     }, {
         id: "12",
-        label: isTeam ? "\u2800Un-Team" : "\u2800Team",
+        label: isTeam ? "\u2800{locale_main_unTeam}" : "\u2800{locale_main_team}",
         emoji: isTeam ? "team" : "unteam",
         args: isTeam ? { action: "clear", slot: card.card.team, where: "card", data: `${card.card.id}:${userAccess}:${page}` } : { action: "add", slot: card.card.id,  where: "card", data: `${card.card.id}:${userAccess}:${page}` }
     }]), interaction.components.buttons([{
         id: "0",
-        label: "\u2800Use Items",
+        label: "\u2800{locale_main_useItems}",
         emoji: "donut",
         args: { path: "fastUse", cardId: card.card.id }
     },  {
         id: '7',
-        label: `\u2800Sell (+${rarity.sellPrice})`,
+        label: `\u2800{locale_main_sell} (+${rarity.sellPrice})`,
         emoji: "smallCoin",
         disabled: animon.favorite,
         args: { cardId: animon.id },
@@ -89,8 +87,8 @@ async function main(interaction: DiscordInteraction, where: any, userAccess: boo
         embeds: [ interaction.components.embed({
             description: getDesc(animon, interaction.player),
             fields: [
-                { name: "\u2800", value: `-# Name\n${animon.card.character.name}\u2800\u2800\n-# Type\n${type.name} ${type.emoji}\n-# Caught\n${client.unixDate(animon.createdAt)}` + (!player.config.isMobile ? "\n\u2800" : ""), inline: true },
-                { name: "\u2800", value: `-# ID\n\`${client.getId(animon.cardId, animon.print).padEnd(7, " ")}\`\n-# Ball\n{locale_items_${animon.ball?.name}_name} ${animon.ball?.emoji}`, inline: true },
+                { name: "\u2800", value: `-# {locale_main_nameCard}\n${animon.card.character.name}\u2800\u2800\n-# {locale_main_type}\n${type.name} ${type.emoji}\n-# {locale_main_caught}\n${client.unixDate(animon.createdAt)}` + (!player.config.isMobile ? "\n\u2800" : ""), inline: true },
+                { name: "\u2800", value: `-# {locale_main_id}\n\`${client.getId(animon.cardId, animon.print).padEnd(7, " ")}\`\n-# {locale_main_ball}\n{locale_items_${animon.ball?.name}_name} ${animon.ball?.emoji}`, inline: true },
                 // { name: "\u2800", value: `-# Rarity\n**${rarity.name}** (${rarity.chance}%)\n${rarity.emoji.full}` },
             ],
             color: rarity.color,
@@ -115,7 +113,7 @@ async function stats(interaction: DiscordInteraction, where: any, currentStat?: 
 
     let fields = [{
         name: `\u2800`,
-        value: `You have **${card.getStatPoints()} Attribute Points** to allocate.\n-# You gain **${keys.length} points** each time your Animon levels up.\n-# Attributes enhance the effectiveness of specific moves during battle.\n\u2800`,
+        value: `{locale_main_pointsText}\n\u2800`,
         inline: false
     }];
 
@@ -131,7 +129,7 @@ async function stats(interaction: DiscordInteraction, where: any, currentStat?: 
     }
 
     let components = [ interaction.components.buttons([{
-        label: "Allocate Points",
+        label: "{locale_main_allocatePoints}",
         emoji: "plus",
         style: "green",
         args: { path: "allocate", cardId: animon.id },
@@ -142,8 +140,8 @@ async function stats(interaction: DiscordInteraction, where: any, currentStat?: 
     desc += desc ? "\n\n" : "";
 
     let hpPercentage = Math.floor(card.getCurrentHealth()!/card.getMaxHealth()*100);
-    desc += `**Level ${card.getLevel()}** (${card.getPercentage()}%)\n${card.getExpBar(player.config.isMobile ? 8 : 15)}\n-# The maximum level for this rarity is **${card.getRarity()?.maxLevel||0}**.\n-# Evolve your Animon to increase its level cap.`;
-    desc += `\n\n**Health** (${hpPercentage}%) \n${card.getHealthBar(player.config.isMobile ? 8 : 15)}\n-# {number_${card.getCurrentHealth()}}/{number_${card.getMaxHealth()}}`;
+    desc += `**{locale_main_level} ${card.getLevel()}** (${card.getPercentage()}%)\n${card.getExpBar(player.config.isMobile ? 8 : 15)}\n-# {locale_main_maxLevelTip}\n-# {locale_main_evolveTip}`;
+    desc += `\n\n**{locale_main_health}** (${hpPercentage}%) \n${card.getHealthBar(player.config.isMobile ? 8 : 15)}\n-# {number_${card.getCurrentHealth()}}/{number_${card.getMaxHealth()}}`;
 
     return [{
         embeds: [ interaction.components.embed({
@@ -151,6 +149,10 @@ async function stats(interaction: DiscordInteraction, where: any, currentStat?: 
             fields: fields,
             thumbnail: `attachment://${attachment?.name}`,
             color: rarity.color
+        }, {
+            points: [`${card.getStatPoints()}`],
+            count: [`${keys.length}`],
+            maxLevel: [`${card.getRarity()?.maxLevel||0}`] 
         }) ],
         files: [attachment],
         components: components
@@ -181,21 +183,21 @@ export default new Panel({
 
         let components = [interaction.components.buttons([{
             id: "0",
-            label: "Info",
+            label: "{locale_main_info}",
             emoji: "info",
             style: page === "main" ? "blurple" : "gray",
             disabled: page === "main",
             args: { path: "animon", id: animon.id, userAccess: false, page: "main" }
         }, {
             id: "0",
-            label: "Stats",
+            label: "{locale_main_statsShort}",
             style: page === "stats" ? "blurple" : "gray",
             emoji: "stats",
             disabled: page === "stats",
             args: { path: "animon", id: animon.id, userAccess: false, page: "stats" }
         }, {
             id: "0",
-            label: "Moves",
+            label: "{locale_main_moves}",
             style: page === "moves" ? "blurple" : "gray",
             emoji: "evolve",
             disabled: page === "moves",

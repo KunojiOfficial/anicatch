@@ -22,7 +22,7 @@ async function main(interaction: DiscordInteraction) {
 
     const fields = categories.map(c => ({ 
         name: `${items.find(i => i.item.type === c)?.item.emoji} {locale_store_categories_${c}_name}`, 
-        value: `{locale_store_categories_${c}_description}\n-# ${counts[c]} items`,
+        value: `{locale_store_categories_${c}_description}\n-# ${counts[c]} {locale_main_items}`,
         inline: true
     }));
 
@@ -31,13 +31,13 @@ async function main(interaction: DiscordInteraction) {
 
     return {
         embeds: [ interaction.components.embed({
-            author: { name: `${player.user.displayName} - Inventory`, iconUrl: player.user.displayAvatarURL() },
-            description: player.getBalance() + `\n${player.getEncounters()}\nSelect a category of the items you would like to view.\n` + `\u2800`.repeat(36),
+            author: { name: `${player.user.displayName} - {locale_main_inventory}`, iconUrl: player.user.displayAvatarURL() },
+            description: player.getBalance() + `\n${player.getEncounters()}\n{locale_main_selectCategoryText}\n` + `\u2800`.repeat(36),
             fields: fields
         }) ],
         components: [ interaction.components.selectMenu({
             id: 0,
-            placeholder: "🛍️\u2800Select a category!",
+            placeholder: "🛍️\u2800{locale_main_selectCategory}",
             options: categories.map(c => ({ 
                 label: `{locale_store_categories_${c}_name}`, 
                 description: `{locale_store_categories_${c}_description}`, 
@@ -83,7 +83,7 @@ async function category(interaction: DiscordInteraction, category: ItemType, ite
     
     let components = [ interaction.components.selectMenu({
         id: 0,
-        placeholder: "🛍️\u2800Select an item!",
+        placeholder: "🛍️\u2800{locale_main_selectItem}",
         options: data.map(i => ({ 
             label: i.name, 
             description: i.desc, 
@@ -122,7 +122,7 @@ async function category(interaction: DiscordInteraction, category: ItemType, ite
         }, {
             id: '9',
             emoji: "wyes",
-            label: "Use",
+            label: "{locale_main_use}",
             style: "green",
             disabled: !item.item.usable,
             args: { itemId: itemId, count: count }
@@ -139,7 +139,7 @@ async function category(interaction: DiscordInteraction, category: ItemType, ite
         }) ],
         components: [...components, interaction.components.buttons([{
             id: '0',
-            label: "Back",
+            label: "{locale_main_back}",
             emoji: "back",
             args: { path: 'inventory', page: 'main' }
         }])]

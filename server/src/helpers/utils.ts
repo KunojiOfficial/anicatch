@@ -5,7 +5,7 @@ import { pathToFileURL } from "url";
 
 import config from "../config/main.json";
 import emoji from "../config/emoji.json";
-import { Role } from "@prisma/client";
+import { PrismaClient, Role } from "@prisma/client";
 
 function toUpperCamelCase (text: string): string {
     return text.replace(/(?:^\w|[A-Z]|\b\w)/g, (word) => word.toUpperCase());
@@ -18,12 +18,16 @@ function getTextBetweenTwoStrings(string: String, start: string, end: string) {
     return [ matches, matches.map(match => match.slice(start.length, -end.length)) ]
 }
 
-function deepValue(obj: any, path: any){
-    for (var i=0, path=path.split('.'), len=path.length; i<len; i++){
-        obj = obj[path[i]];
-    };
+function deepValue(obj: any, path: any) {
+    const keys = path.split('.');
+    for (let i = 0; i < keys.length; i++) {
+        if (obj === undefined || obj === null) {
+            return undefined;
+        }
+        obj = obj[keys[i]];
+    }
     return obj;
-};
+}
 
 function numberWithCommas(x: any) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -95,13 +99,26 @@ function unixDate(date: Date, format?: 'long' | 'short' | 'hours') {
     return (`<t:${parseInt((date.getTime() / 1000).toFixed(0))}:${type}>`);
 }
 
-function getBenefits(role: Role) {
+async function getBenefits(role: Role, db?: PrismaClient) {
     let text = "";
     
     text += `* {emoji_encounters} {locale_main_encountersCap}: **{number_${role.maxEncounters}}**`;
     text += `\n* {emoji_time} {locale_main_encountersRecharge}: **${Math.round(role.rechargeTime/60)} minutes**`;
     if (role.expShare>0) text += `\n* {emoji_exp} {locale_main_expShare}`;
     if (role.emoji&&role.color) text += `\n* ${role.emoji} {locale_main_collectionLooks}`;
+    if (role.daily?.length) {
+        const rewards: [{id: number, count: number}] = (role?.daily || []) as [{id: number, count: number}];
+        const items = await db.item.findMany({ where: { id: { in: rewards.map(r => r.id) } } });
+
+        const texts = [];
+        for (const reward of rewards) {
+            const item = items.find(i => i.id === reward.id);
+            texts.push(`${item?.emoji} **{locale_items_${item?.name}_name}** x${reward.count}`);
+        }
+
+        text += `\n* ${items[0].emoji} {locale_main_daily}:\n  * ${texts.join('\n  * ')}`;
+    }
+
     text += `\n* {emoji_discord} {locale_main_specialRole}`;
     
     return {text, variables: { value: [ `**${role.expShare*100}%**` ] }};

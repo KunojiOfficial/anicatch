@@ -31,13 +31,13 @@ export default new Panel({
             const isIncoming = offer.recipientId === player.data.id;
 
             fields.push({
-                name: `Trade #${offer.id}`,
+                name: `{locale_main_tradeOffer} #${offer.id}`,
                 value: `-# ${isIncoming ? "{emoji_incoming}" : "{emoji_outgoing}"} @${otherPerson?.username}\n-# {emoji_${offer.status}} {locale_main_${offer.status}}`,
                 inline: true
             });
 
             options.push({
-                label: `Trade #${offer.id}`,
+                label: `{locale_main_tradeOffer} #${offer.id}`,
                 value: `1:${offer.id}`,
                 description: `@${otherPerson?.username}`,
                 emoji: offer.status
@@ -61,7 +61,7 @@ export default new Panel({
             emoji: "chevron.single.left"
         }, {
             id: '5',
-            label: `\u2800Page ${page} / ${pageCount}\u2800`,
+            label: `\u2800{locale_main_page} ${page} / ${pageCount}\u2800`,
             args: { min: 1, max: pageCount, index: 1, customId: Object.values(defaults.args).join(':') }
         }, {
             ...defaults,
@@ -77,14 +77,14 @@ export default new Panel({
             id: 0,
             followUp: true,
             options: options,
-            placeholder: `🔁\u2800Select a trade offer to view its details...`,
+            placeholder: `🔁\u2800{locale_main_selectTradeOffer}`,
             args: { path: "tradeOffer" }
         }))
 
         return {
             embeds: [ interaction.components.embed({
-                author: { name: `${player.user.displayName} - Trade List`, iconUrl: player.user.displayAvatarURL() },
-                description: `Use the buttons below to navigate the list of active and past trade offers.\nTo create a new trade offer, use the command {command_trade new}.\n\u2800`,
+                author: { name: `${player.user.displayName} - {locale_main_tradeList}`, iconUrl: player.user.displayAvatarURL() },
+                description: `{locale_main_tradeListText}\n\u2800`,
                 fields: fields
             }) ],
             components: components

@@ -51,13 +51,15 @@ export default new Command({
             await interaction.editReply({
                 content: `${user} ${interaction.user}`,
                 embeds: [ interaction.components.embed({
-                    author: { name: `${interaction.user.displayName} - Battle Challenge`, iconUrl: interaction.user.displayAvatarURL() },
-                    description: `${user} has been challenged to a battle by ${interaction.user}!\nThe challenged player must accept the challenge by using the button below.`,
+                    author: { name: `${interaction.user.displayName} - {locale_main_battleChallenge}`, iconUrl: interaction.user.displayAvatarURL() },
+                    description: `{locale_main_battleChallengeText}`,
+                }, {
+                    user: [`${user}`, `${interaction.user}`],
                 }) ],
                 components: [ interaction.components.buttons([{
                     id: '18',
                     owner: user.id,
-                    label: "Accept",
+                    label: "{locale_main_accept}",
                     style: "green",
                     emoji: "wyes",
                     args: { challenger: player.data.id }

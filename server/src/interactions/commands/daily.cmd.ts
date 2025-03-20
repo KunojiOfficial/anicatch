@@ -52,7 +52,7 @@ export default new Command({
 
         await interaction.editReply({
             embeds: [ interaction.components.embed({
-                description: `**Wohoo!** Your daily rewards are here!\n\n* ${texts.join('\n* ')}`
+                description: `{locale_main_dailyText}\n\n* ${texts.join('\n* ')}`
             }) ]
         });
     }

@@ -79,7 +79,7 @@ export default new Panel({
             disabled: pageCount <= 1
         }, {
             id: '5',
-            label: `\u2800` + `Page ${page} / ${pageCount}` + `\u2800`,
+            label: `\u2800` + `{locale_main_page} ${page} / ${pageCount}` + `\u2800`,
             disabled: pageCount <= 1,
             args: { min: 1, max: pageCount, index: 1, customId: Object.values(defaults.args).join(':') }
         }, {
@@ -98,16 +98,18 @@ export default new Panel({
             id: 0,
             followUp: true,
             options: options.length ? options : [ { label: "test", value: "test" } ],
-            placeholder: `💿\u2800Select an Animon to view its details!`,
+            placeholder: `💿\u2800{locale_main_selectAnimon}`,
             args: { path: "animon" }
         }))
 
         return {
             embeds: [ interaction.components.embed({
-                author: { name: `${owner.displayName}'s Collection`, iconUrl: owner.displayAvatarURL() },
-                description: (userData.roleId>1?`### ${userData.role.name}\u2800${userData.role.emoji||""}\n\n`:``) + `**Sort by:** rarity (desc.)\n-# View details of an Animon by using the {command_animon} command or the select menu below.\n` + "\u2800".repeat(47),
+                author: { name: `{locale_main_collection}`, iconUrl: owner.displayAvatarURL() },
+                description: (userData.roleId>1?`### ${userData.role.name}\u2800${userData.role.emoji||""}\n\n`:``) + `**{locale_main_sortBy}:** {locale_main_rarityDesc}\n-# {locale_main_collectionTip}\n` + "\u2800".repeat(47),
                 fields: fields,
                 color: (userData.roleId>1&&userData.role.color) ? userData.role.color : undefined
+            }, {
+                user: [`${owner.displayName}`]
             }) ],
             components: components
         }

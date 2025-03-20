@@ -1,0 +1,17 @@
+{
+    "gettingStarted": {
+        "name": "Pierwsze Kroki",
+        "firstSteps": {
+            "name": "Pierwsze Kroki",
+            "description": "**Witaj w świecie Animonów!**\nW tym przewodniku znajdziesz kilka wskazówek, które pomogą Ci rozpocząć grę.\n\nZacznijmy od złapania Twojego pierwszego Animona!\nTo bardzo proste – wystarczy użyć komendy {command_catch}, aby napotkać dzikiego Animona o losowym typie i rzadkości.\nGdy go spotkasz, możesz spróbować go złapać lub zignorować i szukać innego.\nJeśli zdecydujesz się go złapać, będziesz musiał użyć jednej ze swoich **AniBalli**.\n\n**AniBalle** to przedmioty, których używasz do łapania Animonów. Możesz je kupić w {command_store} lub otrzymać za darmo raz dziennie dzięki {command_daily}.\n\nPo złapaniu swojego pierwszego Animona możesz odwiedzić {command_collection}, aby zobaczyć wszystkie Animony, które do tej pory zdobyłeś."
+        },
+        "encounters": {
+            "name": "Spotkania",
+            "description": "W {config_bot_name} możesz używać komendy {command_catch} ograniczoną liczbę razy. Te próby nazywane są spotkaniami, a ich liczba zależy od Twojej roli. Spotkania odnawiają się z czasem.\n\nMożesz sprawdzić, ile spotkań Ci pozostało, używając komendy {command_inventory} lub włączyć powiadomienia, aby otrzymać wiadomość, gdy Twoje spotkania zostaną odnowione, w {command_settings}.\nJeśli zabraknie Ci spotkań, możesz kupić więcej w {command_store}. Dodatkowe spotkania możesz również zdobyć, głosując na {config_bot_name} za pomocą komendy {command_vote}.\n\nChcesz jeszcze więcej spotkań? Zostań {command_patron} i ciesz się wieloma dodatkowymi korzyściami, w tym dodatkowymi spotkaniami!"
+        },
+        "teamAndBattles": {
+            "name": "Drużyna i Walki",
+            "description": "W {config_bot_name} możesz stworzyć drużynę Animonów, aby walczyć z innymi użytkownikami oraz dzikimi Animonami. Możesz mieć maksymalnie 5 Animonów w drużynie i zmieniać je w dowolnym momencie za pomocą komendy {command_team}.\n\nGdy Twoja drużyna jest gotowa, możesz walczyć z dzikimi Animonami po ich napotkaniu przy użyciu {command_catch}, klikając przycisk „Walka”.\n\nDostępne są również walki przeciwko innym użytkownikom. Możesz wyzwać ich na pojedynek za pomocą komendy {command_battle start}. Możesz także dołączyć do już rozpoczętej walki, używając komendy {command_battle resume}.\n\nWalki są turowe, a Animony mogą używać różnych ruchów, aby pokonać przeciwnika. Możesz nauczyć swoje Animony nowych ruchów, używając komendy {command_animon} w sekcji „Ruchy”.\n\nKażdy Animon ma swój unikalny typ oraz statystyki, które wpływają na jego siłę w walce. Możesz przydzielać punkty do różnych statystyk za pomocą komendy {command_animon} w sekcji „Statystyki”. Typy wpływają na skuteczność ruchów podczas walki, więc wybieraj drużynę mądrze! Jeśli chcesz zobaczyć typy i ich efektywność, użyj komendy {command_types}."
+        }
+    }
+}

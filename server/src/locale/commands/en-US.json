@@ -10,6 +10,137 @@
         }
     },
     "animon": {
-        "name": "animon"
+        "name": "animon",
+        "description": "View the details of the selected Animon(s)!",
+        "options": {
+            "id": {
+                "name": "id",
+                "description": "The ID(s) of the selected Animon(s). Max 5, separated by commas."
+            }
+        }
+    },
+    "card": {
+        "name": "card",
+        "description": "View the details of the selected Animon(s)!",
+        "options": {
+            "id": {
+                "name": "id",
+                "description": "The ID(s) of the selected Animon(s). Max 5, separated by commas."
+            }
+        }
+    },
+    "battle": {
+        "name": "battle",
+        "description": "Battle against another user or a random Animon!",
+        "options": {
+            "start": {
+                "name": "start",
+                "description": "Start a new battle!",
+                "options": {
+                    "user": {
+                        "name": "user",
+                        "description": "The user you want to battle against (they must be on this server)."
+                    }
+                }
+            },
+            "resume": {
+                "name": "resume",
+                "description": "Resume a battle that you are currently in!"
+            }
+        }
+    },
+    "catch": {
+        "name": "catch",
+        "description": "Catch Waifus/Husbandos (Animons) to add them to your collection!"
+    },
+    "collection": {
+        "name": "collection",
+        "description": "View and browse your Animon collection!",
+        "options": {
+            "user": {
+                "name": "user",
+                "description": "The user whose collection you want to view."
+            }
+        }
+    },
+    "daily": {
+        "name": "daily",
+        "description": "Claim your free daily AniBalls and other rewards!"
+    },
+    "gems": {
+        "name": "gems",
+        "description": "Buy Gems to upgrade your adventure!"
+    },
+    "guide": {
+        "name": "guide",
+        "description": "View the guide to learn more about the game!"
+    },
+    "help": {
+        "name": "help",
+        "description": "View the list of commands and other useful info!"
+    },
+    "inventory": {
+        "name": "inventory",
+        "description": "Easily browse and manage your items!"
+    },
+    "invite": {
+        "name": "invite",
+        "description": "Invite the bot to your server!"
+    },
+    "ping": {
+        "name": "ping",
+        "description": "Pong!"
+    },
+    "premium": {
+        "name": "premium",
+        "description": "Get premium for the bot and unlock exclusive features!"
+    },
+    "redeem": {
+        "name": "redeem",
+        "description": "Redeem purchased items if they are not automatically added to your inventory."
+    },
+    "server": {
+        "name": "server",
+        "description": "Join our community server for updates, support, and more!"
+    },
+    "settings": {
+        "name": "settings",
+        "description": "Edit your user settings, such as mobile mode and language."
+    },
+    "store": {
+        "name": "store",
+        "description": "View the store to buy items and other goodies!"
+    },
+    "team": {
+        "name": "team",
+        "description": "Set up and manage your Animon team!"
+    },
+    "trade": {
+        "name": "trade",
+        "description": "Trade with other users!",
+        "options": {
+            "new": {
+                "name": "new",
+                "description": "initiate a new trade offer!",
+                "options": {
+                    "user": {
+                        "name": "user",
+                        "description": "The user you want to trade with (they must be on this server)."
+                    }
+                }
+            },
+            "list": {
+                "name": "list",
+                "description": "Browse your active and old trade offers,"
+            }
+        }
+    },
+    "types": {
+        "name": "types",
+        "description": "Display a chart showing the strengths and weaknesses of each Animon type!"
+    },
+    "vote": {
+        "name": "vote",
+        "description": "Vote for the bot to receive rewards!"
     }
 }

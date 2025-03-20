@@ -15,34 +15,36 @@ export default new Panel({
         const trade = new Trade(interaction, offer, offer.users);
         let [text, _] = await trade.getItems(side);
 
-        let description = `${player.getBalance()}\n\n**Created:** ${client.unixDate(offer.createdAt, "long")}`;
-        if (offer.updatedAt) description += `\n**Finalized:** ${client.unixDate(offer.updatedAt, "long")}`;
+        let description = `${player.getBalance()}\n\n**{locale_main_created}:** ${client.unixDate(offer.createdAt, "long")}`;
+        if (offer.updatedAt) description += `\n**{locale_main_finalized}:** ${client.unixDate(offer.updatedAt, "long")}`;
 
-        description += `\n**Status:** {emoji_${offer.status}} {locale_main_${offer.status}}`;
+        description += `\n**{locale_main_status}:** {emoji_${offer.status}} {locale_main_${offer.status}}`;
 
         const recipient = offer.users.find(u=> u.id === offer.recipientId), offerer = offer.users.find(u=> u.id === offer.offererId); 
 
-        if (text.length < 1) text = "\n*No items...*\n";
+        if (text.length < 1) text = "\n*{locale_main_noItemsShort}*\n";
 
         const components = [ interaction.components.selectMenu({
             id: 0,
             options: [
-                { label: `⬅️\u2800${offerer?.username}'s offer`, value: "2:offered", default: side === "offered" },
-                { label: `➡️\u2800${recipient?.username}'s offer`, value: "2:requested", default: side === "requested" }
+                { label: `⬅️\u2800{locale_main_usersOffer}`, value: "2:offered", default: side === "offered" },
+                { label: `➡️\u2800{locale_main_usersOffer}`, value: "2:requested", default: side === "requested" }
             ],
             args: { path: "tradeOffer", offerId: offerId }
+        }, {
+            user: [offerer?.username, recipient?.username]
         }) ];
 
         if (offer.status === "ACTIVE" && offer.recipientId === player.data.id) components.push(interaction.components.buttons([{
             id: "16",
-            label: "Accept",
+            label: "{locale_main_accept}",
             emoji: "wyes",
             style: "green",
             args: { result: "accept", id: offer.id },
             cooldown: { id: "finalize", time: 5 }
         }, {
             id: "16",
-            label: "Reject",
+            label: "{locale_main_reject}",
             emoji: "wno",
             style: "red",
             args: { result: "reject", id: offer.id },
@@ -50,7 +52,7 @@ export default new Panel({
         }])); 
         else if (offer.status === "ACTIVE" && offer.offererId === player.data.id) components.push(interaction.components.buttons([{
             id: "16",
-            label: "Cancel",
+            label: "{locale_main_cancel}",
             emoji: "wno",
             style: "red",
             args: { result: "reject", id: offer.id },
@@ -59,7 +61,7 @@ export default new Panel({
 
         return {
             embeds: [ interaction.components.embed({
-                author: { name: `${player.user.displayName} - Trade #${offer.id}`, iconUrl: player.user.displayAvatarURL() },
+                author: { name: `${player.user.displayName} - {locale_main_tradeOffer} #${offer.id}`, iconUrl: player.user.displayAvatarURL() },
                 description: description + "\n" + text + "\u2800".repeat(40)
             }) ],
             components: components
