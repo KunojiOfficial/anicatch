@@ -80,7 +80,7 @@ class Client extends DiscordClient {
         for (const file of eventFiles) {
             const name = path.parse(file).name;
             const eventUrl = pathToFileURL(`${eventPath}/${file}`).href;
-            const event: Event = (await import(eventUrl)).default as Event
+            const event: Event = (await import(process.env.NODE_ENV === 'production' ? `${eventPath}/${file}` : eventUrl)).default as Event
 
             if (event.once) {
                 this.once(name, (...args: any[]) => event.execute(...args))
