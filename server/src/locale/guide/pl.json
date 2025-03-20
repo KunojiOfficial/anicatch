@@ -7,7 +7,7 @@
         },
         "encounters": {
             "name": "Spotkania",
-            "description": "W {config_bot_name} możesz używać komendy {command_catch} ograniczoną liczbę razy. Te próby nazywane są spotkaniami, a ich liczba zależy od Twojej roli. Spotkania odnawiają się z czasem.\n\nMożesz sprawdzić, ile spotkań Ci pozostało, używając komendy {command_inventory} lub włączyć powiadomienia, aby otrzymać wiadomość, gdy Twoje spotkania zostaną odnowione, w {command_settings}.\nJeśli zabraknie Ci spotkań, możesz kupić więcej w {command_store}. Dodatkowe spotkania możesz również zdobyć, głosując na {config_bot_name} za pomocą komendy {command_vote}.\n\nChcesz jeszcze więcej spotkań? Zostań {command_patron} i ciesz się wieloma dodatkowymi korzyściami, w tym dodatkowymi spotkaniami!"
+            "description": "W {config_bot_name} możesz używać komendy {command_catch} ograniczoną liczbę razy. Te próby nazywane są spotkaniami, a ich liczba zależy od Twojej roli. Spotkania odnawiają się z czasem.\n\nMożesz sprawdzić, ile spotkań Ci pozostało, używając komendy {command_inventory} lub włączyć powiadomienia, aby otrzymać wiadomość, gdy Twoje spotkania zostaną odnowione, w {command_settings}.\nJeśli zabraknie Ci spotkań, możesz kupić więcej w {command_store}. Dodatkowe spotkania możesz również zdobyć, głosując na {config_bot_name} za pomocą komendy {command_vote}.\n\nChcesz jeszcze więcej spotkań? Zostań {command_premium} i ciesz się wieloma dodatkowymi korzyściami, w tym dodatkowymi spotkaniami!"
         },
         "teamAndBattles": {
             "name": "Drużyna i Walki",

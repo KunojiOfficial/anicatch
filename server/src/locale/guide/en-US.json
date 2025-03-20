@@ -7,7 +7,7 @@
         },
         "encounters": {
             "name": "Encounters",
-            "description": "In {config_bot_name}, you can use the {command_catch} command a limited number of times. These attempts are called encounters, and the number you have depends on your role. Encounters recharge over time.\n\nYou can check how many encounters you have left with the {command_inventory} command, or enable notifications to receive a message when your encounters recharge in your {command_settings}.\nIf you run out of encounters, you can purchase more in the {command_store}. You can also get more encounters by voting for {config_bot_name} with the {command_vote} command.\n\nWant even more encounters? Become a {command_patron} and enjoy many cool perks, including additional encounters!"
+            "description": "In {config_bot_name}, you can use the {command_catch} command a limited number of times. These attempts are called encounters, and the number you have depends on your role. Encounters recharge over time.\n\nYou can check how many encounters you have left with the {command_inventory} command, or enable notifications to receive a message when your encounters recharge in your {command_settings}.\nIf you run out of encounters, you can purchase more in the {command_store}. You can also get more encounters by voting for {config_bot_name} with the {command_vote} command.\n\nWant even more encounters? Get {command_premium} and enjoy many cool perks, including additional encounters!"
         },
         "teamAndBattles": {
             "name": "Team and Battles",
