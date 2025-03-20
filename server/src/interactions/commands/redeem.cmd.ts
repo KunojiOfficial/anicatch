@@ -1,6 +1,6 @@
 import { ApplicationIntegrationType, InteractionContextType, SlashCommandBuilder } from 'discord.js';
-import Command from '../../classes/Command';
-import redeem from 'src/mechanics/redeem';
+import Command from '../../classes/Command.ts';
+import redeem from '../../mechanics/redeem.ts';
 
 export default new Command({
     emoji: "💋",

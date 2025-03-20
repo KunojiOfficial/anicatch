@@ -1,7 +1,8 @@
 import { Collection } from "discord.js";
-import { DiscordInteraction } from "../types";
-import Interaction from "../classes/Interaction";
-import Event from "../classes/Event";
+import { DiscordInteraction } from "../types.ts";
+
+import Interaction from "../classes/Interaction.ts";
+import Event from "../classes/Event.ts";
 
 const cooldowns = new Collection();
 

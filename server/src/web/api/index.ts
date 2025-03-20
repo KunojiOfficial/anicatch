@@ -1,6 +1,7 @@
 import { Router } from "express";
-import authRouter from "./auth";
-import battleRouter from "./battle";
+
+import authRouter from "./auth.ts";
+import battleRouter from "./battle.ts";
 
 const router = Router();
 

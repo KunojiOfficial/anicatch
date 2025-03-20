@@ -1,5 +1,5 @@
-import { InteractionEditReplyOptions, InteractionReplyOptions, MessagePayload } from "discord.js";
-import { DiscordInteraction } from "../types";
+import { InteractionReplyOptions, MessagePayload } from "discord.js";
+import { DiscordInteraction } from "../types.ts";
 
 export default class Interactable {
     id: Number;

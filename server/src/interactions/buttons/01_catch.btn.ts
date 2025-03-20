@@ -1,6 +1,6 @@
 import { InteractionReplyOptions } from "discord.js";
-import Interactable from "../../classes/Interactable";
-import _catch from "../../mechanics/catch";
+import Interactable from "../../classes/Interactable.ts";
+import _catch from "../../mechanics/catch.ts";
 
 import rarities from "../../data/rarities.json";
 

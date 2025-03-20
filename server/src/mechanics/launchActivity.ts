@@ -1,4 +1,4 @@
-import { DiscordInteraction } from "../types";
+import { DiscordInteraction } from "../types.ts";
 import axios from 'axios';
 
 export default async function launchActivity(interaction: DiscordInteraction) {

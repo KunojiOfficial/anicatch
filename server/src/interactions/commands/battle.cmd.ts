@@ -1,6 +1,6 @@
-import { ApplicationIntegrationType, InteractionContextType, InteractionReplyOptions, SlashCommandBuilder } from 'discord.js';
-import Command from '../../classes/Command';
-import launchActivity from 'src/mechanics/launchActivity';
+import { ApplicationIntegrationType, InteractionContextType, SlashCommandBuilder } from 'discord.js';
+import Command from '../../classes/Command.ts';
+import launchActivity from '../../mechanics/launchActivity.ts';
 
 export default new Command({
     emoji: {

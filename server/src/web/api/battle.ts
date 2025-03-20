@@ -1,8 +1,9 @@
 import { Router } from "express";
-import { getBattle, setMove, switchCard, useItem, run } from "../services/battleService";
 import rateLimit from "express-rate-limit";
-import { authMiddleware } from "../middleware/authMiddleware";
-import { cooldownMiddleware } from "../middleware/cooldownMiddleware";
+
+import { getBattle, setMove, switchCard, useItem, run } from "../services/battleService.ts";
+import { authMiddleware } from "../middleware/authMiddleware.ts";
+import { cooldownMiddleware } from "../middleware/cooldownMiddleware.ts";
 
 const router = Router();
 

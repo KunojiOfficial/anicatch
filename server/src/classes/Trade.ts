@@ -1,9 +1,10 @@
 import { Trade as TradeDB, User } from "@prisma/client";
-import { DiscordInteraction, TradeIncluded } from "../types";
-import Card from "./Card";
-import Player from "./Player";
-import Components from "./Components";
-import { parseColor } from "src/helpers/utils";
+import { DiscordInteraction } from "../types.ts";
+import { parseColor } from "../helpers/utils.ts";
+
+import Card from "./Card.ts";
+import Player from "./Player.ts";
+import Components from "./Components.ts";
 
 type ItemType = "currencies" | "cards" | "items";
 type Side = "offered" | "requested";

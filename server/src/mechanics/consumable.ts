@@ -1,5 +1,5 @@
 import Card from "../classes/Card";
-import { DiscordInteraction } from "../types";
+import { DiscordInteraction } from "../types.ts";
 
 interface Property {
     effect: "HEAL" | "REVIVE" | "LEVELUP",

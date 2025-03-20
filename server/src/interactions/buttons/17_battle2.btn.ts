@@ -1,7 +1,7 @@
 import { InteractionReplyOptions } from "discord.js";
-import Interactable from "../../classes/Interactable";
-import launchActivity from "../../mechanics/launchActivity";
-import { calculateExpForLevel, calculateLevelFromExp } from "src/mechanics/statsCalculator";
+import Interactable from "../../classes/Interactable.ts";
+import launchActivity from "../../mechanics/launchActivity.ts";
+import { calculateExpForLevel, calculateLevelFromExp } from "../../mechanics/statsCalculator.ts";
 
 export default new Interactable({
     id: 17,

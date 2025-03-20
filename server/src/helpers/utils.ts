@@ -1,10 +1,8 @@
 import { Collection } from "discord.js";
 import { readdirSync } from "fs";
-import path from "path";
 import { pathToFileURL } from "url";
+import path from "path";
 
-import config from "../config/main.json";
-import emoji from "../config/emoji.json";
 import { PrismaClient, Role } from "@prisma/client";
 
 function toUpperCamelCase (text: string): string {
@@ -78,7 +76,7 @@ async function loadFiles(collection: Collection<string, any>, directory: string)
     for (const file of files) {
         let name = path.parse(file).name.replace(/.cmd|.sel|.btn/, '');
         const cmdUrl = pathToFileURL(`${filePath}/${file}`).href;
-        const command: any = (await import(cmdUrl)).default as any
+        const command: any = (await import(process.env.NODE_ENV === 'production' ? `${filePath}/${file}` : cmdUrl)).default as any
         
         if (command.id !== undefined) name = command.id.toString();
         collection.set(name, command);

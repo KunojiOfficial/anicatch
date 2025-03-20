@@ -4,11 +4,11 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import path from 'path';
 
-import { base26ToBase10 } from 'src/helpers/utils';
-import Vote from 'src/classes/Vote';
+import { base26ToBase10 } from '../helpers/utils.ts';
+import Vote from '../classes/Vote.ts';
 
 import apiRouter from './api';
-import { manager, db } from 'index';
+import { manager, db } from '../../index.ts';
 
 const app = express();
 const server = createServer(app);

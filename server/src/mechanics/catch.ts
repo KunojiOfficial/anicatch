@@ -1,5 +1,5 @@
 import { CardInstance, Item, Prisma } from "@prisma/client";
-import { DiscordInteraction } from "../types";
+import { DiscordInteraction } from "../types.ts";
 
 function calculateCatchChance(ball: Item, card: CardInstance) {
     if (!ball.properties) return 0;

@@ -1,6 +1,6 @@
 import fs from "fs";
 import path from "path";
-import { deepValue } from "src/helpers/utils";
+import { deepValue } from "../helpers/utils.ts";
 
 type Translations = Record<string, any>;
 

@@ -1,7 +1,8 @@
 import { InteractionReplyOptions } from "discord.js";
-import { DiscordInteraction } from "../types";
-import Panel from "../classes/Panel";
-import Trade from "../classes/Trade";
+
+import { DiscordInteraction } from "../types.ts";
+import Panel from "../classes/Panel.ts";
+import Trade from "../classes/Trade.ts";
 
 export default new Panel({
     name: "tradeOffer",

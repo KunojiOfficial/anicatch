@@ -1,7 +1,7 @@
-import Card from '../../classes/Card';
-import Battle from 'src/classes/Battle';
+import Card from '../../classes/Card.ts';
+import Battle from '../../classes/Battle.ts';
 
-import { db } from 'index';
+import { db } from '../../../index.ts';
 
 import locale from '../../locale/items/en-US.json';
 

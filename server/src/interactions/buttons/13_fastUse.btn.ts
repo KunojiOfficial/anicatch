@@ -1,6 +1,6 @@
 import { InteractionReplyOptions } from "discord.js";
-import Interactable from "../../classes/Interactable";
-import consumable from "../../mechanics/consumable";
+import Interactable from "../../classes/Interactable.ts";
+import consumable from "../../mechanics/consumable.ts";
 
 export default new Interactable({
     id: 13,

@@ -1,9 +1,10 @@
 import { InteractionReplyOptions } from "discord.js";
-import { DiscordInteraction } from "../types";
-import Panel from "../classes/Panel";
+import { DiscordInteraction } from "../types.ts";
+
+import Panel from "../classes/Panel.ts";
+import Components from "../classes/Components.ts";
 
 import settings from "../data/settings.json";
-import Components from "src/classes/Components";
 
 const categories = Object.keys(settings);
 const allSettings = settings[categories[0]].concat(settings[categories[1]]).concat(settings[categories[2]]);

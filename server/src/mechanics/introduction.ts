@@ -1,4 +1,4 @@
-import { DiscordInteraction } from "../types";
+import { DiscordInteraction } from "../types.ts";
 
 export default async function(interaction: DiscordInteraction) {
 

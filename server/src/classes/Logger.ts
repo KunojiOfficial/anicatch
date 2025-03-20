@@ -1,6 +1,5 @@
 import winston from 'winston';
 import { User, WebhookClient } from "discord.js";
-import { DiscordClient } from "../types";
 
 import config from "../config/main.json";
 

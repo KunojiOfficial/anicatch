@@ -1,11 +1,11 @@
 import { APIEmbed, ActionRowBuilder, ButtonBuilder, ModalBuilder, StringSelectMenuBuilder, TextInputBuilder, TextInputStyle, User } from "discord.js";
-import { DiscordClient, Button } from "../types";
-import { deepValue, parseColor } from "../helpers/utils";
+import { DiscordClient, Button } from "../types.ts";
+import { deepValue, parseColor } from "../helpers/utils.ts";
 
 import emoji from '../config/emoji.json';
 import config from '../config/main.json';
 
-import Player from "./Player";
+import Player from "./Player.ts";
 
 let emojis: any = emoji;
 

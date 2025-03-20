@@ -1,5 +1,5 @@
 import { ApplicationIntegrationType, InteractionContextType, SlashCommandBuilder } from 'discord.js';
-import Command from '../../classes/Command';
+import Command from '../../classes/Command.ts';
 import { addHours } from '../../helpers/utils';
 
 function isMoreThan24HoursAgo(givenDate: Date) {

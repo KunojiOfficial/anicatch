@@ -1,12 +1,12 @@
 import { CardCatalog, CardInstance, Character, Item, Move } from "@prisma/client";
 import { AttachmentBuilder } from "discord.js";
-import { createCanvas, loadImage, registerFont } from "canvas";
+import { createCanvas, loadImage } from "canvas";
 
-import { calculateExpForLevel, calculateHp, calculateLevelFromExp } from "../mechanics/statsCalculator";
+import { calculateExpForLevel, calculateHp, calculateLevelFromExp } from "../mechanics/statsCalculator.ts";
+import { base10ToBase26 } from "../helpers/utils.ts";
 
 import rarities from "../data/rarities.json";
 import types from "../data/types.json";
-import { base10ToBase26 } from "src/helpers/utils";
 
 interface Stats {
     hp: number,

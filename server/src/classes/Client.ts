@@ -1,24 +1,20 @@
-import { ClientOptions, REST, Routes, Client as DiscordClient, Collection } from "discord.js";
+import { ClientOptions, Client as DiscordClient, Collection } from "discord.js";
 import { ClusterClient } from "discord-hybrid-sharding";
 import { PrismaClient, User as PrismaUser, Role as PrismaRole } from "@prisma/client";
+import { pathToFileURL } from "url";
 import { readdirSync } from "fs";
 import path from "path";
 
 import { base10ToBase26, base26ToBase10, loadFiles, unixDate } from "../helpers/utils";
-import { DiscordInteraction } from "../types";
 
-import Event from "./Event";
-import Panel from "./Panel";
-import Command from "./Command";
-import Interactable from "./Interactable";
+import Event from "./Event.ts";
+import Panel from "./Panel.ts";
+import Command from "./Command.ts";
+import Interactable from "./Interactable.ts";
+import Logger from "./Logger.ts";
+import Formatter from "./Formatter.ts";
 
-import config from "../config/main.json";
 import emoji from "../config/emoji.json";
-
-import Logger from "./Logger";
-
-import { pathToFileURL } from "url";
-import Formatter from "./Formatter";
 
 class Client extends DiscordClient {
     cluster: ClusterClient<DiscordClient> | undefined;

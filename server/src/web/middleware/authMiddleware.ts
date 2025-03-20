@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import fetch from "node-fetch";
 
-import { db } from "index";
+import { db } from "../../../index.ts";
 
 export async function authMiddleware(req: Request, res: Response, next: NextFunction) {
     const token = req.headers.authorization?.split(" ")[1];

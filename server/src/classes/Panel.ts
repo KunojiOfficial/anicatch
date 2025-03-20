@@ -1,5 +1,5 @@
 import { InteractionReplyOptions } from "discord.js";
-import { DiscordInteraction } from "../types";
+import { DiscordInteraction } from "../types.ts";
 
 /**
  * Represents a interactable panel

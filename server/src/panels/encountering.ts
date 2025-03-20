@@ -1,6 +1,6 @@
-import { InteractionReplyOptions, AttachmentBuilder } from "discord.js";
-import { DiscordInteraction } from "../types";
-import Panel from "../classes/Panel";
+import { InteractionReplyOptions } from "discord.js";
+import { DiscordInteraction } from "../types.ts";
+import Panel from "../classes/Panel.ts";
 
 import encounter from '../mechanics/encounter';
 import Card from "../classes/Card";

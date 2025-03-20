@@ -2,8 +2,8 @@ import { PrismaClient, Role } from "@prisma/client";
 import { ClusterManager } from "discord-hybrid-sharding";
 import { APIEntitlement, EntitlementType, REST, Routes } from "discord.js";
 
-import { formatter } from "index";
-import { getBenefits, parseColor } from "src/helpers/utils";
+import { formatter } from "../../index.ts";
+import { getBenefits, parseColor } from "../helpers/utils.ts";
 
 import entitlementsData from "../config/entitlements.json";
 import config from "../config/main.json";

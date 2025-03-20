@@ -1,7 +1,7 @@
-import { disableValidators, InteractionReplyOptions } from "discord.js";
-import { DiscordInteraction } from "../types";
-import Panel from "../classes/Panel";
 import { ItemType } from "@prisma/client";
+import { InteractionReplyOptions } from "discord.js";
+import { DiscordInteraction } from "../types.ts";
+import Panel from "../classes/Panel.ts";
 
 async function main(interaction: DiscordInteraction) {
     const { client, player } = interaction;

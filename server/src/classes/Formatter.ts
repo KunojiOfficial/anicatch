@@ -1,5 +1,5 @@
-import { deepValue, getTextBetweenTwoStrings, numberWithCommas } from "src/helpers/utils";
-import Localization from "./Localization";
+import { deepValue, getTextBetweenTwoStrings, numberWithCommas } from "../helpers/utils.ts";
+import Localization from "./Localization.ts";
 
 import emoji from '../config/emoji.json';
 import config from "../config/main.json";

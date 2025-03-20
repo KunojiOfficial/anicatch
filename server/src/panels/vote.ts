@@ -1,9 +1,10 @@
 import { InteractionReplyOptions } from "discord.js";
-import { DiscordInteraction } from "../types";
-import Panel from "../classes/Panel";
+
+import { addHours } from "../helpers/utils.ts";
+import { DiscordInteraction } from "../types.ts";
+import Panel from "../classes/Panel.ts";
 
 import votesData from "../config/vote.json";
-import { addHours } from "src/helpers/utils";
 
 export default new Panel({
     name: "vote",

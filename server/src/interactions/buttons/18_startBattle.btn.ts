@@ -1,7 +1,7 @@
 import { InteractionReplyOptions } from "discord.js";
-import Interactable from "../../classes/Interactable";
-import launchActivity from "../../mechanics/launchActivity";
-import Card from "src/classes/Card";
+import Interactable from "../../classes/Interactable.ts";
+import launchActivity from "../../mechanics/launchActivity.ts";
+import Card from "../../classes/Card.ts";
 
 export default new Interactable({
     id: 18,

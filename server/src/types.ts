@@ -1,10 +1,11 @@
 import { ButtonInteraction, ChatInputCommandInteraction, InteractionReplyOptions, Message, MessagePayload, ModalSubmitFields, ModalSubmitInteraction, SelectMenuInteraction } from "discord.js";
-import Client from "./classes/Client";
-import Player from "./classes/Player";
-import Components from "./classes/Components";
 import { Prisma } from "@prisma/client";
 
-import emoji from 'src/config/emoji.json';
+import Client from "./classes/Client.ts";
+import Player from "./classes/Player.ts";
+import Components from "./classes/Components.ts";
+
+import emoji from './config/emoji.json';
 
 type DiscordClient = Client;
 type DiscordMessage = Message;

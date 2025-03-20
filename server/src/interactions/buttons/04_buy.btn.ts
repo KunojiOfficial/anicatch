@@ -1,5 +1,5 @@
 import { InteractionReplyOptions, MessageManager } from "discord.js";
-import Interactable from "../../classes/Interactable";
+import Interactable from "../../classes/Interactable.ts";
 
 export default new Interactable({
     id: 4,

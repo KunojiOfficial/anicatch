@@ -1,5 +1,5 @@
 import { Inventory, Item } from "@prisma/client";
-import { DiscordInteraction } from "../types";
+import { DiscordInteraction } from "../types.ts";
 
 export default async function(interaction: DiscordInteraction, item: Inventory, itemData: Item, count: number) {
     const { client } = interaction;

@@ -1,6 +1,4 @@
-import { getRandomNumber } from "../helpers/utils";
-import { DiscordInteraction } from "../types";
-
+import { DiscordInteraction } from "../types.ts";
 import rarities from "../data/rarities.json";
 
 function getRandomRarity(rarities: any) {

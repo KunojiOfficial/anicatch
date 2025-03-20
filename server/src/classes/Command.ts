@@ -2,7 +2,7 @@ import type {
     AutocompleteInteraction,
     SlashCommandBuilder,
 } from 'discord.js'
-import { DiscordInteraction } from '../types'
+import { DiscordInteraction } from '../types.ts'
 
 /**
  * Represents an Application Command

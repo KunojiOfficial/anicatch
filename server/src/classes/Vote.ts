@@ -1,6 +1,6 @@
 
-import { db, formatter, manager } from "index";
-import { addHours, parseColor, unixDate } from "src/helpers/utils";
+import { db, formatter, manager } from "../../index.ts";
+import { addHours, parseColor, unixDate } from "../helpers/utils.ts";
 
 import votesData from "../config/vote.json";
 import config from "../config/main.json";

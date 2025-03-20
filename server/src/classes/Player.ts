@@ -1,7 +1,6 @@
 import { User as DiscordUser } from "discord.js";
 import { Config, Role, User } from "@prisma/client";
-import { UserRole } from "../types";
-import Client from "./Client";
+import Client from "./Client.ts";
 
 export default class Player {
     data: User

@@ -1,7 +1,8 @@
 import { ClusterClient, IPCMessage, getInfo } from 'discord-hybrid-sharding'
-import { default as Client } from './classes/Client';
 import { TextBasedChannel } from 'discord.js';
-import Logger from './classes/Logger';
+
+import { default as Client } from './classes/Client.ts';
+import Logger from './classes/Logger.ts';
 
 const client = new Client({
     shards: getInfo().SHARD_LIST,

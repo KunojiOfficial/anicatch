@@ -1,8 +1,9 @@
 import { InteractionReplyOptions } from "discord.js";
-import { Button, DiscordInteraction } from "../types";
-import Panel from "../classes/Panel";
-import Card from "../classes/Card";
 import { CardInstance } from "@prisma/client";
+import { Button, DiscordInteraction } from "../types.ts";
+
+import Panel from "../classes/Panel.ts";
+import Card from "../classes/Card.ts";
 
 import _rarities from "../data/rarities.json";
 import types from "../data/types.json";

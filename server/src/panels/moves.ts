@@ -1,7 +1,7 @@
 import { InteractionReplyOptions } from "discord.js";
-import { DiscordInteraction } from "../types";
-import Panel from "../classes/Panel";
-import Card from "src/classes/Card";
+import { DiscordInteraction } from "../types.ts";
+import Panel from "../classes/Panel.ts";
+import Card from "../classes/Card.ts";
 
 const emojis = {
     "ATTACK": "⚔️",

@@ -1,6 +1,7 @@
 import { InteractionReplyOptions } from "discord.js";
-import { DiscordInteraction } from "../types";
-import Panel from "../classes/Panel";
+
+import { DiscordInteraction } from "../types.ts";
+import Panel from "../classes/Panel.ts";
 
 const ON_PAGE = 9;
 

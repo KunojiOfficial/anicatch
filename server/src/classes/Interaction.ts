@@ -1,10 +1,10 @@
 import { Collection, InteractionReplyOptions, Locale } from "discord.js";
-import { DiscordInteraction } from "src/types";
+import { DiscordInteraction } from "../types.ts";
 
-import Player from "./Player";
-import Components from "./Components";
+import Player from "./Player.ts";
+import Components from "./Components.ts";
 
-import introduction from "src/mechanics/introduction";
+import introduction from "../mechanics/introduction.ts";
 
 export default class Interaction {
     interaction: DiscordInteraction;

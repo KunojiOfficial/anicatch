@@ -1,8 +1,8 @@
 import { InteractionReplyOptions } from "discord.js";
-import { DiscordInteraction } from "../types";
-import Panel from "../classes/Panel";
-import { getBenefits } from "src/helpers/utils";
+import { DiscordInteraction } from "../types.ts";
+import { getBenefits } from "../helpers/utils.ts";
 
+import Panel from "../classes/Panel.ts";
 
 export default new Panel({
     name: "premium",

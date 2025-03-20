@@ -1,9 +1,10 @@
 import { Entitlement } from "discord.js";
-import Components from "../classes/Components";
-import { DiscordClient } from "../types";
+import { DiscordClient } from "../types.ts";
 
 import entitlementsData from "../config/entitlements.json";
-import Player from "src/classes/Player";
+
+import Components from "../classes/Components";
+import Player from "../classes/Player.ts";
 
 export default async function redeem(entitlement: Entitlement) {
     if (entitlement.consumed) return;

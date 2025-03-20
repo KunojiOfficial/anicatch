@@ -1,9 +1,11 @@
-import { AttachmentBuilder, InteractionReplyOptions } from "discord.js";
-import { DiscordInteraction } from "../types";
-import Panel from "../classes/Panel";
-import Card from "../classes/Card";
-import { CardInstance, CardStatus } from "@prisma/client";
-import Player from "../classes/Player";
+import { InteractionReplyOptions } from "discord.js";
+import { CardInstance } from "@prisma/client";
+
+import { DiscordInteraction } from "../types.ts";
+
+import Player from "../classes/Player.ts";
+import Panel from "../classes/Panel.ts";
+import Card from "../classes/Card.ts";
 
 function getDesc(card: CardInstance, player: Player) {
     if (card.userId !== player.data.id) return undefined;

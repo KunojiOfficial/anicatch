@@ -1,11 +1,11 @@
 import { PrismaClient } from "@prisma/client";
 import { ClusterManager } from "discord-hybrid-sharding";
-import { parseColor } from "../helpers/utils";
+import { parseColor } from "../helpers/utils.ts";
 
 import config from "../config/main.json";
 import vote from "../config/vote.json";
 
-import { formatter } from "index";
+import { formatter } from "../../index.ts";
 
 export default function (db: PrismaClient, manager: ClusterManager) {
     setInterval(async () => {

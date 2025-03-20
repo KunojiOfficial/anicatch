@@ -1,9 +1,9 @@
 import { Collection, REST, Routes } from 'discord.js';
 import { loadFiles } from './utils';
 
-import Logger from 'src/classes/Logger';
-import Command from 'src/classes/Command';
-import Formatter from 'src/classes/Formatter';
+import Logger from '../classes/Logger.ts';
+import Command from '../classes/Command.ts';
+import Formatter from '../classes/Formatter.ts';
 
 function parseLocalization(text: string, key: string, emoji?: string) {
     if (key === "name") {

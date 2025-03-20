@@ -1,14 +1,17 @@
-import { Battle as DbBattle, User } from "@prisma/client";
-import { HistoryElement } from "src/types";
-import Card from "./Card";
-import { manager, db } from "../../index";
 import { BaseMessage } from "discord-hybrid-sharding";
-import { numberWithCommas, parseColor } from "src/helpers/utils";
-import types from "../data/types.json";
-import consumable from "src/mechanics/consumable";
+import { Battle as DbBattle } from "@prisma/client";
 
+import { manager, db } from "../../index.ts";
+import { HistoryElement } from "../types.ts";
+import { numberWithCommas, parseColor } from "../helpers/utils.ts";
+
+import consumable from "../mechanics/consumable.ts";
+import { calculateAtk, calculateDmg, calculateDroppedExp } from "../mechanics/statsCalculator.ts";
+
+import types from "../data/types.json";
 import locale from "../locale/items/en-US.json";
-import { calculateAtk, calculateDmg, calculateDroppedExp } from "src/mechanics/statsCalculator";
+
+import Card from "./Card.ts";
 
 function rev(i: number) { return i === 0 ? 1 : 0; }
 

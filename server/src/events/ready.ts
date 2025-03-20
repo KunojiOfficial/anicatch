@@ -1,7 +1,8 @@
 import { ActivityType } from "discord.js";
 import { Status as Statuses } from "@prisma/client";
-import { DiscordClient } from "../types";
-import Event from "../classes/Event";
+
+import { DiscordClient } from "../types.ts";
+import Event from "../classes/Event.ts";
 
 let i = 0;
 function changeStatuses(client: DiscordClient, statuses: Array<Statuses>) {
