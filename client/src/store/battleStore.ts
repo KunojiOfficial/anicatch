@@ -1,13 +1,12 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { create } from "zustand";
-import { discordSdk } from "../utils/setupDiscordSdk"; // Import discordSdk
-import { RPCCloseCodes } from "@discord/embedded-app-sdk";
 
 interface BattleState {
     battle: { type: string; [key: string]: any } | null;
     targetMove: { type: string; [key: string]: any } | null;
     battleFinished: boolean | null;
-    setBattle: (battle: unknown) => void;
-    setBattleFinished: (battle: unknown) => void;
+    setBattle: (battle: { type: string; [key: string]: any } | null) => void;
+    setBattleFinished: (battleFinished: boolean | null) => void;
     intervalId: NodeJS.Timeout | null;
     connect: () => void;
     error: string | null;
@@ -17,9 +16,9 @@ export const useBattleStore = create<BattleState>((set, get) => ({
     battle: null,
     targetMove: null,
     battleFinished: null,
-    setBattle: (battle) => set({ battle }),
+    setBattle: (battle) => set({ battle: battle as { type: string; [key: string]: any } | null }),
     setTargetMove: (targetMove) => set({ targetMove }),
-    setBattleFinished: (battleFinished) => set({ battleFinished }),
+    setBattleFinished: (battleFinished: boolean | null) => set({ battleFinished }),
     intervalId: null,
     error: null,
     connect: () => {
@@ -62,12 +61,12 @@ export const useBattleStore = create<BattleState>((set, get) => ({
                         set({ intervalId });
                     } else if (!targetMove) {
                         console.log("🛑 Stopping polling...");
-                        clearInterval(get().intervalId);
+                        clearInterval(get().intervalId as any);
                         set({ intervalId: null });
                     }
                 } else if (data.type === "BATTLE_NOT_FOUND") {
                     set({ battleFinished: true });
-                    clearInterval(get().intervalId);
+                    clearInterval(get().intervalId as any);
                     set({ intervalId: null });
                     // discordSdk.close(RPCCloseCodes.CLOSE_NORMAL, "You exited from the app."); // Close the Discord SDK
                 }
@@ -75,7 +74,11 @@ export const useBattleStore = create<BattleState>((set, get) => ({
                 
             } catch (error) {
                 console.error("HTTP polling error:", error);
-                set({ error: error.message });
+                if (error instanceof Error) {
+                    set({ error: error.message });
+                } else {
+                    set({ error: String(error) });
+                }
             }
         };
 

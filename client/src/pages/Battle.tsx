@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import Button from "../components/ui/Button";
 import Card from "../components/battle/Card";
 import Stats from "../components/battle/Stats";
