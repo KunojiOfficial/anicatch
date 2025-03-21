@@ -11,6 +11,8 @@ import useWindowDimensions from "../hooks/useWindowDimensions"; // Import custom
 import './Battle.css'; // Import the CSS file for background animation
 import Move from "../components/battle/Move";
 
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000"; 
+
 export default function Battle() {
     const { battle, targetMove, connect, error, battleFinished } = useBattleStore();
     const initialButtonTexts = ["Fight", "Bag", "Team", "Run"];
@@ -147,7 +149,7 @@ export default function Battle() {
         }
 
         try {
-            const response = await fetch('/.proxy/api/battle/item', {
+            const response = await fetch(`${API_URL}/api/battle/item`, {
                 method: 'POST',
                 headers: {
                     Authorization: `Bearer ${accessToken}`, // Use the stored access token
@@ -190,7 +192,7 @@ export default function Battle() {
         }
 
         try {
-            const response = await fetch('/.proxy/api/battle/run', {
+            const response = await fetch(`${API_URL}/api/battle/run`, {
                 method: 'POST',
                 headers: {
                     Authorization: `Bearer ${accessToken}`, // Use the stored access token
@@ -217,7 +219,7 @@ export default function Battle() {
         }
 
         try {
-            const response = await fetch('/.proxy/api/battle/move', {
+            const response = await fetch(`${API_URL}/api/battle/move`, {
                 method: 'POST',
                 headers: {
                     Authorization: `Bearer ${accessToken}`, // Use the stored access token
@@ -244,7 +246,7 @@ export default function Battle() {
         }
 
         try {
-            const response = await fetch('/.proxy/api/battle/switch', {
+            const response = await fetch(`${API_URL}/api/battle/switch`, {
                 method: 'POST',
                 headers: {
                     Authorization: `Bearer ${accessToken}`, // Use the stored access token
