@@ -1,7 +1,6 @@
 import { DiscordSDK } from "@discord/embedded-app-sdk";
 
 const discordSdk = new DiscordSDK(import.meta.env.VITE_DISCORD_CLIENT_ID);
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000"; 
 
 export { discordSdk }; // Export discordSdk
 
@@ -24,7 +23,7 @@ export default async function setupDiscordSdk() {
   
     console.log("Code received:", code);
 
-    const response = await fetch(`${API_URL}/api/auth/token`, {
+    const response = await fetch("/.proxy/api/auth/token", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",

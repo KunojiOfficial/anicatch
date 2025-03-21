@@ -12,8 +12,6 @@ interface BattleState {
     error: string | null;
 }
 
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000"; 
-
 export const useBattleStore = create<BattleState>((set, get) => ({
     battle: null,
     targetMove: null,
@@ -33,7 +31,7 @@ export const useBattleStore = create<BattleState>((set, get) => ({
             try {
                 console.log("🔍 Fetching battle updates...");
 
-                const response = await fetch(`${API_URL}/api/battle`, {
+                const response = await fetch(`/.proxy/api/battle`, {
                     method: "POST",
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
