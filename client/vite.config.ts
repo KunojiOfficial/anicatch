@@ -6,7 +6,7 @@ import tailwindcss from '@tailwindcss/vite'
 export default defineConfig({
   envDir: './',
   server: {
-    allowedHosts: ["moms-yorkshire-valley-mainstream.trycloudflare.com"],
+    allowedHosts: ["play.anicatch.com"],
     proxy: {
       '/api': {
         target: 'http://localhost:3000',
