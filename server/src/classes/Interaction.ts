@@ -91,7 +91,9 @@ export default class Interaction {
         this.interaction.owner = owner;
         this.interaction.args = args;
     
-        if (owner !== this.interaction.user.id && owner != "0") throw 20;
+        let owners = owner.split("+");
+
+        if (!owners.includes(this.interaction.user.id) && owner != "0") throw 20;
 
         if (cdId && cdTime) {
             const cooldown = this.cooldown(cdId, "int", parseInt(cdTime));

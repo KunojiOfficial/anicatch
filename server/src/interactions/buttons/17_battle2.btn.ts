@@ -5,7 +5,6 @@ import { calculateExpForLevel, calculateLevelFromExp } from "../../mechanics/sta
 
 export default new Interactable({
     id: 17,
-    dontReply: true,
     async execute(interaction): Promise<InteractionReplyOptions> {
         const { client, args, player } = interaction;
         let [ timeoutId, timeout2Id, cardId ] = args;
@@ -73,11 +72,9 @@ export default new Interactable({
             });
         }
 
-        await Promise.all([
-            launchActivity(interaction),
-            interaction.message.edit({components: []})
-        ]);
+        const panel = await client.panels.get("battle")?.execute(interaction);
+        // await interaction.editReply(panel);
 
-        return {};
+        return panel;
     }
 });

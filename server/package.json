@@ -8,7 +8,7 @@
     "start": "npx tsc-watch --outDir ./dist --onSuccess \"ts-node ./scripts/run\"",
     "db": "npx prisma migrate dev --name dev && npx prisma studio",
     "build": "tsc && cpy --cwd=src '*.json' '../dist/' && cp -r src/assets dist/src/ && cp -r src/locale dist/src/ && cp -r src/web/views dist/src/",
-    "dev": "nodemon --ignore src/assets --exec tsx ./index.ts",
+    "dev": "nodemon --ignore src/assets/* --exec tsx ./index.ts",
     "emojis": "tsx ./src/helpers/setupEmojis.ts"
   },
   "keywords": [],
@@ -44,5 +44,10 @@
     "tsc-hooks": "^1.1.2",
     "tsx": "^4.19.3",
     "typescript": "^5.4.5"
+  },
+  "nodemonConfig": {
+    "ignore": [
+      "src/assets/*"
+    ]
   }
 }

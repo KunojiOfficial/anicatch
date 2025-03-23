@@ -7,7 +7,7 @@ export default new Command({
         start: "🔥",
         resume: "🔁"
     },
-    dontReply: true,
+    // dontReply: true,
     data: new SlashCommandBuilder()
         .setName("battle")
         .setDescription("ddd")
@@ -31,10 +31,8 @@ export default new Command({
         const { client, player } = interaction;
         const subcommand = interaction.options.getSubcommand();
 
-        if (subcommand === 'resume') await launchActivity(interaction);
+        if (subcommand === 'resume') await interaction.editReply(await client.panels.get("battle").execute(interaction));
         else if (subcommand === 'start') {
-            await interaction.deferReply();
-
             const user = interaction.options.getUser("user");
             
             const enemyPlayer = await client.db.user.findFirst({ where: { discordId: user.id } });

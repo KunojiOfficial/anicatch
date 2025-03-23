@@ -15,6 +15,8 @@ import redeemEntitlements from "./src/intervals/redeemEntitlements.ts";
 
 dotenv.config();
 
+console.log("Starting bot...");
+
 let logger, formatter;
 
 // Initialize the database
@@ -38,11 +40,10 @@ const manager = new ClusterManager(`${process.cwd()}/src/bot.${process.env.NODE_
 	logger = new Logger("--" as any);
 	
 	// Deploy commands
-	await deployCommands(logger, formatter);
+	if (process.env.NODE_ENV !== "development") await deployCommands(logger, formatter);
 
 	// Spawn the clusters
 	manager.spawn({ timeout: -1 });
-
 	
 	// Start the website
 	website.listen(process.env.PORT || 3000, () => {

@@ -64,5 +64,7 @@
     "64": "This move is already known.",
     "65": "This user has disabled trade offers.",
     "66": "You've already completed the tutorial.",
-    "67": "You have no items available to redeem."
+    "67": "You have no items available to redeem.",
+    "68": "You don't have any Animons in your team that can join this battle.",
+    "69": "Nice. You have already selected a move. Wait for your opponent."
 }

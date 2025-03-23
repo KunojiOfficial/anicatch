@@ -194,10 +194,19 @@ export default class Card {
         return `${this.ball ? `${this.ball?.emoji} ` : ""}${this.type.emoji} ${this.rarity.emoji.short} \`${this.getId().padEnd(7, " ")}\` **${this.character?.name}** [Lv. ${this.getLevel()}]`;
     }
 
+    getShorterLabel() {
+        return `${this.type.emoji} ${this.rarity.emoji.short} **${this.getName()}** [Lv. ${this.getLevel()}]`;
+    }
+
     getStatPoints() {
         let expectedPoints = this.getLevel() * 6;
         let spentPoints = this.card.vit + this.card.def + this.card.pow + this.card.agi + this.card.spi + this.card.res;
 
         return Math.max(0, expectedPoints-spentPoints);
     }
+
+    getName() {
+        return this.character?.name;
+    }
+    
 }

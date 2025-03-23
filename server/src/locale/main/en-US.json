@@ -263,5 +263,12 @@
     "level": "Level",
     "health": "Health",
     "editItems+offered": "Edit offered items",
-    "editItems+requested": "Edit requested items"
+    "editItems+requested": "Edit requested items",
+    "moveSelected": "{custom_trainer}'s move accepted.",
+    "moveWaiting": "Waiting for {custom_trainer}'s move...",
+    "selectMoveBtn": "Select Move",
+    "move": "Move",
+    "item": "Item",
+    "forfeit": "Forfeit",
+    "selectCard": "Select an Animon..."
 }

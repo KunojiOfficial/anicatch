@@ -1,3 +1,4 @@
+import { createCanvas, loadImage, registerFont } from 'canvas';
 import { BaseMessage } from "discord-hybrid-sharding";
 import { Battle as DbBattle } from "@prisma/client";
 
@@ -12,8 +13,11 @@ import types from "../data/types.json";
 import locale from "../locale/items/en-US.json";
 
 import Card from "./Card.ts";
+import { drawCard, drawStats } from '../helpers/battleCanvas.ts';
 
 function rev(i: number) { return i === 0 ? 1 : 0; }
+
+registerFont('./src/assets/fonts/Ebrima.ttf', { family: 'Ebrima' });
 
 class Battle {
     battle: DbBattle;
@@ -467,6 +471,59 @@ class Battle {
         }}));
 
         return true;
+    }
+
+    /**
+     * Check if the move is selected
+     * @returns true if move is selected
+     */
+    public isMoveSelected() {
+        return this.battle[`move${this.userIndex+1}`] !== null;
+    }
+
+    public getOpponent() {
+        return this.userIndex === 0 ? this.battle.userId2 : this.battle.userId1;
+    }
+
+    /**
+     * Generate the battle canvas
+     * @param width the width of canvas
+     * @param height the height of canvas
+     * @returns the canvas
+     */
+    public async generateCanvas(width: number = 1200, height: number = 600) {
+        const canvas = createCanvas(width, height);
+        const ctx = canvas.getContext('2d');
+
+        if (!this.activeCards.length) await this.setActiveCards();
+
+        const card1Data = this.activeCards[0];
+        const card2Data = this.activeCards[1];
+
+        // Load images
+        const [ bg, card1, card2, rarity1, rarity2, type1, type2, ball ] = await Promise.all([
+            loadImage('./src/assets/battle/bg1.png'),
+            loadImage(`./src/assets/cards/${card1Data.parent.id}.jpg`),
+            loadImage(`./src/assets/cards/${card2Data.parent.id}.jpg`),
+            loadImage(`./src/assets/rarities/${card1Data.card.rarity}.png`),
+            loadImage(`./src/assets/rarities/${card2Data.card.rarity}.png`),
+            loadImage(`./src/assets/types/${card1Data.parent.type}.png`),
+            loadImage(`./src/assets/types/${card2Data.parent.type}.png`),
+            loadImage('./src/assets/battle/aniball.png')
+        ]);
+
+        // Draw background
+        ctx.drawImage(bg, 0,0, width, height);
+
+        // Draw cards
+        drawCard(ctx, card1, 206, 33, rarity1, card1Data.card.rarity);
+        drawCard(ctx, card2, 732, 33, rarity2, card2Data.card.rarity);
+
+        // Draw stats
+        drawStats(ctx, ball, 66, 430, type1, card1Data.character.name, card1Data.getLevel(), card1Data.getCurrentHealth()/card1Data.getMaxHealth(), 5);
+        drawStats(ctx, ball, 590, 430, type2, card2Data.character.name, card2Data.getLevel(), card2Data.getCurrentHealth()/card2Data.getMaxHealth(), 5);
+
+        return canvas;
     }
 }
 
