@@ -15,14 +15,13 @@ export default new Interactable({
         if (items.count < count) throw 25;
 
         if (items.item.type !== "CONSUMABLE") await interaction.deferUpdate();
-        console.log("tuuu1")
         
         interaction.player = await itemUse(interaction, items, items.item, count);
-        console.log("tuuu")
+
         const message = await client.panels.get("inventory")!.execute!(interaction, items.count-count > 0 ? items.item.type : "main", itemId, count);
 
         if (items.item.type === "CONSUMABLE") return message;
-
+console.log("test")
         return {
             ...message,
             embeds: [ ...message.embeds!, interaction.components.embed({
