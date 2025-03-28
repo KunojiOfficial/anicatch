@@ -21,8 +21,8 @@ export default new Interactable({
         const message = await client.panels.get("inventory")!.execute!(interaction, items.count-count > 0 ? items.item.type : "main", itemId, count);
 
         if (items.item.type === "CONSUMABLE") return message;
-console.log("test")
-        return {
+
+        await interaction.editReply({
             ...message,
             embeds: [ ...message.embeds!, interaction.components.embed({
                 description: `{locale_main_useSuccess}`
@@ -30,6 +30,6 @@ console.log("test")
                 name: [`${items.item.emoji} **${client.formatText(`{locale_items_${items.item.name}_name}`, interaction.locale)}**`],
                 count: [`**${count}**`]
             }) ]
-        }
+        })
     }
 });
