@@ -32,5 +32,6 @@ dist-ssr
 
 commands.json
 
+assets/cards
 vite.config.ts
 server/src/config/*
