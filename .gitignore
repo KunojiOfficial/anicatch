@@ -3,6 +3,7 @@ node_modules
 migrations
 dist/
 package-lock.json
+config
 
 # Logs
 logs

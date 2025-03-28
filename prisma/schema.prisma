@@ -1,0 +1,328 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider      = "postgresql"
+  url           = env("DATABASE_URL")
+  directUrl     = env("DIRECT_URL")
+}
+
+model Status {
+  id            Int               @unique @default(autoincrement())
+  delay         Int               @default(1000)
+  text          String
+}
+
+enum UserStatus {
+  NEW
+  ACTIVE
+  BANNED
+}
+
+model User {
+  id            Int               @unique @id @default(autoincrement())
+  discordId     String            @unique
+  roleId        Int               @default(1)
+
+  coins         Int               @default(0)
+  gems          Int               @default(0)
+
+  username      String?
+  status        UserStatus        @default(NEW)
+  
+  encounters    Int               @default(15)
+  
+  config        Config?
+  stats         UserStats?
+  role          Role              @relation(fields: [roleId], references: [id])
+  items         Inventory[]
+  cards         CardInstance[]
+  vouchers      Voucher[]
+  trades        Trade[]
+
+  logs          Log[]
+
+  lastDaily     DateTime          @default(now())
+  lastReset     DateTime          @default(now())
+  nextNotify    DateTime?
+
+  createdAt     DateTime          @default(now())
+}
+
+model Role {
+  id            Int               @unique @id @default(autoincrement())
+  name          String
+  emoji         String?
+  color         String?
+
+  skuId         String?
+
+  maxEncounters Int
+  rechargeTime  Int
+
+  expShare      Float             @default(0)
+
+  daily         Json[]
+
+  users         User[]
+}
+
+model Config {
+  locale        String            @default("en-US")
+  
+  isMobile      Boolean           @default(false)
+  
+  //privacy
+  profile       Boolean           @default(true)
+  trades        Boolean           @default(true)
+  
+  //notifications
+  encounters    Boolean           @default(true)
+  votes         Boolean           @default(true)
+  
+  userId        Int               @unique
+  user          User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Log {
+  id            Int               @unique @id @default(autoincrement())
+  userId        Int?      
+  action        String
+  description   String?
+  createdAt     DateTime          @default(now())
+
+  user          User?              @relation(fields: [userId], references: [id], onDelete: SetNull)
+}
+
+model Series {
+  mal_id          Int               @unique @id
+  english_title   String
+  japanese_title  String
+  url             String
+  genres          String[]
+  image           String
+
+  characters      Character[]
+}
+
+model Character {
+  id            Int               @unique @id @default(autoincrement())
+  mal           Int?
+  name          String
+  nicknames     String[] 
+  
+  seriesId      Int?
+
+  series        Series?            @relation(fields: [seriesId], references: [mal_id])
+  cards         CardCatalog[]
+}
+
+enum CardType {
+  NONE
+  INFERNO
+  FROST
+  NATURE
+  LIGHT
+  VOID
+}
+
+model CardCatalog {
+  id            Int               @unique @id @default(autoincrement()) 
+  type          CardType          @default(NONE)
+  count         Int               @default(0)
+  
+  characterId   Int
+
+  fledPrints    Json[]             @default([])
+
+  character     Character         @relation(fields: [characterId], references: [id], onDelete: Cascade)
+  instances     CardInstance[]
+}
+
+enum CardStatus {
+  WILD
+  IDLE
+  FIGHT
+  FLED
+  WILD_FIGHT
+  DEAD
+  WILD_DEAD
+  TRADE
+}
+
+model CardInstance {
+  id            Int               @unique @id @default(autoincrement())
+  userId        Int
+  cardId        Int
+
+  status        CardStatus        @default(WILD)
+  favorite      Boolean           @default(false)
+  team          Int               @default(0)
+
+  rarity        Int
+  print         Int               @default(0)
+ 
+  exp           Int               @default(0)
+
+  hp            Int               @default(-1)
+
+  vit           Int               @default(1)
+  pow           Int               @default(1)
+  def           Int               @default(1)
+  agi           Int               @default(1)
+  spi           Int               @default(1)
+  res           Int               @default(1)
+
+  ballId        Int?              //the id of the ball item
+  fatherId      Int?              //the id of the first owner
+
+  card          CardCatalog       @relation(fields: [cardId], references: [id])
+  user          User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  ball          Item?             @relation(fields: [ballId], references: [id])
+  moves         Move[]
+
+  createdAt     DateTime          @default(now())
+
+  @@unique([cardId, print])
+}
+
+enum ItemType {
+  BALL
+  ENCOUNTER
+  CONSUMABLE
+}
+
+model Item {
+  id            Int               @unique @id @default(autoincrement())
+  name          String
+  type          ItemType
+  emoji         String
+  usable        Boolean           @default(false)
+  properties    Json?
+
+  priceCoin     Int?
+  priceGem      Int?
+  discount      Float?
+
+  value         Int               @default(1)
+
+  inventories   Inventory[]
+  cards         CardInstance[]
+}
+
+model Inventory {
+  itemId        Int
+  userId        Int
+
+  count         Int               @default(1)
+
+  item          Item              @relation(fields: [itemId], references: [id])
+  user          User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([itemId, userId])
+}
+
+model Voucher {
+  id            Int               @unique @id @default(autoincrement())
+  userId        Int
+  skuId         String
+  consumed      Boolean           @default(false)
+  createdAt     DateTime          @default(now())
+
+  user          User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model UserStats {
+  userId        Int               @unique @id
+
+  encountered   Int               @default(0)
+  captured      Int               @default(0)
+  coinsSpent    Int               @default(0)
+  votes         Json              @default("{}")
+
+  user          User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+enum TradeStatus {
+  CREATING
+  ACTIVE
+  ACCEPTED
+  REJECTED
+}
+
+model Trade {
+  id            Int               @unique @id @default(autoincrement())
+  status        TradeStatus       @default(CREATING)
+
+  offererId     Int
+  recipientId   Int
+
+  offered       Json[]
+  requested     Json[]
+
+  createdAt     DateTime          @default(now())
+  updatedAt     DateTime?
+
+  users         User[]
+}
+
+enum BattleStatus {
+  ACTIVE
+  ENDED
+}
+
+enum BattleType {
+  PVP
+  PVE
+}
+
+model Battle {
+  id            Int             @unique @id @default(autoincrement())
+ 
+  type          BattleType
+  status        BattleStatus    @default(ACTIVE)
+  turn          Int             @default(0)
+
+  userId1       Int
+  userId2       Int
+
+  cardId1       Int
+  cardId2       Int
+
+  move1         Json?
+  move2         Json?
+
+  winnerId      Int?
+
+  history       Json[]
+
+  channelId     String
+  messageId     String
+
+  rewards       Json?
+}
+
+enum MoveType {
+  ATTACK
+  DEFENSE
+  SPIRIT_ATTACK
+  SPIRIT_DEFENSE
+}
+
+model Move {
+  id            Int             @unique @id @default(autoincrement())
+  name          String
+  power         Int
+  accuracy      Int
+  pp            Int            
+  requiredLevel Int             @default(1)
+
+  moveType      MoveType        @default(ATTACK)
+
+  coins         Int             @default(0)
+  gems          Int             @default(0)
+
+  type          CardType
+  cards         CardInstance[]
+}

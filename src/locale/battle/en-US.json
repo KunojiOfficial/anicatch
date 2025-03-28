@@ -1,0 +1,16 @@
+{
+    "move": "{custom_animon} used {custom_move}!",
+    "miss": "But it missed!",
+    "0.5x": "It's not very effective...",
+    "2x": "It's super effective!",
+    "kill": "{custom_enemy} fainted!",
+    "block": "The enemy blocked {custom_damage} damage!",
+    "dealt": "{custom_animon} dealt {custom_damage} damage!",
+    "switch": "{custom_animon} joins the battle!",
+    "item": "{custom_item} was used on {custom_animon}!",
+    "fail": "{custom_animon} failed...",
+    "nothing": "{custom_animon} did nothing...",
+    "exp": "{custom_animon} gained {custom_exp} EXP!",
+    "expShare": "The rest of the team gained {custom_sharedExp} EXP!",
+    "end": "The battle ended! {custom_winner} won!"
+}
