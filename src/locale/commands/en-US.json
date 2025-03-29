@@ -142,5 +142,9 @@
     "vote": {
         "name": "vote",
         "description": "Vote for the bot to receive rewards!"
+    },
+    "promo": {
+        "name": "promo",
+        "description": "Complete tasks in the bot and earn rewards in partnered apps!"
     }
 }

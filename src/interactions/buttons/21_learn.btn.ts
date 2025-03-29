@@ -58,7 +58,7 @@ export default new Interactable({
             embeds: [ ...panel.embeds, interaction.components.embed({
                 description: `{emoji_yes}\u2800${desc}`,
                 color: "#00FF00"
-            }) ]
+            }, variables) ]
         };
     }
 });

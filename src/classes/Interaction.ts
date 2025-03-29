@@ -108,7 +108,6 @@ export default class Interaction {
 
         let message = await interactable.execute!(this.interaction);
         
-        console.log(message);
         if (followUp) await this.interaction.followUp(message);
         else if (!interactable.dontReply) await this.interaction.editReply(message);
     }

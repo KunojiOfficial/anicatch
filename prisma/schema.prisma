@@ -326,3 +326,11 @@ model Move {
   type          CardType
   cards         CardInstance[]
 }
+
+model Promo {
+  userId        Int
+  code          String            @unique
+
+  @@id([userId, code])
+  @@unique([userId, code])
+}

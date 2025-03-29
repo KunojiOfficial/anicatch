@@ -20,6 +20,9 @@ export default new Interactable({
             where: { OR: [{ userId1: player.data.id }, { userId2: player.data.id }], status: "ACTIVE" }
         });
 
+        clearTimeout(timeoutId);
+        clearTimeout(timeout2Id);
+
         if (!battle) {
             let team = await client.db.cardInstance.findMany({
                 where: { 
@@ -32,8 +35,6 @@ export default new Interactable({
     
             if (!team.length) throw 55; //team dead or empty
 
-            clearTimeout(timeoutId);
-            clearTimeout(timeout2Id);
 
             // calculate average level of the team and set stats of the wild animon
             let avgLevel = Math.ceil(team.reduce((acc, card) => acc + calculateLevelFromExp(card.exp), 0) / team.length);

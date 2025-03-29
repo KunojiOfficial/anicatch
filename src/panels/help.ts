@@ -29,8 +29,14 @@ export default new Panel({
             embeds: [ interaction.components.embed({
                 author: { name: `{locale_main_help} - ${user.displayName}`, iconUrl: user.displayAvatarURL() },
                 description: `{locale_main_helpText}\n### {emoji_links}{locale_main_usefulLinks}\n{emoji_website} [{locale_main_ourWebsite}]({config_urls_website})\n{emoji_discord} [{locale_main_supportServer}]({config_urls_support})\n{emoji_privacy} [{locale_main_privacyPolicy}]({config_urls_privacyPolicy})\n{emoji_tos} [{locale_main_tos}]({config_urls_tos})\n### {emoji_cmds}{locale_main_commands}\n${text.sort((a,b) => a.length - b.length).join('')}`,
-                fields: fields
-            }) ]
+                fields: fields,
+            }) ],
+            components: [ interaction.components.buttons([{
+                id: "0F",
+                label: "{locale_main_credits}",
+                args: { path: "credits" },
+                emoji: "glass"
+            }]) ]
         }
     }
 }); 

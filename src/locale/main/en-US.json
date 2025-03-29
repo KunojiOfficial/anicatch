@@ -272,5 +272,10 @@
     "forfeit": "Forfeit",
     "selectCard": "Select an Animon...",
     "startPlaying": "Start Playing!",
-    "turn": "Turn"
+    "turn": "Turn",
+    "successRewards": "You have successfully received your rewards!\nCheck your DMs!",
+    "toCapture": "To receive your rewards, you need to catpure {custom_toCapture} more Animons!\nUse the command {command_catch} to catch them!",
+    "clickToShow": "Click to show your code",
+    "credits": "Credits",
+    "disclaimer": "Images of characters used in this bot are not owned by us. They are the property of their respective owners. We do not claim ownership of any of these images. If you are the owner of any of these images and want them removed, please contact us."
 }

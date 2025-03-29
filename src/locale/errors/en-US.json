@@ -67,5 +67,7 @@
     "67": "You have no items available to redeem.",
     "68": "You don't have any Animons in your team that can join this battle.",
     "69": "Nice. You have already selected a move. Wait for your opponent.",
-    "70": "You cannot use this action while in battle.\nUse {command_battle resume} to finish your battle."
+    "70": "You cannot use this action while in battle.\nUse {command_battle resume} to finish your battle.",
+    "71": "You have already claimed all rewards.",
+    "72": "The promotion has ended."
 }

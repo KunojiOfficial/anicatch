@@ -165,7 +165,7 @@ export default new Panel({
         if (battle.status === "ENDED") description += "\n\n" + client.formatText("{locale_battle_end}", interaction.locale, { winner: users[battleInstance.getWinnerIndex()] });
         if (battle.rewards) {
             let rewards: any = await formatRewards(battle.rewards, player, cardInstances, battleInstance);
-            description += "\n" + client.formatText(rewards.text, interaction.locale, rewards.variables);
+            if (rewards.text) description += "\n" + client.formatText(rewards.text, interaction.locale, rewards.variables);
         }
 
         description += "\n" + (fields.length ? "\u2800".repeat(53) : "");
