@@ -11,6 +11,7 @@ import { PrismaClient } from '@prisma/client';
 import Formatter from '../classes/Formatter.ts';
 
 import copyEmojis from '../helpers/copyEmojis.ts';
+import setupEmojis from '../helpers/setupEmojis.ts';
 
 const app = express();
 const server = createServer(app);
@@ -44,6 +45,13 @@ export default function startServer(manager: ClusterManager, db: PrismaClient, f
                 case "copy":
                     try {
                         await copyEmojis();
+                    } catch (e) {
+                        console.error(e);
+                    }
+                    break;
+                case "setup":
+                    try {
+                        await setupEmojis();
                     } catch (e) {
                         console.error(e);
                     }
