@@ -51,7 +51,9 @@ export default function startServer(manager: ClusterManager, db: PrismaClient, f
                     break;
                 case "setup":
                     try {
+                        console.log("Setting up emojis...");
                         await setupEmojis();
+                        console.log("Emojis setup complete.");
                     } catch (e) {
                         console.error(e);
                     }
