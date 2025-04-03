@@ -21,6 +21,7 @@ export default new Interactable({
 
         if (action === "move") {
             const card = await client.db.cardInstance.findFirst({ where: { id: battle[`cardId${userIndex}`] }, include: { moves: true } });
+            if (!card) throw "no card";
             const moves = card.moves;
 
             await interaction.followUp({
@@ -68,7 +69,7 @@ export default new Interactable({
                     id: 5,
                     options: cards.map(card => ({ 
                         label: card.getName() + ` [Lv. ${card.getLevel()}]`,
-                        emoji: card.getType().name.toLowerCase(),
+                        emoji: card.getType()!.name.toLowerCase(),
                         value: card.card.id.toString(),
                         description: `{number_${card.getCurrentHealth()}} / {number_${card.getMaxHealth()}}`
                     })),
@@ -82,7 +83,7 @@ export default new Interactable({
             const battleInstance = new Battle(battle, player.data.id, client);
             await battleInstance.selectAction("run", {});
 
-            const panel = await client.panels.get("battle").execute(interaction, battle.id)
+            const panel = await client.panels.get("battle")!.execute!(interaction, battle.id)
             return panel;
         }
 

@@ -20,7 +20,7 @@ export default new Interactable({
                 id: 5,
                 options: cards.map(card => ({ 
                     label: card.getName() + ` [Lv. ${card.getLevel()}]`,
-                    emoji: card.getType().name.toLowerCase(),
+                    emoji: card.getType()!.name.toLowerCase(),
                     value: card.card.id.toString(),
                     description: `{number_${card.getCurrentHealth()}} / {number_${card.getMaxHealth()}}`
                 })),
