@@ -30,8 +30,6 @@ dist-ssr
 *.sln
 *.sw?
 
-commands.json
-
 assets/cards/*
 vite.config.ts
 server/src/config/*
