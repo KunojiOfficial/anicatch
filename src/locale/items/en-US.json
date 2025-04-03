@@ -53,18 +53,30 @@
     },
     "snowdriftDonut": {
         "name": "Snowdrift Donut",
-        "description": "Restores {item_value} HP with its delicate white icing."
+        "description": "Restores {item_value}% of max HP with its delicate white icing."
     },
     "roseglowDonut": {
         "name": "Roseglow Donut",
-        "description": "Heals {item_value} HP with its sweet pink charm."
+        "description": "Heals {item_value}% of max HP with its sweet pink charm."
     },
     "verdantDonut": {
         "name": "Verdant Donut",
-        "description": "Revitalizes {item_value} HP with its refreshing green glaze."
+        "description": "Revitalizes {item_value}% of max HP with its refreshing green glaze."
     },
     "skyshadeDonut": {
         "name": "Skyshade Donut",
-        "description": "Replenishes {item_value} HP with its serene blue icing."
+        "description": "Replenishes {item_value}% of max HP with its serene blue icing."
+    },
+    "apprenticeTome": {
+        "name": "Apprentice's Tome",
+        "description": "A basic tome that contains a random basic move."
+    },
+    "masterCodex": {
+        "name": "Master's Codex",
+        "description": "A tome that contains a random advanced move."
+    },
+    "legendGrimoire": {
+        "name": "Legendary Grimoire",
+        "description": "A tome that contains a random legendary move."
     }
 }

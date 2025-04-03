@@ -30,6 +30,34 @@ export default async function(interaction: DiscordInteraction, item: Inventory, 
                 }))
 
                 break;
+            
+            case "MOVE_BOX":
+                const moves = [];
+                for (let i = 0; i < count; i++) {
+                    const rarity = (itemData.properties as any).rarity;
+    
+                    const rowCount = await tx.move.count({ where: { rarity: rarity } });
+                    const randomOffset = Math.floor(Math.random() * rowCount);
+            
+                    const [result] = await tx.move.findMany({ where: {rarity: rarity}, skip: randomOffset, take: 1 });
+                    if (!result) throw "no moves found";
+    
+                    moves.push(result);
+                    await tx.moveInventory.upsert({
+                        where: { moveId_userId: { userId: item.userId, moveId: result.id } },
+                        create: { userId: item.userId, moveId: result.id, count: 1 },
+                        update: { count: { increment: 1 } }
+                    });
+    
+                }
+
+                await interaction.followUp({
+                    embeds: [ interaction.components.embed({
+                        description: `{locale_main_movesObtained}:\n${moves.map(m => `* \`${m.name}\``).join("\n")}`
+                    }) ]
+                })
+
+                break;
         }
 
         await tx.log.create({ data: { userId: item.userId, action: "use", description: `uses ${item.itemId} x ${count}` } })

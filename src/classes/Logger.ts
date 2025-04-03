@@ -16,13 +16,14 @@ let webhookDetails = {};
 export default class Logger {
     clusterId: number
     webhooks: {
-        error: WebhookClient
+        error: WebhookClient,
+        log: WebhookClient
     }
 
     constructor(clusterId: number) {
         this.clusterId = clusterId;
 
-        this.webhooks = { error: new WebhookClient({ url: config.webhooks.error }) }
+        this.webhooks = { error: new WebhookClient({ url: config.webhooks.error }), log: new WebhookClient({ url: config.webhooks.log }) };
 
         webhookDetails = {
             username: config.bot.name,
@@ -44,5 +45,15 @@ export default class Logger {
 
     info(message: string) {
         logger.info(`[${this.clusterId.toString().padStart(2,'0')}] ${message}`);
+    }
+
+    log(message: string) {
+        this.webhooks.log.send({
+            ...webhookDetails,
+            embeds: [ {
+                description: message,
+                color: 0x0000ff
+            } ]
+        }).catch(console.error)
     }
 }

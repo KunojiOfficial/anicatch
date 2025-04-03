@@ -37,6 +37,7 @@ model User {
   stats         UserStats?
   role          Role              @relation(fields: [roleId], references: [id])
   items         Inventory[]
+  moves         MoveInventory[]
   cards         CardInstance[]
   vouchers      Voucher[]
   trades        Trade[]
@@ -191,6 +192,7 @@ enum ItemType {
   BALL
   ENCOUNTER
   CONSUMABLE
+  MOVE_BOX
 }
 
 model Item {
@@ -204,8 +206,6 @@ model Item {
   priceCoin     Int?
   priceGem      Int?
   discount      Float?
-
-  value         Int               @default(1)
 
   inventories   Inventory[]
   cards         CardInstance[]
@@ -221,6 +221,18 @@ model Inventory {
   user          User              @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@id([itemId, userId])
+}
+
+model MoveInventory {
+  moveId        Int
+  userId        Int
+
+  count         Int               @default(1)
+
+  move          Move              @relation(fields: [moveId], references: [id])
+  user          User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([moveId, userId])
 }
 
 model Voucher {
@@ -320,11 +332,11 @@ model Move {
 
   moveType      MoveType        @default(ATTACK)
 
-  coins         Int             @default(0)
-  gems          Int             @default(0)
+  rarity        Int             @default(1)
 
   type          CardType
   cards         CardInstance[]
+  inventories   MoveInventory[]
 }
 
 model Promo {

@@ -10,13 +10,13 @@ export default async function(interaction: DiscordInteraction) {
                 thumbnail: interaction.client.getEmojiUrl("aniball")
             }) ],
             components: [ interaction.components.buttons([{
-                label: "\u2800{locale_main_mobile}",
-                emoji: "📱",
-                id: "exit_intro2:" + interaction.user.id + ":mobile"
-            }, {
                 label: "\u2800{locale_main_pc}",
                 emoji: "💻",
                 id: "exit_intro2:" + interaction.user.id + ":pc"
+            }, {
+                label: "\u2800{locale_main_mobile}",
+                emoji: "📱",
+                id: "exit_intro2:" + interaction.user.id + ":mobile"
             }]) ]
         });
     } else if (interaction.isButton() && interaction.customId.startsWith("exit_intro2:" + interaction.user.id)) {

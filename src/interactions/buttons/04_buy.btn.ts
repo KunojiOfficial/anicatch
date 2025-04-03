@@ -14,6 +14,9 @@ export default new Interactable({
 
         let item, cost:number = 0;
         await client.db.$transaction(async tx => {
+            const battle = await tx.battle.findFirst({ where: { OR: [{userId1: player.data.id}, {userId2:player.data.id}], status: "ACTIVE" } });
+            if (battle) throw 70;
+
             item = await tx.item.findFirst({ where: { id: itemId } });
             if (!item) throw "wrong itemId";
 

@@ -6,6 +6,7 @@ const PER_PAGE = 12;
 
 import rarities from "../data/rarities.json";
 import types from "../data/types.json";
+import Rarity from "../classes/Rarity.ts";
 
 export default new Panel({
     name: "collection",
@@ -49,9 +50,11 @@ export default new Panel({
             const ball = ballData.find(b => b.id === c.ballId);
             const id = client.getId(c.cardId, c.print);
 
+            const rarityInstance = new Rarity(c.rarity);
+
             fields.push({
                 name: `${(ball?.emoji + " ") || "{emoji_empty}"}${c.card.character.name}`,
-                value: `\`${id.padEnd(7, " ")}\`${type.emoji}${c.favorite ? "{emoji_favorite}":""}\n${rarity.emoji.full}\n\u2800`,
+                value: `\`${id.padEnd(7, " ")}\`{emoji_${type.name.toLowerCase()}}${c.favorite ? "{emoji_favorite}":""}\n${rarityInstance.getLongEmoji()}\n\u2800`,
                 inline: true
             });
 

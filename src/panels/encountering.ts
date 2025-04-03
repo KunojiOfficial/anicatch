@@ -6,6 +6,7 @@ import encounter from '../mechanics/encounter';
 import Card from "../classes/Card";
 
 import types from "../data/types.json";
+import Rarity from "../classes/Rarity.ts";
 
 export default new Panel({
     name: "encountering",
@@ -155,8 +156,8 @@ export default new Panel({
             embeds: [interaction.components.embed(embed, {
                 name: [`**${data.result.character.name}**`],
                 series: [`**${data.result.character?.series?.english_title}**`],
-                type: [`**${type.emoji} ${type.name}**`],
-                rarity: [`**${data.rarity.emoji.short} ${data.rarity.name}**`],
+                type: [`**{emoji_${type.name.toLowerCase()}} ${type.name}**`],
+                rarity: [`**${(new Rarity(data.insert.rarity)).getShortEmoji()} ${data.rarity.name}**`],
                 rate: [`**${data.rarity.chance}%**`],
                 date: [`${client.unixDate(escapeTime)}`]
             })],

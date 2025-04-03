@@ -1,19 +1,59 @@
 [
     {
-        "id": "1349711413806891109",
+        "id": "1355881792024088718",
         "type": "sub",
         "roleId": 2
     },
     {
-        "id": "1349716812698488832",
+        "id": "1355881939017400390",
         "type": "sub",
         "roleId": 3
     },
     {
-        "id": "1349766781484404850",
+        "id": "1355882075290599594",
+        "type": "sub",
+        "roleId": 4
+    },
+    {
+        "id": "1297143579822657618",
         "type": "consumable",
         "rewards": [
-            { "type": "gems", "amount": 10 }
+            { "type": "gems", "amount": 20 }
+        ]
+    },
+    {
+        "id": "1297143905728462848",
+        "type": "consumable",
+        "rewards": [
+            { "type": "gems", "amount": 60 }
+        ]
+    },
+    {
+        "id": "1297144084414332958",
+        "type": "consumable",
+        "rewards": [
+            { "type": "gems", "amount": 125 }
+        ]
+    },
+    {
+        "id": "1297144295114936392",
+        "type": "consumable",
+        "rewards": [
+            { "type": "gems", "amount": 380 }
+        ]
+    },
+    {
+        "id": "1297144406591279115",
+        "type": "consumable",
+        "rewards": [
+            { "type": "gems", "amount": 640 }
+        ]
+    },
+    {
+        "id": "1297145134604881952",
+        "type": "consumable",
+        "rewards": [
+            { "type": "gems", "amount": 1350 }
         ]
     }
 ]

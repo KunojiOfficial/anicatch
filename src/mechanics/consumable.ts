@@ -38,19 +38,21 @@ export default async function(interaction: DiscordInteraction, itemId: number, c
             case "HEAL":
                 if (card.status === "DEAD") throw 34;
                 
+                let maxHp = cardData.getMaxHealth();
                 let currentHp = cardData.getCurrentHealth()!;
-                if (currentHp === cardData.getMaxHealth()) throw 36;
+                if (currentHp === maxHp) throw 36;
                 
                 let maxCount = 0;
+                let healValue = Math.floor(maxHp*(properties.value/100));
 
-                while (currentHp < cardData.getMaxHealth()) {
+                while (currentHp < maxHp) {
                     maxCount++;
-                    currentHp += properties.value;
+                    currentHp += healValue;
                 }
                 
                 
                 count = Math.min(maxCount, count);
-                let newHp = Math.floor(Math.min(cardData.getMaxHealth(), cardData.getCurrentHealth()!+(count*properties.value)));
+                let newHp = Math.floor(Math.min(cardData.getMaxHealth(), cardData.getCurrentHealth()!+(count*healValue)));
                 await tx.cardInstance.update({ where: { id: card.id }, data: { hp: newHp } });
 
                 break;

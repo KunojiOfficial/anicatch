@@ -1,5 +1,6 @@
 import { DiscordInteraction } from "../types.ts";
 import rarities from "../data/rarities.json";
+import types from "../data/types.json";
 
 function getRandomRarity(rarities: any) {
     const randomNum = Math.random() * 100;
@@ -46,8 +47,7 @@ export default async function(interaction: DiscordInteraction) {
 
 
         // Find a move that matches the card's type and power
-        const move = await tx.move.findFirst({ where: { type: result.type }, orderBy: { power: "asc" } });
-        if (!move) throw 5;
+        const moves = types[result.type as keyof typeof types].defaultMoves;
 
         const card = await tx.cardInstance.create({ data: {
             userId: player.data.id,
@@ -55,7 +55,7 @@ export default async function(interaction: DiscordInteraction) {
             cardId: result.id,
             rarity: parseInt(rarity!),
             print: print,
-            moves: { connect: [{ id: move?.id }, { id: 1 }] }
+            moves: { connect: moves.map(m => ({id: m})) }
         } });
 
         const timeoutId = setTimeout(async () => {

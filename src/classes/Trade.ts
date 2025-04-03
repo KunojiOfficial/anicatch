@@ -190,7 +190,7 @@ export default class Trade {
                 if (type === "cards") {
                     let card = new Card({ card: data, parent: data.card, character: data.card.character, ball: data.ball });
                     text += `${card.getLabel()}\n`;                    
-                    options.push({ label: card.character!.name, hardEmoji: card.rarity.emoji.short, value: `${type}:${item.value}` });
+                    options.push({ label: card.character!.name, hardEmoji: card.rarityInstance.getShortEmoji(), value: `${type}:${item.value}` });
                 } else if (type === "items") {
                     text += `${data.emoji} **{locale_items_${data.name}_name}** x${item.count}\n`;
                     options.push({ label: `{locale_items_${data.name}_name} x${item.count}`, hardEmoji: data.emoji, value: `${type}:${item.value}` });

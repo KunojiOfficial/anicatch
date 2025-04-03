@@ -11,6 +11,16 @@
         "CONSUMABLE": {
             "name": "Sweets",
             "description": "Give your Animon a treat! Use these items to boost their stats, heal them or unlock various effects!"
+        },
+        "MOVE": {
+            "BOX": {
+                "name": "Spellbooks",
+                "description": "Spellbooks contain random moves that can be taught to your Animons!"
+            }
+        },
+        "MOVES": {
+            "name": "Moves",
+            "description": "Teach your Animon new moves to make them stronger!"
         }
     }
 }

@@ -26,8 +26,8 @@ export default new Panel({
 
         const card = new Card({ card: animon, parent: animon.card });
 
-        const availableMoves = await client.db.move.findMany({ where: { OR: [ {type: card.parent.type}, {type: "NONE"} ], requiredLevel: { lte: card.getLevel() } }, orderBy: [{type: "asc"}, {power: "asc"}] });
-        const moveTypes = [... new Set(availableMoves.map(m => m.moveType))];
+        const availableMoves = await client.db.moveInventory.findMany({ where: { OR: [ {move: {type: card.parent.type}}, {move: {type: "NONE"}} ], move: {requiredLevel: { lte: card.getLevel() }} }, orderBy: [{move: { type: "asc" }}, {move: {power: "asc"}}], include: { move: true } });
+        const moveTypes = [... new Set(availableMoves.map(m => m.move.moveType))];
 
         if (!moveTypes.includes(type as any)) type = moveTypes[0];
 
@@ -64,34 +64,27 @@ export default new Panel({
                     ...defaults,
                     id: 0,
                     placeholder: "⭐\u2800{locale_main_selectMove}",
-                    options: availableMoves.filter(move => move.moveType === type).map((move, i) => ({ 
-                        label: move.name, 
-                        emoji: move.type.toLowerCase(), 
-                        value: `4:${move.id}`, 
-                        default: move.id === moveId,
-                        description: `{locale_main_power}: ${move.power} | {locale_main_accuracy}: ${move.accuracy}% | {locale_main_limit}: ${move.pp}`
+                    options: availableMoves.filter(move => move.move.moveType === type).map((move, i) => ({ 
+                        label: move.move.name, 
+                        emoji: move.move.type.toLowerCase(), 
+                        value: `4:${move.move.id}`, 
+                        default: move.move.id === moveId,
+                        description: `{locale_main_power}: ${move.move.power} | {locale_main_accuracy}: ${move.move.accuracy}% | {locale_main_limit}: ${move.move.pp}`
                     })),
                     args: {...defaults.args, moveId: "1" }
                 })
             ]
 
             if (moveId) {
-                const move = availableMoves.find(m => m.id === moveId);
+                const move = availableMoves.find(m => m.move.id === moveId);
 
                 components = [...components,
                     interaction.components.buttons([{
                         id: "21",
-                        label: "\u2800{locale_main_learnForCoins} " + `(-{number_${move.coins}})`,
-                        // style: "green",
-                        emoji: "smallCoin",
-                        args: { action: "learn", cardId: cardId, slot: slot, moveId: moveId, currency: "coins" },
-                        cooldown: { id: "learn", time: 2 }
-                    }, {
-                        id: "21",
-                        label: "\u2800{locale_main_learnForGems} " + `(-{number_${move.gems}})`,
-                        // style: "blurple",
-                        emoji: "smallGem",
-                        args: { action: "learn", cardId: cardId, slot: slot, moveId: moveId, currency: "gems" },
+                        label: "\u2800{locale_main_learn} ",
+                        style: "green",
+                        emoji: "wyes",
+                        args: { action: "learn", cardId: cardId, slot: slot, moveId: moveId },
                         cooldown: { id: "learn", time: 2 }
                     }])
                 ];

@@ -89,7 +89,7 @@ async function main(interaction: DiscordInteraction, where: any, userAccess: boo
         embeds: [ interaction.components.embed({
             description: getDesc(animon, interaction.player),
             fields: [
-                { name: "\u2800", value: `-# {locale_main_nameCard}\n${animon.card.character.name}\u2800\u2800\n-# {locale_main_type}\n${type.name} ${type.emoji}\n-# {locale_main_caught}\n${client.unixDate(animon.createdAt)}` + (!player.config.isMobile ? "\n\u2800" : ""), inline: true },
+                { name: "\u2800", value: `-# {locale_main_nameCard}\n${animon.card.character.name}\u2800\u2800\n-# {locale_main_type}\n${type.name} {emoji_${type.name.toLowerCase()}}\n-# {locale_main_caught}\n${client.unixDate(animon.createdAt)}` + (!player.config.isMobile ? "\n\u2800" : ""), inline: true },
                 { name: "\u2800", value: `-# {locale_main_id}\n\`${client.getId(animon.cardId, animon.print).padEnd(7, " ")}\`\n-# {locale_main_ball}\n{locale_items_${animon.ball?.name}_name} ${animon.ball?.emoji}`, inline: true },
                 // { name: "\u2800", value: `-# Rarity\n**${rarity.name}** (${rarity.chance}%)\n${rarity.emoji.full}` },
             ],

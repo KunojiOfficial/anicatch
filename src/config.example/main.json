@@ -10,17 +10,18 @@
         }
     },
     "urls": {
-        "support": "https://google.com",
-        "buyGems": "https://google.com",
-        "website": "https://anicatch.gg",
-        "privacyPolicy": "https://anicatch.gg/privacypolicy",
-        "guidelines": "https://anicatch.gg/communityguidelines",
-        "tos": "https://anicatch.gg/tos",
+        "support": "https://discord.gg/3m55QKkbEp",
+        "buyGems": "https://discord.com/application-directory/1285551523505639476/store",
+        "website": "https://anicatch.com",
+        "privacyPolicy": "https://anicatch.com/privacy",
+        "guidelines": "https://anicatch.com/guidelines",
+        "tos": "https://anicatch.com/terms",
         "store": "https://discord.com/application-directory/1285551523505639476/store",
-        "invite": "https://example.com"
+        "invite": "https://discord.com/oauth2/authorize?client_id=1285551523505639476"
     },
     "webhooks": {
-        "error": "https://discord.com/api/webhooks/1285557612758437958/J2VIVBfP7rC8aqPryBGEicWqLAaPI56f6gU0KIGaHfQ6sSoXW39PLI-Uma9pnL-YEknR"
+        "error": "https://discord.com/api/webhooks/1285557612758437958/J2VIVBfP7rC8aqPryBGEicWqLAaPI56f6gU0KIGaHfQ6sSoXW39PLI-Uma9pnL-YEknR",
+        "log": "https://discord.com/api/webhooks/1356277712372633811/LbTQtsB-aifswlZuNZqAVeTMk1rHCeAblbOPCdrgfJGunxn8RRTc39GdFMT0c0iF3QR6"
     },
     "imgs": {
         "vote": "https://i.imgur.com/3DDOr19.gif"

@@ -7,6 +7,7 @@ import Card from "../classes/Card.ts";
 
 import _rarities from "../data/rarities.json";
 import types from "../data/types.json";
+import Rarity from "../classes/Rarity.ts";
 
 export default new Panel({
     name: "anidex",
@@ -38,10 +39,10 @@ export default new Panel({
 
         const rarities: Button[] = [];
         for (const key of Object.keys(_rarities)) {
-            let data = _rarities[key as keyof typeof _rarities];
+            const instance = new Rarity(key as any);
             rarities.push({
                 id: "0",
-                hardEmoji: data.emoji.short,
+                hardEmoji: client.formatText(instance.getShortEmoji(),interaction.locale),
                 style: rarity == key ? "blurple" : "gray",
                 disabled: rarity == key,
                 args: { path: "anidex", page: page, rarity: key }
@@ -56,9 +57,9 @@ export default new Panel({
         return {
             embeds: [ interaction.components.embed({
                 fields: [
-                    { name: "\u2800", value: `-# {locale_main_nameCard}\n${card.character.name}\n${card.character.series ? `-# {locale_main_series}\n${card.character.series.english_title}\n` : ""}-# {locale_main_type}\n${type.name} ${type.emoji}`, inline: true },
+                    { name: "\u2800", value: `-# {locale_main_nameCard}\n${card.character.name}\n${card.character.series ? `-# {locale_main_series}\n${card.character.series.english_title}\n` : ""}-# {locale_main_type}\n${type.name} {emoji_${type.name.toLowerCase()}}`, inline: true },
                     { name: "\u2800", value: `-# {locale_main_id}\n\`${client.getId(card.id).padEnd(3, " ")}\``, inline: true },
-                    { name: "\u2800", value: `-# {locale_main_totalCaught}: **${card.instances.length}**\n-# ` + [...new Set(card.instances.map(c => c.rarity))].map(r => `${_rarities[r.toString() as keyof typeof _rarities].emoji.short} **${card.instances.filter((c:any) => c.rarity === r).length}**`).join(" ") + "\u2800" }
+                    { name: "\u2800", value: `-# {locale_main_totalCaught}: **${card.instances.length}**\n-# ` + [...new Set(card.instances.map(c => c.rarity))].map(r => `${(new Rarity(r as any)).getShortEmoji()} **${card.instances.filter((c:any) => c.rarity === r).length}**`).join(" ") + "\u2800" }
                 ],
                 image: "attachment://card.jpg",
                 color: cardC.getRarity()?.color

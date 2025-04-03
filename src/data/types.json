@@ -1,38 +1,38 @@
 {
     "INFERNO": {
         "name": "Inferno",
-        "emoji": "<:INFERNO:1343345959693713429>",
         "strong": ["FROST"],
-        "weak": ["NATURE"]
+        "weak": ["NATURE"],
+        "defaultMoves": [1,2,148,183]
     },
     "FROST": {
         "name": "Frost",
-        "emoji": "<:FROST:1343345957751754844>",
         "strong": ["NATURE"],
-        "weak": ["INFERNO"]
+        "weak": ["INFERNO"],
+        "defaultMoves": [1,3,158,183]
     },
     "NATURE": {
         "name": "Nature",
-        "emoji": "<:NATURE:1343345963946868796>",
         "strong": ["INFERNO"],
-        "weak": ["FROST"]
+        "weak": ["FROST"],
+        "defaultMoves": [1,4,118,183]
     },
     "LIGHT": {
         "name": "Light",
-        "emoji": "<:LIGHT:1343345962386722816>",
         "strong": ["VOID"],
-        "weak": ["VOID"]
+        "weak": ["VOID"],
+        "defaultMoves": [1,5,128,183]
     },
     "VOID": {
         "name": "Void",
-        "emoji": "<:VOID:1343345966312591460>",
         "strong": ["LIGHT"],
-        "weak": ["LIGHT"]
+        "weak": ["LIGHT"],
+        "defaultMoves": [1,6,138,183]
     },
     "NONE": {
         "name": "None",
-        "emoji": "<:VOID:1343345966312591460>",
         "strong": [],
-        "weak": []
+        "weak": [],
+        "defaultMoves": []
     }
 }

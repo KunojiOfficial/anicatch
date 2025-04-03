@@ -7,6 +7,7 @@ import { base10ToBase26 } from "../helpers/utils.ts";
 
 import rarities from "../data/rarities.json";
 import types from "../data/types.json";
+import Rarity from "./Rarity.ts";
 
 interface Stats {
     hp: number,
@@ -26,6 +27,7 @@ export default class Card {
     ball?: Item
     
     rarity?: typeof rarities[1]
+    rarityInstance: Rarity
     type?: any
 
     constructor(object: {card: CardInstance, parent?: CardCatalog, character?: Character, ball?: Item, moves?: Move[]}) {
@@ -37,6 +39,7 @@ export default class Card {
 
         this.rarity = rarities[this.card.rarity.toString() as keyof typeof rarities];
         this.type = types[this.parent?.type.toString() as keyof typeof types];
+        this.rarityInstance = new Rarity(this.card.rarity);
     }
 
     canLevel() : boolean {
@@ -187,15 +190,15 @@ export default class Card {
     }
 
     getLabel() {
-        return `${this.ball?.emoji} **${this.character?.name}** [Lv. ${this.getLevel()}]\n\`${this.getId().padEnd(7, " ")}\`${this.type.emoji}\n${this.rarity.emoji.full}`;
+        return `${this.ball?.emoji} **${this.character?.name}** [Lv. ${this.getLevel()}]\n\`${this.getId().padEnd(7, " ")}\`{emoji_${this.type.name.toLowerCase()}}\n${this.rarityInstance.getLongEmoji()}`;
     }
 
     getShortLabel() {
-        return `${this.ball ? `${this.ball?.emoji} ` : ""}${this.type.emoji} ${this.rarity.emoji.short} \`${this.getId().padEnd(7, " ")}\` **${this.character?.name}** [Lv. ${this.getLevel()}]`;
+        return `${this.ball ? `${this.ball?.emoji} ` : ""}{emoji_${this.type.name.toLowerCase()}} ${this.rarityInstance.getShortEmoji()} \`${this.getId().padEnd(7, " ")}\` **${this.character?.name}** [Lv. ${this.getLevel()}]`;
     }
 
     getShorterLabel() {
-        return `${this.type.emoji} ${this.rarity.emoji.short} **${this.getName()}** [Lv. ${this.getLevel()}]`;
+        return `{emoji_${this.type.name.toLowerCase()}} ${this.rarityInstance.getShortEmoji()} **${this.getName()}** [Lv. ${this.getLevel()}]`;
     }
 
     getStatPoints() {

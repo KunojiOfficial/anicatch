@@ -7,7 +7,7 @@ export default new Interactable({
     id: 21,
     async execute(interaction): Promise<InteractionReplyOptions> {
         const { client, args, player } = interaction;
-        let [ action, cardId, slot, moveId, currency ] = args;
+        let [ action, cardId, slot, moveId ] = args;
         
         cardId = parseInt(cardId);
         slot = parseInt(slot);
@@ -25,30 +25,22 @@ export default new Interactable({
             variables = { move: [`**${animon.moves[slot-1].name}**`], slot: [slot] };
             await client.db.cardInstance.update({ where: { id: cardId }, data: { moves: { disconnect: { id: animon.moves.find(move => move.id === moveId).id } } } });
         } else if (action === "learn") {
-            const move = await client.db.move.findFirst({ where: { id: moveId } });
+            const move = await client.db.moveInventory.findFirst({ where: { moveId: moveId, userId: player.data.id, count: {gt: 0} }, include: { move: true } });
             if (!move) throw 61;
 
             const card = new Card({ card: animon });
 
             if (animon.moves[slot-1]) throw 62;
-            if (move.requiredLevel > card.getLevel()) throw 63;
-
+            if (move.move.requiredLevel > card.getLevel()) throw 63;
             if (animon.moves.find(move => move.id === moveId)) throw 64;
-            
-            if (currency === "coins" && player.data.coins < move.coins) throw 9;
-            if (currency === "gems" && player.data.gems < move.gems) throw 10;
-
-            if (currency !== "coins" && currency !== "gems") throw "invalid_currency";
 
             await client.db.$transaction(async tx => {
-                await tx.user.update({ where: { id: player.data.id }, data: { [currency]: { decrement: move[currency] } } });
+                await tx.moveInventory.updateMany({ where: { userId: player.data.id, moveId: moveId }, data: { count: { decrement: 1 } } });
                 await tx.cardInstance.update({ where: { id: cardId }, data: { moves: { connect: { id: moveId } } } });
             });
 
-            interaction.player.data[currency] -= move[currency];
-
             desc = `{locale_main_taughtMove}`;
-            variables = { move: [`**${move.name}**`] };
+            variables = { move: [`**${move.move.name}**`] };
         }
 
         const panel = await client.panels.get("moves")!.execute!(interaction, cardId, slot);

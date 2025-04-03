@@ -150,7 +150,7 @@
     "accept": "Accept",
     "dailyText": "**Woohoo!** You have received your daily rewards!",
     "encountersRecharged": "Your encounters have been recharged!",
-    "encountersRechargedText": "Return to {config_bot_name] and collect your favorite anime characters!",
+    "encountersRechargedText": "Return to {config_bot_name} and collect your favorite anime characters!",
     "disableNotifications": "You can disable these notifications in your {command_settings}.",
     "intro1": "**Welcome to {config_bot_name}**! 🎉\n\nWe're excited to have you join the adventure! Before you begin, please take a moment to review and agree to our **Terms of Service** and **Community Guidelines**.\n\nBy continuing, you confirm that you have read and accepted these terms. This helps ensure a fair and enjoyable experience for everyone.\n\n**[{emoji_tos} Terms of Service]({config_urls_tos})**\n**[{emoji_privacy} Community Guidelines]({config_urls_guidelines})**\n\nOnce you're ready, press the button below to start your journey!",
     "intro1Btn": "I have read and accepted these terms",
@@ -277,5 +277,7 @@
     "toCapture": "To receive your rewards, you need to catpure {custom_toCapture} more Animons!\nUse the command {command_catch} to catch them!",
     "clickToShow": "Click to show your code",
     "credits": "Credits",
-    "disclaimer": "Images of characters used in this bot are not owned by us. They are the property of their respective owners. We do not claim ownership of any of these images. If you are the owner of any of these images and want them removed, please contact us."
+    "disclaimer": "Images of characters used in this bot are not owned by us. They are the property of their respective owners. We do not claim ownership of any of these images. If you are the owner of any of these images and want them removed, please contact us.",
+    "movesObtained": "The following moves have been added to your {command_inventory}",
+    "learn": "Learn"
 }

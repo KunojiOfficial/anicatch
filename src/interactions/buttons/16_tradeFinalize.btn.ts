@@ -9,6 +9,9 @@ export default new Interactable({
         let [ result, tradeId ] = args;
         tradeId = parseInt(tradeId);
 
+        const battle = await client.db.battle.findFirst({ where: { OR: [{userId1: player.data.id}, {userId2:player.data.id}], status: "ACTIVE" } });
+        if (battle) throw 70;
+
         const offer = await client.db.trade.findFirst({ where: { id: tradeId, status: "ACTIVE", OR: [{recipientId: player.data.id}, {offererId: player.data.id}] }, include: { users: { include: { config: true } } } });
         if (!offer || (result === "accept" && offer.recipientId !== player.data.id)) throw 42;
 
