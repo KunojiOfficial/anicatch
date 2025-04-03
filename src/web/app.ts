@@ -10,6 +10,8 @@ import Vote from '../classes/Vote.ts';
 import { PrismaClient } from '@prisma/client';
 import Formatter from '../classes/Formatter.ts';
 
+import copyEmojis from '../helpers/copyEmojis.ts';
+
 const app = express();
 const server = createServer(app);
 
@@ -38,6 +40,13 @@ export default function startServer(manager: ClusterManager, db: PrismaClient, f
                 case "translate":
                     res.send(`THE ID IS ${base26ToBase10(req.body.id.toUpperCase())}`);
                     return;
+                    break;
+                case "copy":
+                    try {
+                        await copyEmojis();
+                    } catch (e) {
+                        console.error(e);
+                    }
                     break;
             }
         } catch (e) {
