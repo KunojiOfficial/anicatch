@@ -293,5 +293,10 @@
     "gemsSpent": "Gems Spent",
     "tradesMade": "Trades Made",
     "viewCollection": "View Collection",
-    "customizeProfile": "Customize Profile"
+    "customizeProfile": "Customize Profile",
+    "suspended": "Account Suspended",
+    "reason": "Reason",
+    "expires": "Expires",
+    "never": "never",
+    "suspendedNote": "Your account has been suspended due to violating our **[Terms of Service]({config_urls_tos})** or **[Community Guidelines]({config_urls_guidelines})**. If you believe this is a mistake, please contact us in our [support server]({config_urls_support})."
 }

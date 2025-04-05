@@ -27,7 +27,7 @@ export default class Interaction {
 
             //create or find user
             await this.interaction.player.create(this.interaction.user, this.interaction.client, this.interaction.locale);
-            
+
             //refresh encounters
             await this.interaction.player.refreshEncounters(this.interaction.client);
 
@@ -37,6 +37,25 @@ export default class Interaction {
             //add components
             this.interaction.components = new Components(this.interaction.client, this.interaction.locale, this.interaction.player)
             
+            
+            //suspensions
+            if (this.interaction.player.suspensions.length) {
+                const suspended = this.interaction.player.suspensions[0];
+                if (suspended) {
+                    await this.interaction.reply({
+                        embeds: [ this.interaction.components.embed({
+                            description: 
+                                `### {locale_main_suspended}\n**{locale_main_reason}:** ${suspended.reason}
+                                \n**{locale_main_expires}:** ${suspended.expiresAt ? this.interaction.client.unixDate(suspended.expiresAt) : "{locale_main_never}"}.\n\n-# *{locale_main_suspendedNote}*
+                            `,
+                            color: "#ff0000"
+                        }) ], 
+                        flags: [ "Ephemeral" ]
+                    });
+                    return;
+                }
+            }
+
             //introduction
             if (this.interaction.player.data.status === "NEW") {
                 await introduction(this.interaction);

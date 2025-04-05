@@ -1,11 +1,12 @@
 import { User as DiscordUser } from "discord.js";
-import { Config, Role, User } from "@prisma/client";
+import { Config, Role, Suspension, User } from "@prisma/client";
 import Client from "./Client.ts";
 
 export default class Player {
     data: User
     role?: Role
     config?: Config
+    suspensions: Suspension[]
     user: DiscordUser
     
     constructor(user: DiscordUser, data?: User, role?: Role, config?: Config) {
@@ -69,11 +70,12 @@ export default class Player {
                 stats: { create: {} },
                 items: { create: [{ itemId: 1, count: 15 }, { itemId: 2, count: 1 }, { itemId: 3, count: 1 }, { itemId: 4, count: 1 }] }
             },
-            include: { config: true, role: true }
+            include: { config: true, role: true, suspensions: { where: { OR: [{expiresAt: { gt: new Date() }}, {expiresAt: null}] } } }
         });
     
         this.data = data;
         this.config = data.config;
         this.role = data.role;
+        this.suspensions = data.suspensions;
     }
 }

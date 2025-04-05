@@ -42,6 +42,7 @@ model User {
   vouchers      Voucher[]
   trades        Trade[]
   profile       UserProfile?
+  suspensions   Suspension[]
 
   logs          Log[]
 
@@ -265,6 +266,15 @@ model UserProfile {
   color         String?
 
   user          User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Suspension {
+  id            Int               @unique @id @default(autoincrement())
+  userId        Int
+  reason        String
+  expiresAt     DateTime?
+
+  user          User              @relation(fields: [userId], references: [id])
 }
 
 enum TradeStatus {

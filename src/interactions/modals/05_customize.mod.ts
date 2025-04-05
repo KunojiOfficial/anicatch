@@ -1,6 +1,5 @@
 import { InteractionReplyOptions } from "discord.js";
 import Interactable from "../../classes/Interactable.ts";
-import Trade from "../../classes/Trade.ts";
 
 function isValidHexColor(hex: string): boolean {
     return /^#[0-9A-F]{6}$/i.test(hex);
