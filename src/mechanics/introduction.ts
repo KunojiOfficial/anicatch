@@ -36,14 +36,14 @@ export default async function(interaction: DiscordInteraction) {
             })],
             components: [ interaction.components.buttons([{
                 id: "0F",
-                label: "\u2800{locale_main_tutorial}",
-                emoji: "📚",
-                args: { path: "guide" }
-            }, {
-                id: "0F",
                 label: "\u2800{locale_main_startPlaying}",
                 emoji: "🩵",
                 args: { path: "encountering" }
+            },{
+                id: "0F",
+                label: "\u2800{locale_main_tutorial}",
+                emoji: "📚",
+                args: { path: "guide" }
             }]) ]
         });
 

@@ -180,7 +180,8 @@ export default class Components {
         menu.setCustomId(customId.join(';'));
 
         if (object.placeholder) menu.setPlaceholder(this.client.formatText(object.placeholder, this.locale, replace));
-        if (object.options) {
+        
+        if (object.options && object.options.length > 0) {
             const options = [];
             for (const o of object.options) {
                 options.push({
@@ -192,6 +193,11 @@ export default class Components {
             }
             
             menu.addOptions(options);
+        } else {
+            menu.addOptions({
+                label: this.client.formatText("{locale_main_nothingToShow}", this.locale, replace),
+                value: "x"
+            });
         }
         
 
@@ -250,7 +256,7 @@ export default class Components {
             inp.setStyle(TextInputStyle[input.style]);
 
             if (input.minLength) inp.setMinLength(input.minLength);
-            if (input.maxLength) inp.setMinLength(input.maxLength);
+            if (input.maxLength) inp.setMaxLength(input.maxLength);
             if (input.placeholder) inp.setPlaceholder(this.client.formatText(input.placeholder, this.locale, replace));
             if (input.value) inp.setValue(input.value);
             if (input.required) inp.setRequired(true);

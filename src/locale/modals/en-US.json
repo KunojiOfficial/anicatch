@@ -39,5 +39,15 @@
             "label": "Item Amount",
             "placeholder": "An integral number"
         }]
+    },
+    "5": {
+        "title": "Profile Customization",
+        "inputs": [{
+            "label": "Color",
+            "placeholder": "The color of the profile card (HEX format)"
+        }, {
+            "label": "Description",
+            "placeholder": "The description of the profile card (max 500 characters)"
+        }]
     }
 }

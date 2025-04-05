@@ -62,6 +62,7 @@ export default class Interaction {
         }
         
         const command = this.interaction.client.commands.get(name);
+        if (!command) throw "unknown command";
         const cooldown = await this.cooldown(name, "command", command.cooldown);
 
         if (cooldown) throw {id: 14, variables: { time: [`<t:${Math.round(cooldown/1000)}:R>`] }};
@@ -108,7 +109,7 @@ export default class Interaction {
 
         let message = await interactable.execute!(this.interaction);
         
-        if (followUp) await this.interaction.followUp(message);
+        if (followUp && Object.keys(message).length) await this.interaction.followUp(message);
         else if (!interactable.dontReply) await this.interaction.editReply(message);
     }
 

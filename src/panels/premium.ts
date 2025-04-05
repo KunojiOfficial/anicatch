@@ -23,21 +23,21 @@ export default new Panel({
             embeds: [ interaction.components.embed({
                 author: { name: `{locale_main_premium} - ${user.displayName}`, iconUrl: user.displayAvatarURL() },
                 description: `{locale_main_premiumText}\n### ${currentTier.emoji} ${currentTier.name}\n${benefits.text}`,
-                thumbnail: client.user.displayAvatarURL(),
-                color: currentTier.color
+                thumbnail: client.user!.displayAvatarURL(),
+                color: currentTier.color || undefined
             }, benefits.variables) ],
             components: [
                 interaction.components.buttons(premiumRoles.map((role,i) => ({
                     id: "0",
                     label: `{locale_main_tier} ${premiumRoles.length-i}`,
-                    emoji: role.emoji,
+                    hardEmoji: role.emoji || undefined,
                     disabled: tier === i,
                     style: tier === i ? "blurple" : "gray",
                     args: { path: "premium", tier: i }
                 }))),
                 interaction.components.buttons([{
                     style: "premium",
-                    skuId: currentTier.skuId
+                    skuId: currentTier.skuId!
                 }, {
                     style: "link",
                     label: "{locale_main_browseStore}",

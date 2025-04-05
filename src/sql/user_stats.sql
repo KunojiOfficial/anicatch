@@ -7,6 +7,13 @@ BEGIN
         VALUES (NEW.id, OLD.coins - NEW.coins)
         ON CONFLICT ("userId")
         DO UPDATE SET "coinsSpent" = "UserStats"."coinsSpent" + (OLD.coins - NEW.coins);
+    
+    IF NEW.gems < OLD.gems THEN
+        INSERT INTO "UserStats" ("userId", "gemsSpent")
+        VALUES (NEW.id, OLD.gems - NEW.gems)
+        ON CONFLICT ("userId")
+        DO UPDATE SET "gemsSpent" = "UserStats"."gemsSpent" + (OLD.gems - NEW.gems);
+
     END IF;
 
     RETURN NEW;

@@ -69,5 +69,8 @@
     "69": "Nice. You have already selected a move. Wait for your opponent.",
     "70": "You cannot use this action while in battle.\nUse {command_battle resume} to finish your battle.",
     "71": "You have already claimed all rewards.",
-    "72": "The promotion has ended."
+    "72": "The promotion has ended.",
+    "73": "This user's profile is private.",
+    "74": "You cannot customize your profile! Become a **Premium** member to unlock this feature - {command_premium}.",
+    "75": "The color you provided is invalid. Please use a valid HEX color code - you can use [this tool](https://www.w3schools.com/colors/colors_picker.asp) to find one."
 }

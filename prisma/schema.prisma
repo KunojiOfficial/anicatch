@@ -41,6 +41,7 @@ model User {
   cards         CardInstance[]
   vouchers      Voucher[]
   trades        Trade[]
+  profile       UserProfile?
 
   logs          Log[]
 
@@ -63,6 +64,7 @@ model Role {
   rechargeTime  Int
 
   expShare      Float             @default(0)
+  canCustomize  Boolean          @default(false)
 
   daily         Json[]
 
@@ -251,7 +253,16 @@ model UserStats {
   encountered   Int               @default(0)
   captured      Int               @default(0)
   coinsSpent    Int               @default(0)
+  gemsSpent     Int               @default(0)
   votes         Json              @default("{}")
+
+  user          User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model UserProfile {
+  userId        Int               @unique @id
+  description   String?
+  color         String?
 
   user          User              @relation(fields: [userId], references: [id], onDelete: Cascade)
 }

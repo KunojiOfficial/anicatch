@@ -1,4 +1,4 @@
-import { InteractionReplyOptions } from "discord.js";
+import { Component, InteractionReplyOptions } from "discord.js";
 import { DiscordInteraction } from "../types.ts";
 import Panel from "../classes/Panel.ts";
 
@@ -48,7 +48,7 @@ export default new Panel({
             }
         }
 
-        //get user balls :) 
+        //get user's balls :) 
         const balls = await client.db.inventory.findMany({ where: { userId: player.data.id, item: { type: "BALL" } }, include: { item: true } });
         balls.sort((a,b) => a.itemId-b.itemId);
 
@@ -122,7 +122,7 @@ export default new Panel({
 
         const buttons = balls.map(b => ({ emoji: b.item.emoji, label: b.count.toString(), id: 1, args: { cardId: data.insert.id, ballId: b.itemId, timeoutId: data.timeout, embedTimeout: timeOutId } }));
 
-        let k = -1, components = [];
+        let k = -1, components: any[] = [];
         for (const [index, button] of buttons.entries()) {
             if (index % 5 === 0) {
                 components.push([]);
