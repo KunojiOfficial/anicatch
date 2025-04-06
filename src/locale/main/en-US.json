@@ -298,5 +298,7 @@
     "reason": "Reason",
     "expires": "Expires",
     "never": "never",
-    "suspendedNote": "Your account has been suspended due to violating our **[Terms of Service]({config_urls_tos})** or **[Community Guidelines]({config_urls_guidelines})**. If you believe this is a mistake, please contact us in our [support server]({config_urls_support})."
+    "suspendedNote": "Your account has been suspended due to violating our **[Terms of Service]({config_urls_tos})** or **[Community Guidelines]({config_urls_guidelines})**. If you believe this is a mistake, please contact us in our [support server]({config_urls_support}).",
+    "welcomeTitle": "Hello {custom_guildName}!",
+    "welcomeText": "Hey there! I'm **{config_bot_name}**! 🎉\n\n{emoji_aniball} **Ready to start catching awesome anime characters?**\nJust type {command_catch} and dive in!\n{emoji_privacy} **Need a hand getting started?**\nCheck out {command_guide} for all the tips and tricks!\n{emoji_cmds} **Wanna see all the cool stuff I can do?**\nHit up {command_help} for the full list of commands!\n\nLet's catch 'em all and have a blast together! {emoji_favorite2}"
 }

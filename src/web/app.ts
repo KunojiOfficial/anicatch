@@ -82,5 +82,32 @@ export default function startServer(manager: ClusterManager, db: PrismaClient, f
         }
     });
 
+    app.get("/roles", async (req, res) => {
+        if (req.headers.authorization !== process.env.VOTE_SECRET) return res.status(401).send("Unauthorized");
+
+        try {
+            const roles = await db.user.findMany({ where: { roleId: { gt: 1 } }, select: { discordId: true, roleId: true } });;
+            res.status(200).json(roles);
+        } catch (e) {
+            console.error(e)
+            res.status(500).send("Error processing roles");
+        }
+    });
+
+    app.post("/roles", async (req, res) => {
+        if (req.headers.authorization !== process.env.VOTE_SECRET) return res.status(401).send("Unauthorized");
+        
+        const user = await db.user.findUnique({ where: { discordId: req.body.discordId }, include: { role: true } });
+        if (!user) return res.status(404).send("User not found");
+
+        const newRole = await db.role.findUnique({ where: { id: req.body.roleId } });
+        if (!newRole) return res.status(404).send("Role not found");
+
+        if (user.roleId !== 1 && user.role.priority > newRole.priority) return res.status(400).send("User already has a higher role");
+
+        await db.user.update({ where: { discordId: req.body.discordId }, data: { roleId: newRole.id } });
+        return res.status(200).send("Role updated");
+    });
+
     return server;
 }

@@ -55,6 +55,7 @@ model User {
 
 model Role {
   id            Int               @unique @id @default(autoincrement())
+  priority      Int               @default(1)
   name          String
   emoji         String?
   color         String?

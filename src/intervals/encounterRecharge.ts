@@ -11,16 +11,17 @@ export default function (db: PrismaClient, manager: ClusterManager, formatter: F
         const users = await db.user.findMany({ where: { nextNotify: { lte: new Date() }, config: { encounters: true } }, include: { config: true } });
         
         for (const user of users) {
-          await db.user.updateMany({ where: { id: user.id }, data: { nextNotify: null } });
-          for (const [_, cluster] of manager.clusters) {
-            const answer = await cluster.request({ action: 'directMessage', user: user.discordId, content: {
-              embeds: [ {
-                description: formatter.f(`### {locale_main_encountersRecharged}\n{locale_main_encountersRechargedText}\n\n-# {locale_main_disableNotifications}`, user.config.locale),
-                color: parseColor(config.defaults.embed.color)
-              } ]
-            } });
-            if ((answer as any).found) break;
-          }
+            await db.user.updateMany({ where: { id: user.id }, data: { nextNotify: null } });
+            for (const [_, cluster] of manager.clusters) {
+                const answer = await cluster.request({ action: 'directMessage', user: user.discordId, content: {
+                    embeds: [ {
+                        description: formatter.f(`### {locale_main_encountersRecharged}\n{locale_main_encountersRechargedText}\n\n-# {locale_main_disableNotifications}`, user.config.locale),
+                        color: parseColor(config.defaults.embed.color),
+                    } ]
+                } });
+
+                if ((answer as any).found) break;
+            }
         }
       
     }, 60000);
