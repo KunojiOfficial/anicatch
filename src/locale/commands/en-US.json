@@ -146,5 +146,15 @@
     "promo": {
         "name": "promo",
         "description": "Complete tasks in the bot and earn rewards in partnered apps!"
+    },
+    "profile": {
+        "name": "profile",
+        "description": "Display your profile and stats!",
+        "options": {
+            "user": {
+                "name": "user",
+                "description": "The user whose profile you want to view."
+            }
+        }
     }
 }
