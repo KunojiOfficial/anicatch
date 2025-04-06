@@ -1,9 +1,9 @@
 {
-    "localhost": {
+    "top.gg": {
         "base": 50,
         "encounters": 10,
         "cooldown": 12,
         "img": "https://cdn.discordapp.com/emojis/1067078873013043290.webp",
-        "url": "https://example.com"
+        "url": "https://top.gg/bot/1285551523505639476/vote"
     }
 }
