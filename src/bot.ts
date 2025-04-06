@@ -70,3 +70,5 @@ process.on('uncaughtException', (error) => {
 });
 
 client.login(process.env.BOT_TOKEN);
+
+export default {};
