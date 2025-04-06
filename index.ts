@@ -13,8 +13,6 @@ import Logger from "./src/classes/Logger.ts";
 import redeemEntitlements from "./src/intervals/redeemEntitlements.ts";
 import startServer from "./src/web/app.ts";
 
-import bot from "./src/bot.ts";
-
 dotenv.config();
 
 let logger, formatter;
