@@ -70,10 +70,10 @@ export default function startServer(manager: ClusterManager, db: PrismaClient, f
         if (req.headers.authorization !== process.env.VOTE_SECRET && req.body.password !== process.env.ADMIN_PASSWORD) return res.status(401).send("Unauthorized");
         
         try {
-            const requestingUrl = new URL(req.headers.referer || req.headers.origin).hostname;
+            // const requestingUrl = new URL(req.headers.referer || req.headers.origin).hostname;
             const id = req.body.user;
     
-            await new Vote(id, requestingUrl, db, manager, formatter).process();
+            await new Vote(id, "top.gg", db, manager, formatter).process();
             
             res.status(200).send("Vote processed");
         } catch (e) {
