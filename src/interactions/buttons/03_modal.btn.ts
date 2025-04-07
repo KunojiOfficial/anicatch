@@ -8,7 +8,7 @@ export default new Interactable({
         const { args, client } = interaction;
 
         const modal = args[0];
-        const locale = client.formatter.localization.locales[interaction.locale].modals[modal];
+        const locale = client.formatter.localization.locales[interaction.locale] ? client.formatter.localization.locales[interaction.locale].modals[modal] : client.formatter.localization.locales["en-US"].modals[modal];
         if (!locale) throw "modal doesn't exist (or the locale doesn't support it)";
         
         let data:any = {};

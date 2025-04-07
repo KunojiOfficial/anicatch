@@ -318,6 +318,8 @@ class Battle {
                 efectivness,
                 defended
             );
+
+            if (this.isAi) damage *= 0.5; //AI damage reduction
     
             if (move.accuracy !== 100) {
                 const hit = Math.random() < move.accuracy/100;
