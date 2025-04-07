@@ -40,7 +40,8 @@ export default async function redeemEntitlements(db: PrismaClient, manager: Clus
         
         if (!entitlements?.length) return;
         
-        const subscriptions = entitlements.filter(e => e.type === EntitlementType.ApplicationSubscription);
+        const subs = entitlementsData.filter(e => e.type === "sub").map(s => s.id);
+        const subscriptions = entitlements.filter(e => subs.includes(e.sku_id));
         const subbedUsers = await db.user.findMany({ where: { role: { skuId: { in: entitlementsData.filter(e => e.type === "sub").map(s => s.id) } } }, include: { role: true, config: true } });
     
         //manage users who are subscribed
