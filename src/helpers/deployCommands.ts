@@ -83,7 +83,7 @@ export default async function deployCommands(logger: Logger, formatter: Formatte
     }
 
     try {
-        await rest.delete(Routes.applicationGuildCommands(process.env.DISCORD_CLIENT_ID, process.env.DEV_GUILD_ID));
+        await rest.put(Routes.applicationGuildCommands(process.env.DISCORD_CLIENT_ID, process.env.DEV_GUILD_ID), { body: []});
         await rest.put(route, { body: allCommands });
         logger.info(`Deployed ${count} commands`);
     } catch (err) {
