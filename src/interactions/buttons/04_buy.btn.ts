@@ -24,7 +24,7 @@ export default new Interactable({
             if (currency === "coins") {
                 if (!item.priceCoin) throw 11;
 
-                cost = count * (item.priceCoin*(1-(item.discount||0)));
+                cost = Math.ceil(count * (item.priceCoin*(1-(item.discount||0))));
 
                 if (player.data.coins < cost) throw 9;
                 interaction.player.data.coins -= cost||0;
@@ -33,7 +33,7 @@ export default new Interactable({
             } else if (currency === "gems") {
                 if (!item.priceGem) throw 11;
 
-                cost = count * (item.priceGem*(1-(item.discount||0)));
+                cost = Math.ceil(count * (item.priceGem*(1-(item.discount||0))));
 
                 if (player.data.gems < cost) throw 10;
                 interaction.player.data.gems -= cost||0;
