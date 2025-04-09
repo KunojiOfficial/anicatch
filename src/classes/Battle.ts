@@ -153,6 +153,7 @@ class Battle {
             const stats2 = this.activeCards[1].getStats();
 
             if (stats1.agi > stats2.agi) this.movesOrdered = [move1,move2];
+            else if (stats1.agi === stats2.agi) this.movesOrdered = Math.random() < 0.5 ? [move1,move2] : [move2,move1];
             else this.movesOrdered = [move2,move1];
         } else {
             //one move, one switch
@@ -319,8 +320,8 @@ class Battle {
                 defended
             );
 
-            if (this.isAi) damage *= 0.5; //AI damage reduction
-    
+            if (this.battle.type === "PVE" && card.card.status === "WILD_FIGHT") damage *= 0.5; //wild card damage 
+
             if (move.accuracy !== 100) {
                 const hit = Math.random() < move.accuracy/100;
                 if (!hit) {

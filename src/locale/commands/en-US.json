@@ -156,5 +156,9 @@
                 "description": "The user whose profile you want to view."
             }
         }
+    },
+    "heal": {
+        "name": "heal",
+        "description": "Heal and revive your Animons!"
     }
 }

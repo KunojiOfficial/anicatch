@@ -57,8 +57,8 @@ manager.on('clusterCreate', async cluster => {
 	spawnedClusters++;
 	
 	if (spawnedClusters === manager.totalClusters) {
-		encounterRecharge(db, manager, formatter);
-		voteNotifications(db, manager, formatter);
+		//encounterRecharge(db, manager, formatter);
+		//voteNotifications(db, manager, formatter);
 		redeemEntitlements(db, manager, formatter);
 	}
 });

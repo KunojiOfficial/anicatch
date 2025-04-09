@@ -13,7 +13,7 @@ function calculateHp(vit: number) {
 }
 
 function calculateAtk(powCard: number, powMove: number) {
-    return Math.floor(Math.pow(powCard, 1.5)*2 + Math.pow(powMove, 1.4)*5);
+    return Math.floor(Math.pow(powCard, 1.5)*2 + Math.pow(powMove, 1.5)*4);
 }
 
 function calculateDmg(atk: number, def: number, effectiveness: number, blocked: number) {
@@ -21,7 +21,7 @@ function calculateDmg(atk: number, def: number, effectiveness: number, blocked: 
 }
 
 function calculateDroppedExp(level: number) {
-    return Math.floor(200 * Math.pow(level, 1.2));
+    return Math.floor(300 * Math.pow(level, 1.2));
 }
 
 export { calculateLevelFromExp, calculateExpForLevel, calculateHp, calculateAtk, calculateDmg, calculateDroppedExp };
