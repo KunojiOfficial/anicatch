@@ -71,12 +71,15 @@ export default new Panel({
                 args: { ...defaults.args, page: page-1 }
             }, {
                 id: '5',
-                label: `\u2800\u2800\u2800{number_${page}} / {number_${count}}\u2800\u2800\u2800`,
+                label: `{number_${page}} / {number_${count}}`,
                 args: { min: 1, max: count, index: 1, customId: Object.values(defaults.args).join(':') }
             }, {
                 ...defaults,
                 emoji: "chevron.single.right",
                 args: { ...defaults.args, page: page+1 }
+            }, {
+                id: "24",
+                emoji: "glass"
             }]), ...rarityGroups ]
         }
     }

@@ -49,5 +49,18 @@
             "label": "Description",
             "placeholder": "The description of the profile card (max 500 characters)"
         }]
+    },
+    "6": {
+        "title": "Search",
+        "inputs": [{
+            "label": "Character Name",
+            "placeholder": "The name of the character you want to search for."
+        }, {
+            "label": "Series Name",
+            "placeholder": "The name of the series you want to search for."
+        }, {
+            "label": "Card ID",
+            "placeholder": "The ID of the Animon you want to search for."
+        }]
     }
 }
