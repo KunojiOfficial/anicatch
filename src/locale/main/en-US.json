@@ -303,5 +303,7 @@
     "welcomeText": "Hey there! I'm **{config_bot_name}**! 🎉\n\n{emoji_aniball} **Ready to start catching awesome anime characters?**\nJust type {command_catch} and dive in!\n{emoji_privacy} **Need a hand getting started?**\nCheck out {command_guide} for all the tips and tricks!\n{emoji_cmds} **Wanna see all the cool stuff I can do?**\nHit up {command_help} for the full list of commands!\n\nLet's catch 'em all and have a blast together! {emoji_favorite2}",
     "noCards": "You have no Animons to heal!",
     "healSuccess": "You have successfully healed {custom_count} Animons!",
-    "searchResults": "We found {custom_count} results for your search:"
+    "searchResults": "We found {custom_count} results for your search:",
+    "noResults": "No results found for your search.",
+    "noResultsText": "Try searching for a different name."
 }
