@@ -1,7 +1,9 @@
 {
     "move": "{custom_animon} used {custom_move}!",
     "miss": "But it missed!",
-    "0.5x": "It's not very effective...",
+    "0": {
+        "5x": "It's not very effective..."
+    },
     "2x": "It's super effective!",
     "kill": "{custom_enemy} fainted!",
     "block": "The enemy blocked {custom_damage} damage!",
