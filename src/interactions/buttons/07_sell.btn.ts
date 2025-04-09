@@ -13,7 +13,7 @@ export default new Interactable({
         const animon = await client.db.cardInstance.findFirst({ where: { id: cardId }, include: { card: { include: { character: true } } } });
         if (!animon) throw 5;
         if (animon.userId !== player.data.id) throw 17;
-        if (animon.status !== "IDLE") throw 18;
+        if (animon.status !== "IDLE" && animon.status !== "DEAD") throw 18;
         if (animon.favorite) throw 19;
 
         const rarity = rarities[animon.rarity.toString() as keyof typeof rarities];

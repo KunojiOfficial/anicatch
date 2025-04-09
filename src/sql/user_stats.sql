@@ -7,13 +7,13 @@ BEGIN
         VALUES (NEW.id, OLD.coins - NEW.coins)
         ON CONFLICT ("userId")
         DO UPDATE SET "coinsSpent" = "UserStats"."coinsSpent" + (OLD.coins - NEW.coins);
-    
+    END IF;
+
     IF NEW.gems < OLD.gems THEN
         INSERT INTO "UserStats" ("userId", "gemsSpent")
         VALUES (NEW.id, OLD.gems - NEW.gems)
         ON CONFLICT ("userId")
         DO UPDATE SET "gemsSpent" = "UserStats"."gemsSpent" + (OLD.gems - NEW.gems);
-
     END IF;
 
     RETURN NEW;
@@ -21,9 +21,9 @@ END;
 $$ LANGUAGE plpgsql;
 
 CREATE OR REPLACE TRIGGER after_user_update
-AFTER UPDATE OF coins, encounters ON "User"
+AFTER UPDATE OF coins, gems ON "User"
 FOR EACH ROW
-WHEN (OLD.coins > NEW.coins)
+WHEN (OLD.coins > NEW.coins OR OLD.gems > NEW.gems)
 EXECUTE FUNCTION update_user_stats();
 
 -- ENCOUNTERED

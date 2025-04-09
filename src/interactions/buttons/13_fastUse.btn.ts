@@ -22,7 +22,7 @@ export default new Interactable({
                 color: "#00ff00"
             }, {
                 name: [`**${item.item.emoji} ${client.formatText(`{locale_items_${item.item.name}_name}`, interaction.locale)}**`],
-                count: [`1`]
+                count: [count]
             }) ]
         }
     }
