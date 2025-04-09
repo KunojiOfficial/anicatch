@@ -66,7 +66,7 @@ export default new Panel({
             }, {
                 id: '5',
                 label: `${page} / ${Math.ceil(count / ON_PAGE)}`,
-                args: { min: 1, max: Math.ceil(count / ON_PAGE), index: 1, customId: Object.values(defaults.args).join(':') }
+                args: { min: 1, max: Math.ceil(count / ON_PAGE), index: 3, customId: Object.values(defaults.args).join(':') }
             }, {
                 ...defaults,
                 emoji: "chevron.single.right",
