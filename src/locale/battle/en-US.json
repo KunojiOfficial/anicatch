@@ -12,5 +12,6 @@
     "nothing": "{custom_animon} did nothing...",
     "exp": "{custom_animon} gained {custom_exp} EXP!",
     "expShare": "The rest of the team gained {custom_sharedExp} EXP!",
-    "end": "The battle ended! {custom_winner} won!"
+    "end": "The battle ended! {custom_winner} won!",
+    "coins": "You gained {custom_coins} coins!"
 }

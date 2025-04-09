@@ -14,6 +14,7 @@ import locale from "../locale/items/en-US.json";
 
 import Card from "./Card.ts";
 import { drawCard, drawStats } from '../helpers/battleCanvas.ts';
+import Rarity from './Rarity.ts';
 
 function rev(i: number) { return i === 0 ? 1 : 0; }
 
@@ -403,14 +404,17 @@ class Battle {
 
     async end(isWin: boolean = true, winner?: number): Promise<boolean> {
         const user = await this.client.db.user.findFirst({ where: { id: winner }, include: { role: true } });
-        let exp = 0;
+        let exp = 0, coins = 0;
 
-        if (this.battle.type === "PVE") exp = isWin ? calculateDroppedExp(this.activeCards[1].getLevel()) : 0;
+        if (this.battle.type === "PVE") {
+            exp = isWin ? calculateDroppedExp(this.activeCards[1].getLevel()) : 0;
+            coins = isWin ? (new Rarity(this.activeCards[1].card.rarity)).getSellPrice() : 0;
+        }
 
         await this.client.db.$transaction(async tx => {
             await tx.battle.update({
                 where: { id: this.battle.id },
-                data: { status: "ENDED", winnerId: winner, rewards: { exp: exp } }
+                data: { status: "ENDED", winnerId: winner, rewards: { exp, coins } }
             });
 
             await tx.cardInstance.updateMany({
@@ -422,6 +426,11 @@ class Battle {
                 await tx.cardInstance.updateMany({
                     where: { id: this.activeCards[0].card.id },
                     data: { exp: { increment: exp } }
+                });
+
+                await tx.user.updateMany({
+                    where: { id: this.battle.userId1 },
+                    data: { coins: { increment: coins } }
                 });
 
                 //exp share

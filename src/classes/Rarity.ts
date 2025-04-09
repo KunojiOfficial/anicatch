@@ -22,4 +22,8 @@ export default class Rarity {
 
         return text;
     }
+
+    getSellPrice() {
+        return this.data.sellPrice;
+    }
 }

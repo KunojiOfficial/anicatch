@@ -14,10 +14,13 @@ function formatRewards(rewards: any, player: Player, cards: Card[], battle: Batt
     const card = cards.find(c => c.card.id === battle.battle.cardId1);
     if (!card) return {text, variables};
 
+    const coins = rewards.coins || 0;
+
     text = `\n\n`;
-    text += `{locale_battle_exp}`;
+    text += `{locale_battle_exp}\n{locale_battle_coins}`;
     
-    variables["exp"] = [`{number_${exp}}`];
+    variables["exp"] = [`**{number_${exp}}**`];
+    variables["coins"] = [`**{number_${coins}}**`];
     variables["animon"] = [`**${card.getName()}**`];
 
     if (player.role.expShare > 0) {
