@@ -17,7 +17,7 @@ function formatRewards(rewards: any, player: Player, cards: Card[], battle: Batt
     const coins = rewards.coins || 0;
 
     text = `\n\n`;
-    text += `{locale_battle_exp}\n{locale_battle_coins}`;
+    text += `{locale_battle_exp}\n{emoji_smallCoin} {locale_battle_coins}`;
     
     variables["exp"] = [`**{number_${exp}}**`];
     variables["coins"] = [`**{number_${coins}}**`];
