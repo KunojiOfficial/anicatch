@@ -2,7 +2,7 @@ import { ApplicationIntegrationType, InteractionContextType, SlashCommandBuilder
 import Command from '../../classes/Command.ts';
 
 import { DiscordInteraction } from '../../types.ts';
-import heal from '../../mechanics/heal.ts';
+import { getHealableCards, healCost } from '../../mechanics/heal.ts';
 
 export default new Command({
     emoji: "🩹",
@@ -15,9 +15,10 @@ export default new Command({
     async execute(interaction: DiscordInteraction) {
         const { client, player } = interaction;
 
-        const healedCards = await heal(client.db, player.data.id);
+        const toHeal = await getHealableCards(client.db, player.data.id);
+        const cost = healCost * toHeal;
 
-        if (!healedCards) return await interaction.editReply({ 
+        if (!toHeal) return await interaction.editReply({ 
             embeds: [ interaction.components.embed({
                 description: "{emoji_no}\u2800{locale_main_noCards}",
                 color: "#ff0000"
@@ -27,11 +28,19 @@ export default new Command({
 
         return await interaction.editReply({
             embeds: [ interaction.components.embed({
-                description: "{emoji_yes}\u2800{locale_main_healSuccess}",
-                color: "#00ff00"
+                author: { name: `{locale_main_heal} - ${player.user.displayName}`, iconUrl: player.user.displayAvatarURL() },
+                description: "{locale_main_healCost}",
             }, {
-                count: [healedCards]
+                count: [`**{number_${toHeal}}**`],
+                cost: [`**{number_${cost}}**`]
             }) ],
+            components: [ interaction.components.buttons([{
+                label: "{locale_main_accept}",
+                id: "25",
+                emoji: "wyes",
+                style: "green",
+                cooldown: { id: "heal", time: 5 }
+            }]) ]
         });
 
     }

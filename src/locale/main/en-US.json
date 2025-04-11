@@ -305,5 +305,7 @@
     "healSuccess": "You have successfully healed {custom_count} Animons!",
     "searchResults": "We found {custom_count} results for your search:",
     "noResults": "No results found for your search.",
-    "noResultsText": "Try searching for a different name."
+    "noResultsText": "Try searching for a different name.",
+    "healCost": "You need to pay {emoji_smallCoin} {custom_cost} to fully heal {custom_count} of your Animons.",
+    "heal": "Heal"
 }
