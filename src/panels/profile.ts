@@ -8,7 +8,7 @@ export default new Panel({
     async execute(interaction: DiscordInteraction, user: User): Promise<InteractionReplyOptions> {
         const { client } = interaction;
 
-        const userData = await client.db.user.findFirst({ where: { discordId: user.id }, include: { role: true, stats: true, profile: true, config: true, cards: true, trades: { where: { status: "ACCEPTED" } } } });
+        const userData = await client.db.user.findFirst({ where: { discordId: user.id }, include: { role: true, stats: true, profile: true, config: true, cards: { where: { status: { in: ["DEAD", "FIGHT", "IDLE", "TRADE"] } } }, trades: { where: { status: "ACCEPTED" } } } });
         const isOwner = user.id === interaction.user!.id;
 
         if (!userData) throw 7; //user not registered
