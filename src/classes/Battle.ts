@@ -408,7 +408,7 @@ class Battle {
 
         if (this.battle.type === "PVE") {
             exp = isWin ? calculateDroppedExp(this.activeCards[1].getLevel()) : 0;
-            coins = isWin ? (new Rarity(this.activeCards[1].card.rarity)).getSellPrice() : 0;
+            coins = isWin ? Math.ceil((new Rarity(this.activeCards[1].card.rarity)).getSellPrice()*0.5) : 0;
         }
 
         await this.client.db.$transaction(async tx => {
