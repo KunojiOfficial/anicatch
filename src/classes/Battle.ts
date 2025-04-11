@@ -423,10 +423,14 @@ class Battle {
             });
 
             if (exp > 0) {
-                await tx.cardInstance.updateMany({
-                    where: { id: this.activeCards[0].card.id },
-                    data: { exp: { increment: exp } }
-                });
+                const canLevel = this.activeCards[0].canLevel();
+                
+                if (canLevel) {
+                    await tx.cardInstance.updateMany({
+                        where: { id: this.activeCards[0].card.id },
+                        data: { exp: { increment: exp } }
+                    });
+                }
 
                 await tx.user.updateMany({
                     where: { id: this.battle.userId1 },

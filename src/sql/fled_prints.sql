@@ -1,3 +1,4 @@
+-- Function
 CREATE OR REPLACE FUNCTION update_fled_prints()
 RETURNS TRIGGER AS $$
 BEGIN
@@ -7,3 +8,9 @@ BEGIN
   RETURN OLD;
 END;
 $$ LANGUAGE plpgsql;
+
+-- Trigger on delete
+CREATE TRIGGER trg_update_fled_prints
+AFTER DELETE ON "CardInstance"
+FOR EACH ROW
+EXECUTE FUNCTION update_fled_prints();

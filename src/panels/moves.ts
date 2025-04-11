@@ -13,7 +13,7 @@ const emojis = {
 export default new Panel({
     name: "moves",
     async execute(interaction: DiscordInteraction, cardId: number | string, slot: number | string = 1, type: string = "ATTACK", moveId: number | string): Promise<InteractionReplyOptions> {
-        const { client } = interaction;
+        const { client, player } = interaction;
 
         if (typeof cardId === 'string') cardId = parseInt(cardId);
         if (typeof moveId === 'string') moveId = parseInt(moveId);
@@ -26,7 +26,7 @@ export default new Panel({
 
         const card = new Card({ card: animon, parent: animon.card });
 
-        const availableMoves = await client.db.moveInventory.findMany({ where: { OR: [ {move: {type: card.parent!.type}}, {move: {type: "NONE"}} ], move: {requiredLevel: { lte: card.getLevel() }} }, orderBy: [{move: { type: "asc" }}, {move: {power: "asc"}}], include: { move: true } });
+        const availableMoves = await client.db.moveInventory.findMany({ where: { userId: player.data.id,  OR: [ {move: {type: card.parent!.type}}, {move: {type: "NONE"}} ], move: {requiredLevel: { lte: card.getLevel() }} }, orderBy: [{move: { type: "asc" }}, {move: {power: "asc"}}], include: { move: true } });
         const moveTypes = [... new Set(availableMoves.map(m => m.move.moveType))];
 
         if (!moveTypes.includes(type as any)) type = moveTypes[0];
