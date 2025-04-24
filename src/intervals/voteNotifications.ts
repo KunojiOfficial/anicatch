@@ -18,7 +18,8 @@ export default function (db: PrismaClient, manager: ClusterManager, formatter: F
                     AND: [
                         { votes: { path: [site, "lastVoted"], lte: cooldown } }, 
                         { votes: { path: [site, "notified"], equals: false } }
-                    ]
+                    ],
+                    user: { config: { votes: true } }
                 },
                 include: { user: { include: { config: true } } }
             });
