@@ -58,8 +58,8 @@ export default new Interactable({
                         cardId1: team[0].id,
                         cardId2: card.id,
                         type: "PVE",
-                        channelId: interaction.channel.id,
-                        messageId: interaction.message.id
+                        channelId: interaction.channel?.id,
+                        messageId: interaction.message?.id
                     }
                 });
             });
