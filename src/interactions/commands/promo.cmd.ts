@@ -28,7 +28,7 @@ export default new Command({
             if (!code) throw 72;
 
             await client.db.promo.create({ data: { userId: player.data.id, code: code } });
-            await interaction.user.send(client.formatText(`{locale_main_clickToShow} -> ||\`${code}\`||`, interaction.locale));
+            await interaction.user.send(client.formatText(`\`${code}\``, interaction.locale));
 
             msg = "{locale_main_successRewards}";
         } else {
