@@ -67,7 +67,7 @@ export default class Player {
                 discordId: user.id, 
                 username: user.username,
                 lastDaily: new Date(new Date().getTime() - 2 * 24 * 60 * 60 * 1000),
-                config: { create: { locale: locale } },
+                config: { create: { locale: locale, votes: false, encounters: false } },
                 stats: { create: {} },
                 items: { create: [{ itemId: 1, count: 15 }, { itemId: 2, count: 1 }, { itemId: 3, count: 1 }, { itemId: 4, count: 1 }] }
             },
