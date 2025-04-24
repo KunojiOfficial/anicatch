@@ -5,6 +5,7 @@ import { parseColor } from "../helpers/utils.ts";
 import config from "../config/main.json";
 import vote from "../config/vote.json";
 import Formatter from "../classes/Formatter.ts";
+import { setTimeout as delay } from "timers/promises";
 
 export default function (db: PrismaClient, manager: ClusterManager, formatter: Formatter) {
     setInterval(async () => {
@@ -23,6 +24,7 @@ export default function (db: PrismaClient, manager: ClusterManager, formatter: F
             });
 
             for (const user of users) {
+                await delay(1000);
                 // await db.userStats.updateMany({ where: { userId: user.userId }, data: {
                 //     votes: {
                 //         [site]: {
@@ -58,5 +60,5 @@ export default function (db: PrismaClient, manager: ClusterManager, formatter: F
             }
         }
       
-    }, 60000);
+    }, 5 * 60 * 1000);
 }
