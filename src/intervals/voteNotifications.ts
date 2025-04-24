@@ -55,9 +55,10 @@ export default function (db: PrismaClient, manager: ClusterManager, formatter: F
                         }]}]
                     } });
 
+                    console.log("Vote notification sent to user", user.user.discordId, "for site", site);
+                    
                     if ((answer as any).found) break;
 
-                    // console.log("Vote notification sent to user", user.user.discordId, "for site", site);
                 }
             }
         }
