@@ -24,7 +24,7 @@ type InventoryWithItem = Prisma.InventoryGetPayload<{
     include: { item: true }
 }>;
 
-export default async function(interaction: DiscordInteraction, card: CardInstance, ball: InventoryWithItem) {
+export default async function(interaction: DiscordInteraction, card: CardInstance, ball: InventoryWithItem): Promise<{caught: boolean, roll: number, chance: number}> {
     const { client, player } = interaction;
 
     return await client.db.$transaction(async tx => {
@@ -42,10 +42,10 @@ export default async function(interaction: DiscordInteraction, card: CardInstanc
             // const rarity = client.data.rarities[card.rarity.toString() as keyof typeof client.data.rarities];
             // await tx.user.updateMany({ where: { id: player.data.id }, data: { coins: { increment: rarity.catchReward } } });
             await tx.cardInstance.updateMany({ where: { id: card.id }, data: { status: "IDLE", ballId: ball.itemId } });
-            return true;
+            return {caught: true, roll, chance};
         } else {
             await tx.cardInstance.updateMany({ where: { id: card.id }, data: { status: "FLED", ballId: ball.itemId } });
-            return false;
+            return {caught: false, roll, chance};
         }   
     });
 }

@@ -34,7 +34,7 @@ export default new Interactable({
                 for (const button of component.components) {
                     let data = { ...button.data, disabled: true, style: 2 } as any;
                     if (button.customId === interaction.customId) {
-                        data.style = captured ? 3 : 4;
+                        data.style = captured.caught ? 3 : 4;
                         data.label = parseInt(data.label)-1;
                     }
 
@@ -50,7 +50,7 @@ export default new Interactable({
             }
         }
 
-        if (captured) {
+        if (captured.caught) {
             newComponents.push(interaction.components.buttons([{
                 id: "7",
                 label: `{locale_main_sell} (+${rarity.sellPrice})`,
@@ -82,11 +82,13 @@ export default new Interactable({
                     image: { url: "attachment://card.jpg" }
                 }, 
                 interaction.components.embed({
-                    description: captured ? `{emoji_yes}\u2800{locale_main_catchSuccess}\n-# \u2800\u2800\u2800{locale_main_catchSuccess2}` : `{emoji_no}\u2800{locale_main_catchFailure}\n-# \u2800\u2800\u2800{locale_main_catchFailure2}`,
-                    color: captured ? "#00ff00" : "#ff0000"
+                    description: captured.caught ? `{emoji_yes}\u2800{locale_main_catchSuccess}\n-# \u2800\u2800\u2800{locale_main_catchSuccess2}` : `{emoji_no}\u2800{locale_main_catchFailure}\n-# \u2800\u2800\u2800{locale_main_catchFailure3}\n-# \u2800\u2800\u2800**{locale_main_catchFailure2}**`,
+                    color: captured.caught ? "#00ff00" : "#ff0000"
                 }, {
                     name: [`**${card.card.character.name}**`],
-                    ball: [`**${ball.item.emoji} ${client.formatText(`{locale_items_${ball.item.name}_name}`, interaction.locale)}**`]
+                    ball: [`**${ball.item.emoji} ${client.formatText(`{locale_items_${ball.item.name}_name}`, interaction.locale)}**`],
+                    roll: [`${captured.roll.toFixed(3)}`],
+                    chance: [`${captured.chance.toFixed(3)}`],
                 })
             ],
             components: newComponents,

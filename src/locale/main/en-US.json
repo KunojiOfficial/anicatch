@@ -5,6 +5,7 @@
     "catchSuccess2": "They have been added to your {command_collection}.",
     "catchFailure": "Oh no! {custom_name} has broken free from the {custom_ball}!",
     "catchFailure2": "Buy another chance and try again!",
+    "catchFailure3": "Your roll was {custom_roll}, but you needed below {custom_chance} to catch.",
     "catchEscape": "Oh no! The wild Animon has escaped!",
     "buySuccess": "You have successfully bought {custom_item} for {custom_cost}.",
     "buySuccess2": "The item(s) have been added to your {command_inventory}.",
