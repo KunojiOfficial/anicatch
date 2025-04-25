@@ -12,7 +12,7 @@ export default new Panel({
         const gems = entitlements.filter(e => e.type === "consumable" && e.rewards?.find(r => r.type === "gems"));
         const buttons = [[]];
         for (const gem of gems) {
-            if (buttons[buttons.length-1].length >= 5) buttons.push([]);
+            if (buttons[buttons.length-1].length >= 3) buttons.push([]);
             buttons[buttons.length-1].push({
                 style: "premium",
                 skuId: gem.id
