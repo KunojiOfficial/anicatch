@@ -33,98 +33,11 @@ export default new Command({
         // await interaction.reply()
         await componentsV2.send(interaction, {
             components: [
-                { type: "Container", components: [
-                    { type: "MediaGallery", media_gallery_data: { items: [ { media: { url: "https://media.discordapp.net/attachments/697138785317814292/1364347504702914602/docs-header.png?ex=6809ffe1&is=6808ae61&hm=85422951b5867f0fc6b6d664d04ea5350b3df8e77a2ac6109aba5ee469ccdf2a&format=webp&quality=lossless&" } } ]  } },
-                    { type: "Separator" },
-                    {
-                        type: "Section",
-                        section_data: { 
-                            components: [
-                                { type: "TextDisplay", text_display_data: { content: "**Ichigo Kurwosaki**\n⭐⭐⭐⭐⭐" } },
-                            ],
-                            accessory: { type: "Button", button_data: {
-                                label: "View Card", style: "Success"
-                            } }
-                        }
-                    },
-                    {
-                        type: "Section",
-                        section_data: { 
-                            components: [
-                                { type: "TextDisplay", text_display_data: { content: "**Ichigo Kurwosaki**\n⭐⭐⭐⭐⭐" } },
-                            ],
-                            accessory: { type: "Button", button_data: {
-                                label: "View Card", style: "Success"
-                            } }
-                        }
-                    },
-                    {
-                        type: "Section",
-                        section_data: { 
-                            components: [
-                                { type: "TextDisplay", text_display_data: { content: "**Ichigo Kurwosaki**\n⭐⭐⭐⭐⭐" } },
-                            ],
-                            accessory: { type: "Button", button_data: {
-                                label: "View Card", style: "Success"
-                            } }
-                        }
-                    },
-                    {
-                        type: "Section",
-                        section_data: { 
-                            components: [
-                                { type: "TextDisplay", text_display_data: { content: "**Ichigo Kurwosaki**\n⭐⭐⭐⭐⭐" } },
-                            ],
-                            accessory: { type: "Button", button_data: {
-                                label: "View Card", style: "Success"
-                            } }
-                        }
-                    },
-                    {
-                        type: "Section",
-                        section_data: { 
-                            components: [
-                                { type: "TextDisplay", text_display_data: { content: "**Ichigo Kurwosaki**\n⭐⭐⭐⭐⭐" } },
-                            ],
-                            accessory: { type: "Button", button_data: {
-                                label: "View Card", style: "Success"
-                            } }
-                        }
-                    },
-                    {
-                        type: "Section",
-                        section_data: { 
-                            components: [
-                                { type: "TextDisplay", text_display_data: { content: "**Ichigo Kurwosaki**\n⭐⭐⭐⭐⭐" } },
-                            ],
-                            accessory: { type: "Button", button_data: {
-                                label: "View Card", style: "Success"
-                            } }
-                        }
-                    },
-                    {
-                        type: "Section",
-                        section_data: { 
-                            components: [
-                                { type: "TextDisplay", text_display_data: { content: "**Ichigo Kurwosaki**\n⭐⭐⭐⭐⭐" } },
-                            ],
-                            accessory: { type: "Button", button_data: {
-                                label: "View Card", style: "Success"
-                            } }
-                        }
-                    },
-                    {
-                        type: "Section",
-                        section_data: { 
-                            components: [
-                                { type: "TextDisplay", text_display_data: { content: "**Ichigo Kurwosaki**\n⭐⭐⭐⭐⭐" } },
-                            ],
-                            accessory: { type: "Button", button_data: {
-                                label: "View Card", style: "Success"
-                            } }
-                        }
-                    }
-                ] },
+                { type: "Container", container_data: {color: "#ff0000"}, components: [
+                    {type: "Container", container_data: {color: "#00ff00"}, components: [
+                        { type: "TextDisplay", text_display_data: { content: "Test" } }
+                    ]}
+                ] }
             ]
         })
     }
