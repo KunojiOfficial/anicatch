@@ -12,18 +12,6 @@ export default new Interactable({
         const item = await consumable(interaction, itemId, cardId, count);
         const message = await client.panels.get("fastUse")!.execute!(interaction, cardId, itemId, count);
 
-        return {
-            ...message,
-            embeds: [ {
-                ...message.embeds![0],
-                image: { url: "attachment://card.jpg" }
-            }, interaction.components.embed({
-                description: `{emoji_yes}\u2800{locale_main_useSuccess}`,
-                color: "#00ff00"
-            }, {
-                name: [`**${item.item.emoji} ${client.formatText(`{locale_items_${item.item.name}_name}`, interaction.locale)}**`],
-                count: [count]
-            }) ]
-        }
+        return message;
     }
 });

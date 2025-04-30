@@ -1,6 +1,5 @@
 import { ApplicationIntegrationType, InteractionContextType, SlashCommandBuilder } from 'discord.js';
 import Command from '../../classes/Command.ts';
-import ComponentsV2 from '../../classes/ComponentsV2.ts';
 
 export default new Command({
     emoji: "🏓",
@@ -12,33 +11,26 @@ export default new Command({
         .setContexts(InteractionContextType.BotDM, InteractionContextType.Guild, InteractionContextType.PrivateChannel)
         .setIntegrationTypes(ApplicationIntegrationType.UserInstall, ApplicationIntegrationType.GuildInstall),
     async execute(interaction): Promise<void> {
-        // const message = await interaction.deferReply({ withResponse: true });
+        const message = await interaction.deferReply({ withResponse: true });
 
-        // //db speed
-        // const now = new Date();
-        // await interaction.client.db.$executeRaw`SELECT 1`;
-        // const elapsed = (new Date()).getTime() - now.getTime();
+        //db speed
+        const now = new Date();
+        await interaction.client.db.$executeRaw`SELECT 1`;
+        const elapsed = (new Date()).getTime() - now.getTime();
 
-        // await interaction.editReply({
-        //     embeds: [
-        //         interaction.components.embed({
-        //             description: `Pong! Shard #${interaction.guild !== undefined ? (interaction.guild?.shardId||-1) : -1}\n\n\`${interaction.client.ws.ping}ms, ${message.interaction.createdTimestamp - interaction.createdTimestamp}ms, ${elapsed}ms\``
-        //         })
-        //     ]
-        // });
+        const wsPing = interaction.client.ws.ping;
+        const messagePing = message.interaction.createdTimestamp - interaction.createdTimestamp;
 
-
-        const componentsV2 = new ComponentsV2(interaction.client, interaction.locale, interaction.player);
-
-        // await interaction.reply()
-        await componentsV2.send(interaction, {
-            components: [
-                { type: "Container", container_data: {color: "#ff0000"}, components: [
-                    {type: "Container", container_data: {color: "#00ff00"}, components: [
-                        { type: "TextDisplay", text_display_data: { content: "Test" } }
-                    ]}
+        await interaction.editReply({
+            flags: [ "IsComponentsV2" ],
+            components: interaction.componentsV2.construct([
+                { type: "Container", components: [
+                    { type: "TextDisplay", text_display_data: { content: `Pong! Shard #${interaction.client.cluster?.id||0}` } },
+                    { type: "Separator" },
+                    { type: "TextDisplay", text_display_data: { content: `\`${wsPing}ms, ${messagePing}ms, ${elapsed}ms\`` } },
                 ] }
-            ]
-        })
+            ])
+        });
+
     }
 })

@@ -235,6 +235,7 @@
     "buy": "Buy",
     "tooExpensive": "Too expensive!",
     "emptySlot": "Empty Slot",
+    "youDontHaveMoves": "You don't have any moves to teach!",
     "emptySlotText": "-# *Empty slot for*\n-# *your Animon.*",
     "clearSlot": "Clear Slot",
     "addAnimon": "Add Animon",
@@ -307,5 +308,11 @@
     "noResults": "No results found for your search.",
     "noResultsText": "Try searching for a different name.",
     "healCost": "You need to pay {emoji_smallCoin} {custom_cost} to fully heal {custom_count} of your Animons.",
-    "heal": "Heal"
+    "heal": "Heal",
+    "useItemsAbove": "Use one of the items above to catch this Animon!",
+    "pointsToSpend": "Points to allocate",
+    "pointsToSpendText": "Select the number of points you want to allocate.",
+    "howToGetMoves": "To get new moves, visit the {command_store} and buy some **Spellbooks**!",
+    "selectAMoveType": "Select a move type with the menu above first.",
+    "filterMoveTypes": "Filter your available moves by type."
 }

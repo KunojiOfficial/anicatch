@@ -5,6 +5,12 @@ import Battle from "../classes/Battle.ts";
 import Card from "../classes/Card.ts";
 import Player from "../classes/Player.ts";
 
+import { readFileSync } from "fs";
+import { resolve } from "path";
+
+const bannerImagePath = resolve(__dirname, "../assets/battle/banner.png");
+const bannerImage = readFileSync(bannerImagePath);
+
 function formatRewards(rewards: any, player: Player, cards: Card[], battle: Battle): object {
     let text = "", variables = {};
 
@@ -57,8 +63,8 @@ async function formatHistory(client: DiscordClient, history: HistoryElement, car
                 variables["enemy"] = [`**${enemy.card.character.name}**`];
             }
 
-            if (history.defended > 0) text += `\n-# \u2800\u2800 {locale_battle_block}`;
-            if (history.damage > 0) text += `\n-# \u2800\u2800 {locale_battle_dealt}`;
+            if (history.defended > 0) text += `\n-# \u2800\u2800\u2800{locale_battle_block}`;
+            if (history.damage > 0) text += `\n-# \u2800\u2800\u2800{locale_battle_dealt}`;
 
             variables["damage"] = [`{number_${history.damage}}`];
             variables["defended"] = [`{number_${history.defended}}`];
@@ -104,7 +110,7 @@ export default new Panel({
 
         // Generate the canvas
         const canvas = await battleInstance.generateCanvas();
-        const attachment = canvas ? new AttachmentBuilder(canvas.toBuffer(), { name: "battle.jpg" }) : null;
+        const attachment = canvas ? new AttachmentBuilder(canvas.toBuffer(), { name: "battle.jpg" }) : new AttachmentBuilder(bannerImage, { name: "battle.jpg" });
 
         // Get the user instances
         let users = [];
@@ -123,34 +129,6 @@ export default new Panel({
             users = [ player.user, client.user as any ];
         }
 
-        const fields = [], buttons: Button[][] = [];
-        for (let i = 0; i < battleInstance.activeCards.length; i++) {
-            let text = battleInstance.activeCards[i].getShorterLabel();
-            text += "\n{emoji_empty} {emoji_empty} " + battleInstance.activeCards[i].getHealthBar(8);
-            text += `\n-# \u2800\u2800\u2800\u2800\u2800{number_${battleInstance.activeCards[i].getCurrentHealth()}} / {number_${battleInstance.activeCards[i].getMaxHealth()}}`;
-            text += "\n\n";
-
-            const isMoveSelected = battleInstance.battle["move" + (i+1)];
-
-            if (battle.status === "ACTIVE") {
-                if (isMoveSelected) {
-                    text += "*{locale_main_moveSelected}*"
-                }
-                else {
-                    text += "*{locale_main_moveWaiting}*";
-                }
-            }
-
-            if (i < 1 || battle.type !== "PVE") buttons.push();
-
-            fields.push({
-                name: "\u2800",
-                value: text,
-                inline: true
-            });
-
-        }
-
         const defaults = {
             id: "22",
             owner: users.map(u => u.id).join("+"),
@@ -165,50 +143,42 @@ export default new Panel({
         if (history1.text) description += client.formatText(history1.text, interaction.locale, history1.variables) + "\n";
         if (history2.text) description += client.formatText(history2.text, interaction.locale, history2.variables);
         
+        if (battle.status === "ACTIVE") {
+            description += "\n\n";
+            if (battle.move1) description += "-# {locale_main_moveSelected}";
+            else description += "-# {locale_main_moveWaiting}";
+
+            if (battle.move2) description += "\n" + "-# {locale_main_moveSelected}";
+            else description += "\n" + "-# {locale_main_moveWaiting}";
+        }
+
         if (battle.status === "ENDED") description += "\n\n" + client.formatText("{locale_battle_end}", interaction.locale, { winner: users[battleInstance.getWinnerIndex()] });
         if (battle.rewards) {
             let rewards: any = await formatRewards(battle.rewards, player, cardInstances, battleInstance);
             if (rewards.text) description += "\n" + client.formatText(rewards.text, interaction.locale, rewards.variables);
         }
 
-        description += "\n" + (fields.length ? "\u2800".repeat(53) : "");
-
         return {
-            content: client.formatText(`[{locale_main_turn} ${battle.turn+1}] ${users[0]} vs ${users[1]}`, interaction.locale),
-            embeds: [
-                interaction.components.embed({
-                    description: description,
-                    fields: fields.length ? [
-                        fields[0] ?? { name: "\u2800", value: "\u2800", inline: true },
-                        { name: "\u2800", value: "\u2800", inline: true },
-                        fields[1] ?? { name: "\u2800", value: "\u2800", inline: true }
-                    ] : []
-                }, {
-                    trainer: [ `${users[0]}`, `${users[1]}` ]
-                })
-            ],
-            components: battle.status === "ACTIVE" ? [interaction.components.buttons([{
-                ...defaults,
-                label: "\u2800{locale_main_move}",
-                emoji: "move",
-                args: { action: "move", id: battle.id }
-            }, {
-                ...defaults,
-                label: "\u2800{locale_main_item}",
-                emoji: "item",
-                args: { action: "item", id: battle.id }
-            }, {
-                ...defaults,
-                label: "\u2800{locale_main_team}",
-                emoji: "whBall",
-                args: { action: "team", id: battle.id }
-            }, {
-                ...defaults,
-                label: "\u2800{locale_main_forfeit}",
-                emoji: "forfeit",
-                args: { action: "forfeit", id: battle.id }
-            }])] : [],
-            files: attachment ? [attachment] : []
+            flags: ["IsComponentsV2"],
+            files: attachment ? [attachment] : undefined,
+            components: interaction.componentsV2.construct([{
+                type: "Container", components: [
+                    { type: "TextDisplay", text_display_data: { content: `-# [{locale_main_turn} ${battle.turn+1}] ${users[0]} vs ${users[1]}` } },
+                    attachment ? { type: "Separator" } : null, 
+                    attachment ? { type: "MediaGallery", media_gallery_data: { items: [ { media: { url: `attachment://${attachment?.name}` } } ] } } : null,
+                    { type: "Separator", separator_data: { spacing: 2 } },
+                    { type: "TextDisplay", text_display_data: { content: (description ? description : "\u2800") + "\n\n" } },
+                    battle.status === "ACTIVE" ? { type: "Separator", separator_data: { spacing: 2 } } : null,
+                    battle.status === "ACTIVE" ? { type: "ActionRow", components: [
+                        { type: "Button", button_data: { id: "22", label: "{locale_main_move}", emoji: "move", args: { action: "move", id: battle.id }, ...defaults } },
+                        { type: "Button", button_data: { id: "22", label: "{locale_main_item}", emoji: "item", args: { action: "item", id: battle.id }, ...defaults } },
+                        { type: "Button", button_data: { id: "22", label: "{locale_main_team}", emoji: "whBall", args: { action: "team", id: battle.id }, ...defaults } },
+                        { type: "Button", button_data: { id: "22", label: "{locale_main_forfeit}", emoji: "forfeit", args: { action: "forfeit", id: battle.id }, ...defaults } }
+                    ] } : null
+                ]
+            }], {
+                trainer: [ `${users[0]}`, `${users[1]}` ]
+            })
         }
     }
 }); 

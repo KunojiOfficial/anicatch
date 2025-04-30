@@ -43,14 +43,8 @@ export default new Interactable({
             variables = { move: [`**${move.move.name}**`] };
         }
 
-        const panel = await client.panels.get("moves")!.execute!(interaction, cardId, slot);
+        const panel = await client.panels.get("animon")!.execute!(interaction, cardId, false, "moves");
 
-        return {
-            ...panel,
-            embeds: [ ...panel.embeds, interaction.components.embed({
-                description: `{emoji_yes}\u2800${desc}`,
-                color: "#00FF00"
-            }, variables) ]
-        };
+        return panel;
     }
 });

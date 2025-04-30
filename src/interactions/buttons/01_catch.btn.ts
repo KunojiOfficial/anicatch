@@ -1,8 +1,8 @@
-import { InteractionReplyOptions } from "discord.js";
+import { ButtonStyle, InteractionReplyOptions, UnfurledMediaItem } from "discord.js";
 import Interactable from "../../classes/Interactable.ts";
 import _catch from "../../mechanics/catch.ts";
 
-import rarities from "../../data/rarities.json";
+import Rarity from "../../classes/Rarity.ts";
 
 export default new Interactable({
     id: 1,
@@ -23,73 +23,60 @@ export default new Interactable({
 
         const captured = await _catch(interaction, card, ball);
 
-        const components = interaction.message?.components;
-        const newComponents = [];
-        const rarity = rarities[card.rarity.toString() as keyof typeof rarities];
-        
-        if (components.length) {
-            for (const [index, component] of components.entries()) {
-                const buttons = [];  
-                
-                for (const button of component.components) {
-                    let data = { ...button.data, disabled: true, style: 2 } as any;
-                    if (button.customId === interaction.customId) {
-                        data.style = captured ? 3 : 4;
-                        data.label = parseInt(data.label)-1;
-                    }
+        const message = interaction.message;
+        if (!message) return;
+        if (!message.flags || !message.flags.has("IsComponentsV2"))  return;
+        if (!message.components) return;
 
-                    else if (button.customId?.includes("next")) data = button.data;
+        const editable = message.components.findIndex(c => c.id === 500);
+        if (editable === -1) return;
 
-                    buttons.push(data);
+        //new buttons
+        const rarity = new Rarity(card.rarity).data;
+        message.components[message.components.length-1] = !captured ? interaction.componentsV2.construct([{
+            type: "ActionRow", components: [
+                { type: "Button", button_data: { id: "8", label: "{locale_main_anotherChance} (-20)", emoji: "smallGem", cooldown: { id: "chance", time: 5 }, args: { cardId: card.id } } },
+                { type: "Button", button_data: { id: "2", label: `{locale_main_next} (${player.data.encounters})`, emoji: "next", style: "Success", args: { id: Number(embedTimeoutId) }, cooldown: { id: "next", time: 2 } } },
+            ]
+        }])[0] : interaction.componentsV2.construct([{
+            type: "ActionRow", components: [
+                { type: "Button", button_data: { id: "7", label: `{locale_main_sell} (+${rarity.sellPrice})`, emoji: "whsmallCoin", cooldown: { id: "sell", time: 5 }, args: { cardId: card.id }, style: "Danger" } },
+                { type: "Button", component_id: 101, button_data: { id: "2", label: `{locale_main_next} (${player.data.encounters})`, emoji: "next", style: "Success", args: { id: Number(embedTimeoutId) }, cooldown: { id: "next", time: 2 } } },
+                { type: "Button", button_data: { id: "0F", label: "{locale_main_viewDetails}", emoji: "glass", args: { path: "animon", cardId: card.id } } },
+            ]
+        }])[0];
+
+        message.components[editable] = interaction.componentsV2.construct([{
+            type: "Container", component_id: captured ? 501 : 502, container_data: { color: captured ? "#00ff00" : "#ff0000" },  components: [
+                { type: "TextDisplay", text_display_data: { content: captured ? `{emoji_yes}\u2800{locale_main_catchSuccess}\n-# \u2800\u2800\u2800 {locale_main_catchSuccess2}` : `{emoji_no}\u2800{locale_main_catchFailure}\n-# \u2800\u2800\u2800 {locale_main_catchFailure2}` } },
+            ]
+        }], {
+            name: [`**${card.card.character.name}**`],
+            ball: [`**${ball.item.emoji} ${client.formatText(`{locale_items_${ball.item.name}_name}`, interaction.locale)}**`]
+        })[0];
+
+        //iterate throught the ball buttons
+        for (let actionRow of (message as any).components[0].components) {
+            if (actionRow.id < 400) continue;
+
+            for (let button of actionRow.components) {
+                if (button.id === ball.itemId) {
+                    button.data.style = captured ? ButtonStyle.Success : ButtonStyle.Danger;
+                    button.data.label = (parseInt(button.data.label)-1).toString();
                 }
 
-                newComponents.push({
-                    ...component.data,
-                    components: buttons
-                });
+                button.data.disabled = true;
             }
         }
 
-        if (captured) {
-            newComponents.push(interaction.components.buttons([{
-                id: "7",
-                label: `{locale_main_sell} (+${rarity.sellPrice})`,
-                emoji: "whsmallCoin",
-                cooldown: { id: "sell", time: 5 },
-                args: { cardId: card.id },
-                style: "red"
-            }, {
-                id: "0F",
-                label: "{locale_main_viewDetails}",
-                emoji: "glass",
-                args: { path: "animon", cardId: card.id },
-            }]))
-        } else {
-            newComponents.push(interaction.components.buttons([{
-                id: "8",
-                label: "{locale_main_anotherChance} (-20)",
-                emoji: "smallGem",
-                cooldown: { id: "chance", time: 5 },
-                args: { cardId: card.id }
-            }]))
-        }
+        //for some reason, the media gallery needs to be converted to JSON and back to work properly
+        (message as any).components[0].components.splice(4, 1);
+        const component: any = message.components[0].toJSON();
+        component.components.splice(4, 0, { type: 12, items: [ { media: { url: "attachment://card.jpg" } } ] });
+        message.components[0] = component;
 
         return {
-            embeds: [ 
-                {
-                    ...interaction.message.embeds[0].data,
-                    description: interaction.message.embeds[0].data.footer?.text ? interaction.message.embeds[0].data.description : interaction.message.embeds[0].data.description?.substring(0, interaction.message.embeds[0].description?.indexOf("-#", 3)), 
-                    image: { url: "attachment://card.jpg" }
-                }, 
-                interaction.components.embed({
-                    description: captured ? `{emoji_yes}\u2800{locale_main_catchSuccess}\n-# \u2800\u2800\u2800{locale_main_catchSuccess2}` : `{emoji_no}\u2800{locale_main_catchFailure}\n-# \u2800\u2800\u2800{locale_main_catchFailure2}`,
-                    color: captured ? "#00ff00" : "#ff0000"
-                }, {
-                    name: [`**${card.card.character.name}**`],
-                    ball: [`**${ball.item.emoji} ${client.formatText(`{locale_items_${ball.item.name}_name}`, interaction.locale)}**`]
-                })
-            ],
-            components: newComponents,
-        };
+            components: message.components
+        }
     }
 })

@@ -1,118 +1,33 @@
-import { ButtonStyle } from "discord.js";
-import { DiscordClient, DiscordInteraction, ComponentType } from "../types";
-import { deepValue, parseColor } from "../helpers/utils";
+import { ButtonStyle, MessageFlags, parseEmoji } from "discord.js";
+import { ButtonData, Component, ComponentType, ContainerData, MediaGalleryData, SectionData, SeparatorData, StringSelectData, TextDisplayData, ThumbnailData } from "../types/componentTypes.ts";
 
-import emoji from '../config/emoji.json';
+import { deepValue, parseColor } from "../helpers/utils.ts";
+
+import emojiConfig from "../config/emoji.json";
 import config from "../config/main.json";
-import Player from "./Player";
 
-
-interface Component {
-    type: keyof typeof ComponentType
-    components?: [Component?,Component?,Component?,Component?,Component?,Component?,Component?,Component?,Component?,Component?]
-
-    button_data?: ButtonData
-    container_data?: ContainerData
-    string_select_data?: StringSelectData
-    section_data?: SectionData
-    text_display_data?: TextDisplayData
-    thumbnail_data?: ThumbnailData
-    media_gallery_data?: MediaGalleryData
-    separator_data?: SeparatorData
-}
-
-interface ButtonData {
-    id?: string
-    owner?: string
-    cooldown?: { id: string, time: number }
-    label?: string
-    emoji?: string
-    args?: object
-    disabled?: boolean
-    style?: keyof typeof ButtonStyle
-    skuId?: string
-    url?: string
-}
-
-interface ContainerData {
-    color?: string
-}
-
-interface StringSelectData {
-    id?: string
-    owner?: string
-    cooldown?: { id: string, time: number }
-    label?: string
-    emoji?: string
-    args?: object
-    disabled?: boolean
-    options?: Array<StringSelectOption>
-}
-
-interface StringSelectOption {
-    label: string
-    value: string
-    description?: string
-    emoji?: string
-}
-
-interface TextDisplayData {
-    content: string
-}
-
-interface UnfurledMediaItem {
-    url: string
-}
-
-interface ThumbnailData {
-    media: UnfurledMediaItem,
-    description?: string,
-    spoiler?: boolean
-}
-
-interface Accessory {
-    type: "Button" | "Thumbnail"
-    button_data?: ButtonData
-    thumbnail_data?: ThumbnailData
-}
-
-interface SectionComponent {
-    type: "TextDisplay",
-    text_display_data: TextDisplayData
-}
-
-interface SectionData {
-    components: [SectionComponent, SectionComponent?, SectionComponent?]
-    accessory: Accessory
-}
-
-interface MediaGalleryData {
-    items: Array<ThumbnailData>
-}
-
-interface SeparatorData {
-    divider?: boolean
-    spacing?: 1 | 2
-}
+import Client from "./Client";
+import Player from "./Player.ts";
 
 const MAX_COMPONENTS = 30;
 
 export default class ComponentsV2 {
-    client: DiscordClient
-    player: Player
+    client: Client
     locale: string
+    player: Player
 
     totalComponents: number = 0
 
-    constructor(client: DiscordClient, locale: string, player: Player) {
+    public readonly Flag = MessageFlags.IsComponentsV2;
+
+    constructor(client: Client, locale: string, player: Player) {
         this.client = client;
         this.locale = locale;
-        
         this.player = player;
     }
 
-    private actionRow(components: Array<Component>): object {
-        components = components.map(c => this.parseComponent(c)).filter(c => c !== null)
+    private actionRow(components: Array<Component>, replace?: any): object | null {
+        components = components.map(c => this.parseComponent(c, replace)).filter(c => c !== null)
         if (!components.length) return null;
         return { components }
     }
@@ -122,49 +37,119 @@ export default class ComponentsV2 {
      * @param data Button data
      * @returns Button component 
      */
-    private button(data: ButtonData): object {
+    private button(data: ButtonData, replace?: any): object | null {
         if (data.style === "Premium" && !data.skuId) return null;
         if (data.style === "Link" && !data.url) return null;
 
-        if (data.emoji) data.emoji = deepValue(emoji, data.emoji) || data.emoji
+        let emojiData = "";
+        if (data.emoji) emojiData = deepValue(emojiConfig, data.emoji);
+        else if (data.hardEmoji) emojiData = data.hardEmoji;
+
+        let emoji;
+        if (emojiData !== "") {
+            const { id, name } = parseEmoji(emojiData)
+            emoji = { id, name } as any;
+        }
+
+        if (data.label) data.label = this.client.formatText(data.label, this.locale, replace);
+
+        let customId = [];
+        if (data.id !== undefined) customId.push(data.id);
+        else customId.push(0);
+        
+        if (!data.owner) customId.push(this.player.user.id);
+        else customId.push(data.owner);
+
+        if (data.cooldown) {
+            customId.push(data.cooldown.id);
+            customId.push(data.cooldown.time);
+        } else {
+            customId.push(0);
+            customId.push(0);
+        }
+
+        if (data.args) {
+            for (let value of Object.values(data.args)) {
+                customId.push(value);
+            }
+        }
+
         delete data.id;
         
         return {
             ...data,
+            emoji,
             style: data.style ? ButtonStyle[data.style] : ButtonStyle.Secondary,
-            custom_id: Math.random().toString(36).substring(2, 15)
+            custom_id: !data.url && !data.skuId ? customId.join(";") : undefined
         }
     }
 
-    private stringSelect(data: StringSelectData): object {
+    private stringSelect(data: StringSelectData): object | null {
         if (!data.options) return null;
+
+        for (const option of data.options) {
+            let emojiData = "";
+            if (option.emoji) emojiData = deepValue(emojiConfig, (option.emoji as any)?.name || option.emoji);
+            else if (option.hardEmoji) emojiData = option.hardEmoji;
+
+            let emoji;
+            if (emojiData !== "") {
+                const { id, name } = parseEmoji(emojiData)
+                emoji = { id, name } as any;
+            }
+
+            option.emoji = emoji;
+        }
+
+        const customId = [];
+        if (data.id !== undefined) customId.push(data.id + (data.followUp ? "F" : ""));
+        else customId.push(0);
+
+        customId.push(this.player.user.id);
+
+        if (data.cooldown) {
+            customId.push(data.cooldown.id);
+            customId.push(data.cooldown.time);
+        } else {
+            customId.push(0);
+            customId.push(0);
+        }
+
+        if (data.args) {
+            for (let value of Object.values(data.args)) {
+                customId.push(value);
+            }
+        }
 
         delete data.id;
         
         return {
             ...data,
-            custom_id: Math.random().toString(36).substring(2, 15),
+            custom_id: customId.join(";"),
+            placeholder: this.client.formatText(data.placeholder, this.locale),
             options: data.options.map((o) => ({
                 ...o,
-                label: o.label || o.value,
+                label: this.client.formatText(o.label, this.locale),
+                description: o.description ? this.client.formatText(o.description || "", this.locale) : undefined,
                 value: o.value || o.label
             }))
         }
     }
 
-    private section(data: SectionData): object {
+    private section(data: SectionData, replace?: any): object | null {
         let obj = {
-            components: data.components?.map(c => this.parseComponent(c)).filter(c => c !== null) || [],
-            accessory: this.parseComponent(data.accessory)
+            components: data.components?.map(c => this.parseComponent(c, replace)).filter(c => c !== null) || [],
+            accessory: this.parseComponent(data.accessory, replace)
         }
 
         if (!obj.accessory || !obj.components) return null;
         return obj;
     }
 
-    private textDisplay(data: TextDisplayData): object {
+    private textDisplay(data: TextDisplayData, replace?: any): object {
+        const replaceCopy = { ...replace };
         return {
-            content: data.content
+            content: this.client.formatText(data.content, this.locale, replaceCopy)
         }
     }
 
@@ -180,35 +165,41 @@ export default class ComponentsV2 {
         return { ...data }
     }
 
-    private container(data: ContainerData, components: Array<Component>): object {
-
+    private container(data: ContainerData, components: Array<Component>, replace?: any): object {
+        components = components.map(c => this.parseComponent(c, replace)).filter(c => c !== null)
         return {
-            accent_color: parseColor(data.color || config.defaults.embed.color),
+            accent_color: data.color ? parseColor(data.color) : parseColor(config.defaults.embed.color),
             components: components
         }
     }
 
-    private parseComponent(component: Component) {
+    private parseComponent(component: Component, replace?: any): any {
         if (!component || this.totalComponents >= MAX_COMPONENTS) return null;
-        this.totalComponents++;
-
+        // this.totalComponents++;
         let parsed;
 
+
         if (component.type === "ActionRow") {
-            parsed = this.actionRow(component.components || []);
+            if (!component.components) return null;
+            parsed = this.actionRow(component.components as Component[]);
         } else if (component.type === "Button") {
-            parsed = this.button(component.button_data || {});
+            parsed = this.button(component.button_data || {}, replace);
         } else if (component.type === "Container") {
-            parsed = this.container(component.container_data || {}, component.components.map(c => this.parseComponent(c)).filter(c => c !== null));
+            if (!component.components) return null;
+            parsed = this.container(component.container_data || {}, component.components, replace);
         } else if (component.type === "StringSelect") {
             parsed = this.stringSelect(component.string_select_data || {});
         } else if (component.type === "Section") {
-            parsed = this.section(component.section_data);
+            if (!component.section_data) return null;
+            parsed = this.section(component.section_data, replace);
         } else if (component.type === "TextDisplay") {
-            parsed = this.textDisplay(component.text_display_data);
+            if (!component.text_display_data) return null;
+            parsed = this.textDisplay(component.text_display_data, replace);
         } else if (component.type === "Thumbnail") {
+            if (!component.thumbnail_data) return null;
             parsed = this.thumbnail(component.thumbnail_data);
         } else if (component.type === "MediaGallery") {
+            if (!component.media_gallery_data) return null;
             parsed = this.mediaGallery(component.media_gallery_data);
         } else if (component.type === "Separator") {
             parsed = this.separator(component.separator_data || {});
@@ -216,41 +207,20 @@ export default class ComponentsV2 {
 
         if (!parsed) return null;
 
-        parsed.type = ComponentType[component.type];
+        (parsed as any).type = ComponentType[component.type];
+        if (component.component_id) (parsed as any).id = component.component_id
 
         return parsed;
     }
 
-    public async send(interaction: DiscordInteraction, payload: {
-        components: Array<Component>
-    }): Promise<void> {
-        const url = `https://discord.com/api/v10/interactions/${interaction.id}/${interaction.token}/callback`;
-
-        payload.components = payload.components.map(c => this.parseComponent(c)).filter(c => c !== null);
-
-        const body =  {
-            type: 4,
-            data: {
-                flags: "32768",
-                ...payload
-            }
-        }
-
-        // console.log(JSON.stringify(payload, null, 2))
-
-        const response = await fetch(url, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bot ${this.client.token}`,
-            },
-            body: JSON.stringify(body),
-        });
-
-
-        if (!response.ok) {
-            const error = await response.json();
-            console.error("Failed to send message:", JSON.stringify(error.errors, null, 2));
-        }
+    /**
+     * Constructs components for Discord message
+     * @param components Components to construct
+     * @returns Constructed components
+     */
+    public construct(components: Array<Component>, replace?: any): any {
+        components = components.map(c => this.parseComponent(c, replace)).filter(c => c !== null);
+        if (!components.length) return null;
+        return components;
     }
 }

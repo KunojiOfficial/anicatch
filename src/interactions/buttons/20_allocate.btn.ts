@@ -22,17 +22,7 @@ export default new Interactable({
 
         await client.db.cardInstance.update({ where: { id: cardId }, data: { [stat]: { increment: points } } });
 
-        const panel = await client.panels.get("allocate")!.execute!(interaction, cardId, points, stat);
-
-        return {
-            ...panel,
-            embeds: [ ...panel.embeds, interaction.components.embed({
-                description: `{emoji_yes}\u2800{locale_main_allocateSuccess}`,
-                color: "#00FF00"
-            }, {
-                points: [`**${points}**`],
-                stat: [ `**{locale_main_stats_${stat}}**` ]
-            }) ]
-        };
+        const panel = await client.panels.get("animon")!.execute!(interaction, cardId, false, "stats", points);
+        return panel;
     }
 });

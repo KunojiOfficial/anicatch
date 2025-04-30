@@ -6,6 +6,7 @@ import Player from "./classes/Player.ts";
 import Components from "./classes/Components.ts";
 
 import emoji from './config/emoji.json';
+import ComponentsV2 from "./classes/ComponentsV2.ts";
 
 type DiscordClient = Client;
 type DiscordMessage = Message;
@@ -23,6 +24,7 @@ interface DiscordInteraction extends
         client: Client,
         player: Player,
         components: Components,
+        componentsV2: ComponentsV2,
         targetId: Number,
         owner: String,
         args: any,
@@ -70,22 +72,4 @@ type CardIncluded = Prisma.CardInstanceGetPayload<typeof CardWithIncludes>;
 const TradeWithIncludes = Prisma.validator<Prisma.TradeDefaultArgs>()({ include: { users: true } });
 type TradeIncluded = Prisma.TradeGetPayload<typeof TradeWithIncludes>;
 
-enum ComponentType {
-    ActionRow = 1,
-    Button = 2,
-    StringSelect = 3,
-    TextInput = 4,
-    UserSelect = 5,
-    RoleSelect = 6,
-    MentionableSelect = 7,
-    ChannelSelect = 8,
-    Section = 9,
-    TextDisplay = 10,
-    Thumbnail = 11,
-    MediaGallery = 12,
-    File = 13,
-    Separator = 14,
-    Container = 17
-}
-
-export { DiscordClient, DiscordMessage, DiscordInteraction, UserRole, HistoryElement, CardIncluded, TradeIncluded, Button, ComponentType };
+export { DiscordClient, DiscordMessage, DiscordInteraction, UserRole, HistoryElement, CardIncluded, TradeIncluded, Button };

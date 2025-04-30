@@ -22,7 +22,7 @@
     "body-parser": "^1.20.2",
     "canvas": "^2.11.2",
     "discord-hybrid-sharding": "github:meister03/discord-hybrid-sharding#ts-rewrite",
-    "discord.js": "^14.18.0",
+    "discord.js": "^14.19.1",
     "dotenv": "^16.4.5",
     "ejs": "^3.1.10",
     "express": "^4.19.2",

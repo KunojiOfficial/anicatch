@@ -5,6 +5,7 @@ import Player from "./Player.ts";
 import Components from "./Components.ts";
 
 import introduction from "../mechanics/introduction.ts";
+import ComponentsV2 from "./ComponentsV2.ts";
 
 export default class Interaction {
     interaction: DiscordInteraction;
@@ -36,7 +37,7 @@ export default class Interaction {
             
             //add components
             this.interaction.components = new Components(this.interaction.client, this.interaction.locale, this.interaction.player)
-            
+            this.interaction.componentsV2 = new ComponentsV2(this.interaction.client, this.interaction.locale, this.interaction.player);
             
             //suspensions
             if (this.interaction.player.suspensions.length) {
