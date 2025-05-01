@@ -122,4 +122,13 @@ async function getBenefits(role: Role, db?: PrismaClient) {
     return {text, variables: { value: [ `**${role.expShare*100}%**` ] }};
 }
 
-export { getRandomNumber, toUpperCamelCase, getTextBetweenTwoStrings, deepValue, numberWithCommas, randomElement, addHours, base10ToBase26, base26ToBase10, parseColor, loadFiles, unixDate, getBenefits };
+function parseEmoji(emoji: string) {
+    const match = emoji.match(/<a?:\w+:(\d+)>/);
+    const nameMatch = emoji.match(/<a?:(\w+):\d+>/);
+    const name = nameMatch ? nameMatch[1] : null;
+    const id = match ? match[1] : null;
+
+    return { name, id };
+}
+
+export { getRandomNumber, toUpperCamelCase, getTextBetweenTwoStrings, deepValue, numberWithCommas, randomElement, addHours, base10ToBase26, base26ToBase10, parseColor, loadFiles, unixDate, getBenefits, parseEmoji };

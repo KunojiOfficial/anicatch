@@ -6,6 +6,7 @@ import Player from "./classes/Player.ts";
 import Components from "./classes/Components.ts";
 
 import emoji from './config/emoji.json';
+import ComponentsV2 from "./classes/ComponentsV2.ts";
 
 type DiscordClient = Client;
 type DiscordMessage = Message;
@@ -23,6 +24,7 @@ interface DiscordInteraction extends
         client: Client,
         player: Player,
         components: Components,
+        componentsV2: ComponentsV2,
         targetId: Number,
         owner: String,
         args: any,

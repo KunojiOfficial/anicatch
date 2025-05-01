@@ -18,12 +18,19 @@ export default new Command({
         await interaction.client.db.$executeRaw`SELECT 1`;
         const elapsed = (new Date()).getTime() - now.getTime();
 
+        const wsPing = interaction.client.ws.ping;
+        const messagePing = message.interaction.createdTimestamp - interaction.createdTimestamp;
+
         await interaction.editReply({
-            embeds: [
-                interaction.components.embed({
-                    description: `Pong! Shard #${interaction.guild !== undefined ? (interaction.guild?.shardId||-1) : -1}\n\n\`${interaction.client.ws.ping}ms, ${message.interaction.createdTimestamp - interaction.createdTimestamp}ms, ${elapsed}ms\``
-                })
-            ]
+            flags: [ "IsComponentsV2" ],
+            components: interaction.componentsV2.construct([
+                { type: "Container", components: [
+                    { type: "TextDisplay", text_display_data: { content: `Pong! Shard #${interaction.client.cluster?.id||0}` } },
+                    { type: "Separator" },
+                    { type: "TextDisplay", text_display_data: { content: `\`${wsPing}ms, ${messagePing}ms, ${elapsed}ms\`` } },
+                ] }
+            ])
         });
+
     }
 })

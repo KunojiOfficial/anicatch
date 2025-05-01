@@ -1,5 +1,6 @@
 import { InteractionReplyOptions } from "discord.js";
 import Interactable from "../../classes/Interactable.ts";
+import Rarity from "../../classes/Rarity.ts";
 
 const COST = 20;
 
@@ -30,46 +31,77 @@ export default new Interactable({
             return {};
         }
 
+        const balls = await client.db.inventory.findMany({ where: { userId: player.data.id, item: { type: "BALL" } }, include: { item: true } });
+        if (!balls.length) throw 12;
+        
+        balls.sort((a,b) => a.itemId-b.itemId);
+
         await client.db.$transaction(async tx => {
             await tx.user.updateMany({ where: { id: player.data.id }, data: { gems: { decrement: COST } }});
             await tx.cardInstance.updateMany({ where: { id: animon.id }, data: { status: "WILD" } });
         });
 
-        //get user balls :)
-        const balls = await client.db.inventory.findMany({ where: { userId: player.data.id, item: { type: "BALL" } }, include: { item: true } });
-        balls.sort((a,b) => a.itemId-b.itemId);
-        const buttons = balls.map(b => ({ emoji: b.item.emoji, label: b.count.toString(), id: 1, args: { cardId: animon.id, ballId: b.itemId, timeoutId: -1, embedTimeout: -1 } }));
+        const message = interaction.message;
+        if (!message) return {};
+        if (!message.flags || !message.flags.has("IsComponentsV2"))  return {};
+        if (!message.components) return {};
 
-        let k = -1, components = [];
-        for (const [index, button] of buttons.entries()) {
-            if (index % 5 === 0) {
-                components.push([]);
-                k++;
-            }
+        const editable = message.components.findIndex(c => c.id === 502);
+        if (editable == -1) return {};
 
-            components[k].push(button as never);
+        //iterate throught the ball buttons
+        for (let actionRow of (message as any).components[0].components) {
+            if (actionRow.id < 400) continue;
+
+            //remove action rows
+            (message as any).components[0].components.splice((message as any).components[0].components.indexOf(actionRow), 1);
         }
 
-        if (components.length) components = components.map(c => interaction.components.buttons(c));
+        message.components[editable] = interaction.componentsV2.construct([{
+            type: "Container", component_id: 500, container_data: { color: new Rarity(animon.rarity).color }, components: [
+                { type: "TextDisplay", text_display_data: { content: `{emoji_aniball}\u2800{locale_main_useItemsAbove}` } },
+            ]
+        }])[0];
 
-        components.push(interaction.components.buttons([{
-            id: '2',
-            label: `{locale_main_next} (${player.data.encounters-1})`,
-            emoji: "next",
-            cooldown: { id: "next", time: 2 },
-            args: { id: -1 },
-            disabled: true
-        }]))
+        //make ball buttons
+        const ballButtons = balls.map( b => ({
+            component_id: b.itemId,
+            type: "Button",
+            button_data: {
+                id: 1,
+                label: b.count.toString(),
+                hardEmoji: b.item.emoji,
+                args: { cardId: animon.id, ballId: b.itemId }
+            }
+        }));
+
+        let j = -1;
+        const actionRows = [];
+        for (const [index, button] of ballButtons.entries()) {
+            if (index % 3 === 0) {
+                actionRows.push({ type: "ActionRow", component_id: 400+index, components: [] });
+                j++;
+            }
+
+            actionRows[j].components.push(button);
+        }
+
+        //for some reason, the media gallery needs to be converted to JSON and back to work properly
+        (message as any).components[0].components.splice(4, 1);
+        const component: any = message.components[0].toJSON();
+        component.components.splice(4, 0, { type: 12, items: [ { media: { url: "attachment://card.jpg" } } ] });
+        message.components[0] = component;
+
+        //add ball buttons
+        (message as any).components[0].components = [...(message as any).components[0].components, ...interaction.componentsV2.construct(actionRows)]; 
         
+        //action buttons
+        for (let button of (message as any).components[message.components.length-1].components) {
+            button.data.disabled = true;
+        }
+
         return {
-            embeds: [ 
-                { 
-                    ...interaction?.message?.embeds[0].data,
-                    image: { url: "attachment://card.jpg" },
-                    footer: { icon_url: client.getEmojiUrl("gem"), text: client.formatText("{locale_main_secondChance}", interaction.locale) }
-                }
-            ],
-            components: components
+            components: message.components
         }
     }
 })

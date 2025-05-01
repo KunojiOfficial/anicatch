@@ -21,7 +21,7 @@ function calculateDmg(atk: number, def: number, effectiveness: number, blocked: 
 }
 
 function calculateDroppedExp(level: number) {
-    return Math.floor(300 * Math.pow(level, 1.2));
+    return Math.floor(280 * Math.pow(level, 1.1));
 }
 
 export { calculateLevelFromExp, calculateExpForLevel, calculateHp, calculateAtk, calculateDmg, calculateDroppedExp };

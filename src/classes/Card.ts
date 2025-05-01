@@ -28,7 +28,7 @@ export default class Card {
     
     rarity?: typeof rarities[1]
     rarityInstance: Rarity
-    type?: any
+    type?: typeof types.INFERNO
 
     constructor(object: {card: CardInstance, parent?: CardCatalog, character?: Character, ball?: Item, moves?: Move[]}) {
         this.card = object.card;
@@ -143,45 +143,46 @@ export default class Card {
         return bar;
     }
 
-    async generateCanvas(noRarity: boolean = false, noType: boolean = false) {
+    async generateCanvas(noRarity: boolean = false, width: number = 270) {
         if (!this.parent) return;
 
-        const canvas = createCanvas(270, 340);
+        const height = Math.floor(width * 1.25925); // Adjusted height to maintain aspect ratio
+
+        const canvas = createCanvas(width, height);
         const ctx = canvas.getContext('2d');
 
         const cardImage = await loadImage(`./src/assets/cards/${this.parent.id-1}.jpg`); 
-        
         ctx.save();
         ctx.beginPath();
-        ctx.roundRect(0, 0, 215, 340, 20);
+        ctx.roundRect(2, 2, width - 59, height - 4, 10); // Adjusted dimensions to match the outline
         ctx.clip();
-        ctx.drawImage(cardImage, -5, -5, 225, 350);
+        ctx.drawImage(cardImage, 2, 2, width - 59, height - 4); // Adjusted image dimensions and position to fit within the outline
         ctx.restore();
 
         // Draw rounded outline around the cardImage
-        ctx.lineWidth = 2;
+        ctx.lineWidth = 4;
         ctx.strokeStyle = this.rarity?.color || "black";
         ctx.beginPath();
-        ctx.roundRect(0, 0, 215, 340, 20);
+        ctx.roundRect(2, 2, width - 59, height - 4, 10); // Ensure the outline matches the clipped area
         ctx.stroke();
 
         if (!noRarity) {
             const starImage = await loadImage(`./src/assets/rarities/${this.card.rarity}.png`);
-            for (let i = 0; i < this.card.rarity; i++) ctx.drawImage(starImage, 230, /*60+24+*/18+(i*40), 40, 40);
+            for (let i = 0; i < this.card.rarity; i++) ctx.drawImage(starImage, width - 40, 18 + (i * (40 * (width / 270))), 40 * (width / 270), 40 * (width / 270));
         }
 
         // if (!noType) {
         //     const typeImage = await loadImage(`./src/assets/types/${this.parent.type}.png`);
-        //     ctx.drawImage(typeImage, 230, 18, 40, 40);
+        //     ctx.drawImage(typeImage, width - 40, 18, 40, 40);
         // }
 
         return canvas;
     }
 
-    async generateImage(noRarity: boolean = false) {
+    async generateImage(noRarity: boolean = false, width: number = 270) {
         if (!this.parent) return;
 
-        const canvas = await this.generateCanvas(noRarity);
+        const canvas = await this.generateCanvas(noRarity, width);
         return new AttachmentBuilder(canvas!.toBuffer(), { name: "card.jpg" });
     }
 
@@ -211,5 +212,17 @@ export default class Card {
     getName() {
         return this.character?.name;
     }
-    
+
+    public get numericId() {
+        return this.card.id;
+    }
+
+    public get name() {
+        return this.character?.name;
+    }
+
+    public get id() {
+        return `${base10ToBase26(this.card.cardId)}-${this.card.print}`;
+    }
+
 }

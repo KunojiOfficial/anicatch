@@ -86,84 +86,90 @@ export default new Panel({
         escapeTime.setSeconds(escapeTime.getSeconds() + 15);
 
         let text = "";
-        text += `🍃 {locale_main_wildAppeared}`;
-        if (data.result.character.series) text += `\n🍃 {locale_main_wildAppeared2}\n`;
-        text += `\n{locale_main_wildAppeared3}`;
-        text += `\n\n{locale_main_wildAppeared4}`;
-        text += `\n{locale_main_wildAppeared5}`;
-        text += `\n\n-# {locale_main_escapes}`;
-
-        const embed = {
-            description: `-# ${client.getId(data.insert.cardId, data.insert.print)}\n\n${text}`,
-            image: "attachment://card.jpg",
-            color: data.rarity.color,
-        };
+        text += `{locale_main_wildAppeared}`;
+        if (data.result.character.series) text += `\n-# {locale_main_wildAppeared2}`;
+        text += `\n\n{locale_main_wildAppeared3}`;
+        text += `\n{locale_main_wildAppeared4}`;
+        text += `\n-# {locale_main_wildAppeared5}`;
 
         let followUp:any;
         //edit message after animon escapes
         const timeOutId = setTimeout(async () => {
             try {
                 await followUp.edit({
-                    components: [],
-                    embeds: [ 
-                        {
-                            ...followUp.embeds[0].data,
-                            description: followUp.embeds[0].data.description?.substring(0, followUp.embeds[0].description?.indexOf("-#", 3)), 
-                            image: { url: "attachment://card.jpg" },
-                        },
-                        interaction.components.embed({
-                            color: "#ffffff",
-                            description: "🏃\u2800{locale_main_catchEscape}"
-                        })
-                    ]
+                    components: interaction.componentsV2.construct([
+                        { type: "Container", container_data: { color: data.rarity.color }, components: [
+                            { type: "TextDisplay", text_display_data: { content: `-# ${user} | ID: \`${card.getId()}\`` } },
+                            { type: "Separator" },
+                            { type: "TextDisplay", text_display_data: { content: text } },
+                            { type: "Separator" },
+                            { type: "MediaGallery", media_gallery_data: { items: [ { media: { url: "attachment://card.jpg" } } ] } }
+                        ] },
+                        { type: "Container", component_id: 500, container_data: { color: "#ffffff" },  components: [
+                            { type: "TextDisplay", text_display_data: { content: "🏃\u2800{locale_main_catchEscape}" } },
+                        ]}
+                    ], {
+                        name: [`**${data.result.character.name}**`],
+                        series: [`**${data.result.character?.series?.english_title}**`],
+                        type: [`**{emoji_${type.name.toLowerCase()}} ${type.name}**`],
+                        rarity: [`**${(new Rarity(data.insert.rarity)).getShortEmoji()} ${data.rarity.name}**`],
+                        rate: [`**${data.rarity.chance}%**`],
+                        date: [`${client.unixDate(escapeTime)}`]
+                    })
                 });
             } catch (err) {}
         }, 1000 * 15);
 
-        const buttons = balls.map(b => ({ emoji: b.item.emoji, label: b.count.toString(), id: 1, args: { cardId: data.insert.id, ballId: b.itemId, timeoutId: data.timeout, embedTimeout: timeOutId } }));
+        const ballButtons = balls.map( b => ({
+            component_id: b.itemId,
+            type: "Button",
+            button_data: {
+                id: 1,
+                label: b.count.toString(),
+                hardEmoji: b.item.emoji,
+                args: { cardId: data.insert.id, ballId: b.itemId, timeoutId: Number(data.timeout), embedTimeout: Number(timeOutId) }
+            }
+        }))
 
-        let k = -1, components: any[] = [];
-        for (const [index, button] of buttons.entries()) {
-            if (index % 5 === 0) {
-                components.push([]);
-                k++;
+        let j = -1;
+        const actionRows = [];
+        for (const [index, button] of ballButtons.entries()) {
+            if (index % 3 === 0) {
+                actionRows.push({ type: "ActionRow", component_id: 400+index, components: [] });
+                j++;
             }
 
-            components[k].push(button as never);
+            actionRows[j].components.push(button);
         }
 
-        if (components.length) components = components.map(c => interaction.components.buttons(c));
-
-        components.push(interaction.components.buttons([{
-            // id: "10",
-            label: `{locale_main_battle}!`,
-            emoji: "fight",
-            args: { id: timeOutId, id2: data.timeout, cardId: card.card.id },
-            id: "17",
-            style: "red"
-        }, {
-            id: '2',
-            label: `{locale_main_next} (${player.data.encounters-1})`,
-            emoji: "next",
-            cooldown: { id: "next", time: 2 },
-            args: { id: timeOutId },
-            style: "green"
-        }]));
-
-        //send message
         followUp = await interaction.followUp({
-            content: `${user}`,
-            embeds: [interaction.components.embed(embed, {
+            flags: ["IsComponentsV2"],
+            files: [attachment!],
+            components: interaction.componentsV2.construct([
+                { type: "Container", container_data: { color: data.rarity.color }, components: [
+                    { type: "TextDisplay", text_display_data: { content: `-# ${user} | ID: \`${card.getId()}\`` } },
+                    { type: "Separator" },
+                    { type: "TextDisplay", text_display_data: { content: text } },
+                    { type: "Separator" },
+                    { type: "MediaGallery", media_gallery_data: { items: [ { media: { url: "attachment://card.jpg" } } ] } },
+                    ...actionRows,
+                ] },
+                { type: "Container", component_id: 500, container_data: { color: data.rarity.color }, components: [
+                    { type: "TextDisplay", text_display_data: { content: `{emoji_aniball}\u2800{locale_main_useItemsAbove}\n-# \u2800\u2800\u2800 {locale_main_escapes}` } },
+                ]},
+                { type: "ActionRow", components: [
+                    { type: "Button", button_data: { id: "17", label: "{locale_main_battle}!", emoji: "fight", style: "Danger", args: { id: Number(timeOutId), id2: Number(data.timeout), cardId: card.card.id } } },
+                    { type: "Button", button_data: { id: "2", label: `{locale_main_next} (${player.data.encounters-1})`, emoji: "next", style: "Success", args: { id: Number(timeOutId) }, cooldown: { id: "next", time: 2 } } },
+                ] }
+            ], {
                 name: [`**${data.result.character.name}**`],
                 series: [`**${data.result.character?.series?.english_title}**`],
                 type: [`**{emoji_${type.name.toLowerCase()}} ${type.name}**`],
                 rarity: [`**${(new Rarity(data.insert.rarity)).getShortEmoji()} ${data.rarity.name}**`],
                 rate: [`**${data.rarity.chance}%**`],
                 date: [`${client.unixDate(escapeTime)}`]
-            })],
-            files: [attachment!],
-            components: components.length ? components as any : []
-        });
+            })
+        })
 
         return {};
     }

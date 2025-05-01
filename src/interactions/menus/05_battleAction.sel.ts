@@ -45,7 +45,17 @@ export default new Interactable({
 
         if (newTurn) {
             await interaction.followUp(panel);
-            if (message) await message.edit({ components: [] });
+            const components = message.components as any;
+            if (components) {
+                (message as any).components[0].components.splice(2, 1);
+                const component: any = message.components[0].toJSON();
+                component.components.splice(2, 0, { type: 12, items: [ { media: { url: "attachment://battle.jpg" } } ] });
+                message.components[0] = component;
+
+                components[0].components = components[0].components.filter(c => c.type !== 1);
+            }
+
+            if (message) await message.edit({ components: components });
         } else {
             if (message) await message.edit(panel as any);
         }

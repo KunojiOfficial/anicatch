@@ -112,7 +112,7 @@ export default new Panel({
                 fields: fields,
                 color: (userData.roleId>1&&userData.role.color) ? userData.role.color : undefined
             }, {
-                user: [`${owner.displayName}`]
+                owner: [`${owner.displayName}`]
             }) ],
             components: components
         }

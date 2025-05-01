@@ -26,4 +26,8 @@ export default class Rarity {
     getSellPrice() {
         return this.data.sellPrice;
     }
+
+    public get color() {
+        return this.data.color;
+    }
 }

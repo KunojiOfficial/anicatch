@@ -321,7 +321,7 @@ class Battle {
                 defended
             );
 
-            if (this.battle.type === "PVE" && card.card.status === "WILD_FIGHT") damage *= 0.5; //wild card damage 
+            if (this.battle.type === "PVE" && card.card.status === "WILD_FIGHT") damage *= 0.8; //wild card damage 
 
             if (move.accuracy !== 100) {
                 const hit = Math.random() < move.accuracy/100;
@@ -548,11 +548,11 @@ class Battle {
 
         // Draw cards
         drawCard(ctx, card1, 206, 33, rarity1, card1Data.card.rarity);
-        drawCard(ctx, card2, 732, 33, rarity2, card2Data.card.rarity);
+        drawCard(ctx, card2, 732+49, 33, rarity2, card2Data.card.rarity);
 
         // Draw stats
         drawStats(ctx, ball, 66, 430, type1, card1Data.character.name, card1Data.getLevel(), card1Data.getCurrentHealth()/card1Data.getMaxHealth(), this.aliveCards[0]);
-        drawStats(ctx, ball, 590, 430, type2, card2Data.character.name, card2Data.getLevel(), card2Data.getCurrentHealth()/card2Data.getMaxHealth(), this.battle.type === "PVE" ? 1 : this.aliveCards[1]);
+        drawStats(ctx, ball, 590+49, 430, type2, card2Data.character.name, card2Data.getLevel(), card2Data.getCurrentHealth()/card2Data.getMaxHealth(), this.battle.type === "PVE" ? 1 : this.aliveCards[1]);
 
         return canvas;
     }
