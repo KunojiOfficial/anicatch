@@ -13,7 +13,7 @@ function calculateHp(vit: number) {
 }
 
 function calculateAtk(powCard: number, powMove: number) {
-    return Math.floor(Math.pow(powCard, 1.3)*1.7 + Math.pow(powMove, 1.5)*4);
+    return Math.floor(Math.pow(powCard, 1.5)*1.5 + Math.pow(powMove, 1.5)*4);
 }
 
 function calculateDmg(atk: number, def: number, effectiveness: number, blocked: number) {
