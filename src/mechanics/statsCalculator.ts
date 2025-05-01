@@ -13,11 +13,11 @@ function calculateHp(vit: number) {
 }
 
 function calculateAtk(powCard: number, powMove: number) {
-    return Math.floor(Math.pow(powCard, 1.3)*2 + Math.pow(powMove, 1.7)*4);
+    return Math.floor(Math.pow(powCard, 1.45)*2 + Math.pow(powMove, 1.8)*4);
 }
 
 function calculateDmg(atk: number, def: number, effectiveness: number, blocked: number) {
-    return Math.max(0, Math.floor((atk-(Math.pow(def, 1.2)*1.3))*effectiveness)-blocked);
+    return Math.floor(Math.max(0, Math.floor((atk-(Math.pow(def, 1.2)*1.3))*effectiveness)-blocked));
 }
 
 function calculateDroppedExp(level: number) {
