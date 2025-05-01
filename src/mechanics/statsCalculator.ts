@@ -29,7 +29,7 @@ function calculateDroppedCoinsForLevel(myExp: number, enemyExp: number, coins: n
     const enemyLevel = calculateLevelFromExp(enemyExp);
     const levelDiff = Math.abs(myLevel - enemyLevel);
 
-    const maxCoins = Math.floor(coins * 0.8);
+    const maxCoins = Math.floor(coins * 0.5);
     const levelDiffFactor = Math.pow(1.1, levelDiff);
     const droppedCoins = Math.floor(maxCoins / levelDiffFactor);
 
