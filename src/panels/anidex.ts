@@ -13,18 +13,19 @@ export default new Panel({
     name: "anidex",
     async execute(interaction: DiscordInteraction, page: number | string = 1, rarity = 1): Promise<InteractionReplyOptions> {
         const { client } = interaction;        
-        
         let mode = "page";
         if (typeof page === "string" && isNaN(parseInt(page))) mode = "specific";
         else if (typeof page === "string") page = parseInt(page);
-
-        let count = await client.db.cardCatalog.count(), card;
+        
+        let count = await client.db.cardCatalog.count({ where: { id: {gt:0} } }), card, index = 0;
         if (mode === "page" && typeof page === 'number') {
             if (page < 1) page = count;
             else if (page > count) page = 1;
-            card = await client.db.cardCatalog.findFirst({ where: { id: page }, include: { character: { include: { series: true } }, instances: { where: { status: { in: ["IDLE", "FIGHT"] } } } } });
+            card = await client.db.cardCatalog.findFirst({ skip: page-1, include: { character: { include: { series: true } }, instances: { where: { status: { in: ["IDLE", "FIGHT"] } } } } });
+            index = page;
         } else if (typeof page === 'string') {
             card = await client.db.cardCatalog.findFirst({ where: { id: client.getIdReverse(page) }, include: { character: { include: { series: true } }, instances: { where: { status: { in: ["IDLE", "FIGHT"] } } } } });
+            index = await client.db.cardCatalog.count({ where: { id: { lt: card.id } }})+1;
         }
 
         if (!card) return await client.panels.get("anidex")!.execute!(interaction);
@@ -45,7 +46,7 @@ export default new Panel({
                 hardEmoji: client.formatText(instance.getShortEmoji(),interaction.locale),
                 style: rarity == key ? "blurple" : "gray",
                 disabled: rarity == key,
-                args: { path: "anidex", page: page, rarity: key }
+                args: { path: "anidex", page: index, rarity: key }
             });
         }
 
@@ -68,15 +69,15 @@ export default new Panel({
             components: [ interaction.components.buttons([{
                 ...defaults,
                 emoji: "chevron.single.left",
-                args: { ...defaults.args, page: page-1 }
+                args: { ...defaults.args, page: index-1 }
             }, {
                 id: '5',
-                label: `{number_${page}} / {number_${count}}`,
+                label: `{number_${index}} / {number_${count}}`,
                 args: { min: 1, max: count, index: 1, customId: Object.values(defaults.args).join(':') }
             }, {
                 ...defaults,
                 emoji: "chevron.single.right",
-                args: { ...defaults.args, page: page+1 }
+                args: { ...defaults.args, page: index+1 }
             }, {
                 id: "24",
                 emoji: "glass"

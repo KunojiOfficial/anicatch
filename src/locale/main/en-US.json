@@ -195,7 +195,7 @@
     "statsShort": "Stats",
     "moves": "Moves",
     "selectAnimon": "Select an Animon to view its details!",
-    "collection": "{custom_user}'s Collection",
+    "collection": "{custom_owner}'s Collection",
     "sortBy": "Sort by",
     "rarityDesc": "rarity (desc.)",
     "collectionTip": "View details of an Animon by using the {command_animon} command or the select menu below.",

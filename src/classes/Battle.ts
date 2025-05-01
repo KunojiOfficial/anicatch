@@ -321,7 +321,7 @@ class Battle {
                 defended
             );
 
-            if (this.battle.type === "PVE" && card.card.status === "WILD_FIGHT") damage *= 0.5; //wild card damage 
+            if (this.battle.type === "PVE" && card.card.status === "WILD_FIGHT") damage *= 0.8; //wild card damage 
 
             if (move.accuracy !== 100) {
                 const hit = Math.random() < move.accuracy/100;

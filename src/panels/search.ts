@@ -54,7 +54,7 @@ export default new Panel({
                 placeholder: "{locale_main_selectAnimon}",
                 options: cards.map(c => ({
                     label: c.character.name,
-                    value: `1:${c.id}`,
+                    value: `1:${client.getId(c.id)}`,
                     description: c.character.series.english_title,
                     emoji: c.type.toLowerCase(),
                 })),
