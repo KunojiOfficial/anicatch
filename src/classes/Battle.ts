@@ -7,7 +7,7 @@ import { DiscordClient, HistoryElement } from "../types.ts";
 import { numberWithCommas, parseColor } from "../helpers/utils.ts";
 
 import consumable from "../mechanics/consumable.ts";
-import { calculateAtk, calculateDmg, calculateDroppedExp } from "../mechanics/statsCalculator.ts";
+import { calculateAtk, calculateDmg, calculateDroppedCoinsForLevel, calculateDroppedExp } from "../mechanics/statsCalculator.ts";
 
 import types from "../data/types.json";
 import locale from "../locale/items/en-US.json";
@@ -408,7 +408,7 @@ class Battle {
 
         if (this.battle.type === "PVE") {
             exp = isWin ? calculateDroppedExp(this.activeCards[1].getLevel()) : 0;
-            coins = isWin ? Math.ceil((new Rarity(this.activeCards[1].card.rarity)).getSellPrice()*0.5) : 0;
+            coins = isWin ? calculateDroppedCoinsForLevel(this.activeCards[0].card.exp, this.activeCards[1].card.exp, new Rarity(this.activeCards[1].card.rarity).data.sellPrice) : 0;
         }
 
         await this.client.db.$transaction(async tx => {

@@ -24,4 +24,16 @@ function calculateDroppedExp(level: number) {
     return Math.floor(280 * Math.pow(level, 1.1));
 }
 
-export { calculateLevelFromExp, calculateExpForLevel, calculateHp, calculateAtk, calculateDmg, calculateDroppedExp };
+function calculateDroppedCoinsForLevel(myExp: number, enemyExp: number, coins: number) {
+    const myLevel = calculateLevelFromExp(myExp);
+    const enemyLevel = calculateLevelFromExp(enemyExp);
+    const levelDiff = Math.abs(myLevel - enemyLevel);
+
+    const maxCoins = Math.floor(coins * 0.8);
+    const levelDiffFactor = Math.pow(1.1, levelDiff);
+    const droppedCoins = Math.floor(maxCoins / levelDiffFactor);
+
+    return Math.max(1, droppedCoins);
+}
+
+export { calculateLevelFromExp, calculateExpForLevel, calculateHp, calculateAtk, calculateDmg, calculateDroppedExp, calculateDroppedCoinsForLevel };
