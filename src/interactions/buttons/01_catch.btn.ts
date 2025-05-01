@@ -21,7 +21,8 @@ export default new Interactable({
         clearTimeout(parseInt(embedTimeoutId));
         clearTimeout(parseInt(timeoutId));
 
-        const captured = await _catch(interaction, card, ball);
+        const captureData = await _catch(interaction, card, ball);
+        const captured = captureData.caught;
 
         const message = interaction.message;
         if (!message) return;
@@ -48,11 +49,13 @@ export default new Interactable({
 
         message.components[editable] = interaction.componentsV2.construct([{
             type: "Container", component_id: captured ? 501 : 502, container_data: { color: captured ? "#00ff00" : "#ff0000" },  components: [
-                { type: "TextDisplay", text_display_data: { content: captured ? `{emoji_yes}\u2800{locale_main_catchSuccess}\n-# \u2800\u2800\u2800 {locale_main_catchSuccess2}` : `{emoji_no}\u2800{locale_main_catchFailure}\n-# \u2800\u2800\u2800 {locale_main_catchFailure2}` } },
+                { type: "TextDisplay", text_display_data: { content: captured ? `{emoji_yes}\u2800{locale_main_catchSuccess}\n-# \u2800\u2800\u2800 {locale_main_catchSuccess2}` : `{emoji_no}\u2800{locale_main_catchFailure}\n-# \u2800\u2800\u2800 {locale_main_catchFailure3}\n-# \u2800\u2800\u2800 {locale_main_catchFailure2}` } },
             ]
         }], {
             name: [`**${card.card.character.name}**`],
-            ball: [`**${ball.item.emoji} ${client.formatText(`{locale_items_${ball.item.name}_name}`, interaction.locale)}**`]
+            ball: [`**${ball.item.emoji} ${client.formatText(`{locale_items_${ball.item.name}_name}`, interaction.locale)}**`],
+            roll: [`**${Math.floor(captureData.roll*100)}**`],
+            chance: [`**${Math.floor(captureData.chance*100)}**`]
         })[0];
 
         //iterate throught the ball buttons
