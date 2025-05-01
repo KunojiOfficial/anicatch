@@ -45,7 +45,7 @@ export default new Event({
                 embeds: [embed]
             });
 
-            (client as DiscordClient).logger.log(`Joined ${guild.name} (${guild.id})`);
+            // (client as DiscordClient).logger.log(`Joined ${guild.name} (${guild.id})`);
 
         } catch (e) {}
     }
