@@ -17,7 +17,7 @@ function calculateAtk(powCard: number, powMove: number) {
 }
 
 function calculateDmg(atk: number, def: number, effectiveness: number, blocked: number) {
-    return Math.floor(Math.max(0, Math.floor((atk-(Math.pow(def, 1.2)*1.3))*effectiveness)-blocked));
+    return Math.round(Math.max(0, Math.floor((atk-(Math.pow(def, 1.2)*1.3))*effectiveness)-blocked));
 }
 
 function calculateDroppedExp(level: number) {

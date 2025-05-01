@@ -66,8 +66,8 @@ async function formatHistory(client: DiscordClient, history: HistoryElement, car
             if (history.defended > 0) text += `\n-# \u2800\u2800\u2800{locale_battle_block}`;
             if (history.damage > 0) text += `\n-# \u2800\u2800\u2800{locale_battle_dealt}`;
 
-            variables["damage"] = [`{number_${history.damage}}`];
-            variables["defended"] = [`{number_${history.defended}}`];
+            variables["damage"] = [`{number_${Math.round(history.damage)}}`];
+            variables["defended"] = [`{number_${Math.round(history.defended)}}`];
         
         }
     } else if (history.type === "switch") {
