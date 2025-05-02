@@ -60,9 +60,6 @@ export default new Panel({
         
         const pageCards = cards.slice((page-1)*PER_PAGE, page*PER_PAGE);
         
-        //get ballIcons
-        
-
         const sortButtons: Component[] = sortKeys.map((key, i) => {
             let value = sortData[i];
             return {
@@ -82,7 +79,7 @@ export default new Panel({
 
             sections.push({
                 type: "Section", section_data: { components: [
-                    { type: "TextDisplay", text_display_data: { content: `\`${card.id.padEnd(7, " ")}\`\u2800${rarity}\u2800${card.ball.emoji} {emoji_${card.type.name.toLowerCase()}}\u2800 **\`Lv. ${card.getLevel().toString().padEnd(2, " ")}\`**\u2800**${card.name}** ${card.card.favorite ? "{emoji_favorite}" : ""}` } }
+                    { type: "TextDisplay", text_display_data: { content: `\`${card.id.padEnd(7, " ")}\`\u2800${rarity}\u2800${card.ball.emoji} {emoji_${card.type.name.toLowerCase()}}\u2800 ${player.config.isMobile ? "\n" : ""}**\`Lv. ${card.getLevel().toString().padEnd(2, " ")}\`**\u2800**${card.name}** ${card.card.favorite ? "{emoji_favorite}" : ""}` } }
                 ], accessory: { type: "Button", button_data: {
                     id: "0F",
                     emoji: "links",
@@ -112,7 +109,7 @@ export default new Panel({
                     { type: "ActionRow", components: [
                         { type: "Button", button_data: { emoji: "chevron_double_left", ...defaults, args: { ...defaults.args, page: pageCount+5 } } },
                         { type: "Button", button_data: { emoji: "chevron_single_left", ...defaults, args: { ...defaults.args, page: page-1 } } },
-                        { type: "Button", button_data: { label: `\u2800 {locale_main_page}\u2800${page} / ${pageCount} \u2800`, ...defaults, id: "5", args: { min: 1, max: pageCount, index: 1, customId: Object.values(defaults.args).join(':') } } },
+                        { type: "Button", button_data: { label: player.config.isMobile ? `${page}/${pageCount}` : `\u2800 {locale_main_page}\u2800${page} / ${pageCount} \u2800`, ...defaults, id: "5", args: { min: 1, max: pageCount, index: 1, customId: Object.values(defaults.args).join(':') } } },
                         { type: "Button", button_data: { emoji: "chevron_single_right", ...defaults, args: { ...defaults.args, page: page+1 } } },
                         { type: "Button", button_data: { emoji: "chevron_double_right", ...defaults, args: { ...defaults.args, page: -5 } } },
                     ] },
@@ -122,78 +119,5 @@ export default new Panel({
             })
         }
 
-        // const fields = [], options = [];
-        // for (const c of pageCards) {
-        //     const type = types[c.card.type.toString() as keyof typeof types];
-        //     const rarity = rarities[c.rarity.toString() as keyof typeof rarities];
-        //     const ball = ballData.find(b => b.id === c.ballId);
-        //     const id = client.getId(c.cardId, c.print);
-
-        //     const rarityInstance = new Rarity(c.rarity);
-
-        //     fields.push({
-        //         name: `${(ball?.emoji + " ") || "{emoji_empty}"}${c.card.character.name}`,
-        //         value: `\`${id.padEnd(7, " ")}\`{emoji_${type.name.toLowerCase()}}${c.favorite ? "{emoji_favorite}":""}\n${rarityInstance.getLongEmoji()}\n\u2800`,
-        //         inline: true
-        //     });
-
-        //     options.push({
-        //         label: c.card.character.name,
-        //         hardEmoji: ball?.emoji || "",
-        //         description: `${id}\u2800|\u2800${rarity.name}`,
-        //         value: `1:${c.id.toString()}`
-        //     });
-        // }
-
-        // 
-
-        // while (fields.length%3 !== 0) fields.push({ name: "\u2800", value: "\u2800", inline: true });
-
-        // const components = [ interaction.components.buttons([{
-        //     ...defaults,
-        //     emoji: "chevron.double.left",
-        //     args: { ...defaults.args, page: pageCount + 5 },
-        //     disabled: pageCount <= 1
-        // }, {
-        //     ...defaults,
-        //     emoji: "chevron.single.left",
-        //     args: { ...defaults.args, page: page - 1 },
-        //     disabled: pageCount <= 1
-        // }, {
-        //     id: '5',
-        //     label: `\u2800` + `{locale_main_page} ${page} / ${pageCount}` + `\u2800`,
-        //     disabled: pageCount <= 1,
-        //     args: { min: 1, max: pageCount, index: 1, customId: Object.values(defaults.args).join(':') }
-        // }, {
-        //     ...defaults,
-        //     emoji: "chevron.single.right",
-        //     args: { ...defaults.args, page: page + 1 },
-        //     disabled: pageCount <= 1
-        // }, {
-        //     ...defaults,
-        //     emoji: "chevron.double.right",
-        //     args: { ...defaults.args, page: -5 },
-        //     disabled: pageCount <= 1
-        // }]) ];
-
-        // if (fields.length) components.unshift(interaction.components.selectMenu({
-        //     id: 0,
-        //     followUp: true,
-        //     options: options.length ? options : [ { label: "test", value: "test" } ],
-        //     placeholder: `💿\u2800{locale_main_selectAnimon}`,
-        //     args: { path: "animon" }
-        // }))
-
-        // return {
-        //     embeds: [ interaction.components.embed({
-        //         author: { name: `{locale_main_collection}`, iconUrl: owner.displayAvatarURL() },
-        //         description: (userData.roleId>1?`### ${userData.role.name}\u2800${userData.role.emoji||""}\n\n`:``) + `**{locale_main_sortBy}:** {locale_main_rarityDesc}\n-# {locale_main_collectionTip}\n` + "\u2800".repeat(47),
-        //         fields: fields,
-        //         color: (userData.roleId>1&&userData.role.color) ? userData.role.color : undefined
-        //     }, {
-        //         owner: [`${owner.displayName}`]
-        //     }) ],
-        //     components: components
-        // }
     }
 });
