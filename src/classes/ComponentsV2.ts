@@ -126,7 +126,7 @@ export default class ComponentsV2 {
         return {
             ...data,
             custom_id: customId.join(";"),
-            placeholder: this.client.formatText(data.placeholder, this.locale),
+            placeholder: data.placeholder ? this.client.formatText(data.placeholder, this.locale) : undefined,
             options: data.options.map((o) => ({
                 ...o,
                 label: this.client.formatText(o.label, this.locale),
@@ -174,8 +174,8 @@ export default class ComponentsV2 {
     }
 
     private parseComponent(component: Component, replace?: any): any {
-        if (!component || this.totalComponents >= MAX_COMPONENTS) return null;
-        // this.totalComponents++;
+        if (!component || this.totalComponents >= MAX_COMPONENTS*50) return null;
+        this.totalComponents++;
         let parsed;
 
 
@@ -220,6 +220,7 @@ export default class ComponentsV2 {
      */
     public construct(components: Array<Component>, replace?: any): any {
         components = components.map(c => this.parseComponent(c, replace)).filter(c => c !== null);
+        // console.log(this.totalComponents)
         if (!components.length) return null;
         return components;
     }

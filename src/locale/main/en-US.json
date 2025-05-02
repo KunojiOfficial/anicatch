@@ -199,7 +199,7 @@
     "collection": "{custom_owner}'s Collection",
     "sortBy": "Sort by",
     "rarityDesc": "rarity (desc.)",
-    "collectionTip": "View details of an Animon by using the {command_animon} command or the select menu below.",
+    "collectionTip": "View the details of an Animon by using the {command_animon} command or the buttons below.",
     "visitStore": "Visit Store",
     "getPremium": "Get Premium",
     "battle": "Battle",
@@ -315,5 +315,9 @@
     "pointsToSpendText": "Select the number of points you want to allocate.",
     "howToGetMoves": "To get new moves, visit the {command_store} and buy some **Spellbooks**!",
     "selectAMoveType": "Select a move type with the menu above first.",
-    "filterMoveTypes": "Filter your available moves by type."
+    "filterMoveTypes": "Filter your available moves by type.",
+    "rarity": "Rarity",
+    "print": "Print",
+    "show": "Show",
+    "search": "Search"
 }

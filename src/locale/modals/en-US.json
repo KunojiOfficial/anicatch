@@ -62,5 +62,12 @@
             "label": "Card ID",
             "placeholder": "The ID of the Animon you want to search for."
         }]
+    },
+    "7": {
+        "title": "Search",
+        "inputs": [{
+            "label": "Character Name",
+            "placeholder": "The name of the character you want to search for."
+        }]
     }
 }

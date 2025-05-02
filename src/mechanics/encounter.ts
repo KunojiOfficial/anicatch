@@ -34,17 +34,16 @@ export default async function(interaction: DiscordInteraction) {
         let print, rarity;
         if (result.fledPrints.length) { // If there are fled prints, use them
             const fledPrint: FledPrint = result.fledPrints.shift() as any;
-            rarity = fledPrint.rarity;
             print = fledPrint.print;
 
             await tx.cardCatalog.update({ where: { id: result.id }, data: { fledPrints: { set: result.fledPrints } } });
         } else { // Otherwise, generate a new card
-            rarity = getRandomRarity(rarities);
             print = result.count + 1;
 
             await tx.cardCatalog.updateMany({ where: { id: result.id }, data: { count: { increment: 1 } } });
         }
 
+        rarity = getRandomRarity(rarities);
 
         // Find a move that matches the card's type and power
         const moves = types[result.type as keyof typeof types].defaultMoves;

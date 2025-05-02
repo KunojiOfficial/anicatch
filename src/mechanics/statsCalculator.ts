@@ -21,7 +21,7 @@ function calculateDmg(atk: number, def: number, effectiveness: number, blocked: 
 }
 
 function calculateDroppedExp(level: number) {
-    return Math.floor(280 * Math.pow(level, 1.1));
+    return Math.floor(250 * Math.pow(level, 1.1));
 }
 
 function calculateDroppedCoins(turns: number, coins: number) {
