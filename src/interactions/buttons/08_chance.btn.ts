@@ -41,28 +41,6 @@ export default new Interactable({
             await tx.cardInstance.updateMany({ where: { id: animon.id }, data: { status: "WILD" } });
         });
 
-        const message = interaction.message;
-        if (!message) return {};
-        if (!message.flags || !message.flags.has("IsComponentsV2"))  return {};
-        if (!message.components) return {};
-
-        const editable = message.components.findIndex(c => c.id === 502);
-        if (editable == -1) return {};
-
-        //iterate throught the ball buttons
-        for (let actionRow of (message as any).components[0].components) {
-            if (actionRow.id < 400) continue;
-
-            //remove action rows
-            (message as any).components[0].components.splice((message as any).components[0].components.indexOf(actionRow), 1);
-        }
-
-        message.components[editable] = interaction.componentsV2.construct([{
-            type: "Container", component_id: 500, container_data: { color: new Rarity(animon.rarity).color }, components: [
-                { type: "TextDisplay", text_display_data: { content: `{emoji_aniball}\u2800{locale_main_useItemsAbove}` } },
-            ]
-        }])[0];
-
         //make ball buttons
         const ballButtons = balls.map( b => ({
             component_id: b.itemId,
@@ -85,6 +63,37 @@ export default new Interactable({
 
             actionRows[j].components.push(button);
         }
+
+        const message = interaction.message;
+        if (!message) return {};
+        if (!message.flags || !message.flags.has("IsComponentsV2")) {
+            await interaction.followUp({
+                flags: ["IsComponentsV2"],
+                components: interaction.componentsV2.construct(actionRows)
+            });
+
+            return {};
+        }
+
+        if (!message.components) return {};
+
+        const editable = message.components.findIndex(c => c.id === 502);
+        if (editable == -1) return {};
+
+        //iterate throught the ball buttons
+        for (let actionRow of (message as any).components[0].components) {
+            if (actionRow.id < 400) continue;
+
+            //remove action rows
+            (message as any).components[0].components.splice((message as any).components[0].components.indexOf(actionRow), 1);
+        }
+
+        message.components[editable] = interaction.componentsV2.construct([{
+            type: "Container", component_id: 500, container_data: { color: new Rarity(animon.rarity).color }, components: [
+                { type: "TextDisplay", text_display_data: { content: `{emoji_aniball}\u2800{locale_main_useItemsAbove}` } },
+            ]
+        }])[0];
+
 
         //for some reason, the media gallery needs to be converted to JSON and back to work properly
         (message as any).components[0].components.splice(4, 1);
