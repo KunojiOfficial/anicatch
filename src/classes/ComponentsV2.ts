@@ -81,7 +81,7 @@ export default class ComponentsV2 {
             emoji,
             style: data.style ? ButtonStyle[data.style] : ButtonStyle.Secondary,
             custom_id: !data.url && !data.skuId ? customId.join(";") : undefined,
-            url: this.client.formatText(data.url, this.locale) || undefined,
+            url: data.url ? this.client.formatText(data.url, this.locale) : undefined,
         }
     }
 
