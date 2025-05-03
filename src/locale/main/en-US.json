@@ -206,7 +206,7 @@
     "use": "Use",
     "selectAnItem": "Select an item to use!",
     "gemStore": "Gem Store",
-    "gemStoreText": "Buy **{emoji_smallGem} Gems** and level up your experience!\nWith gems, you can grab exclusive items in the {command_store}, unlock a second catch chance, and more!\n\nTo purchase **{emoji_smallGem} Gems**, head over to our [Discord Store]({config_urls_store}).\nBy making a purchase, you agree to our [Terms of Service]({config_urls_tos}).\n\nAfter buying gems, they will be automatically added to your account! If they don't show up, use the {command_redeem} command to redeem them.",
+    "gemStoreText": "Buy **{emoji_smallGem} Gems** and enhance your experience!\nWith gems, you can grab exclusive items in the {command_store}, unlock a second catch chance, and more!\n\nYou can buy Gems from our [Store](https://anicatch.com/store) (lower fees) or via the [Discord Store]({config_urls_store}).",
     "buyGems": "Buy Gems",
     "help": "Help",
     "helpText": "Looking for a guide how to start using the bot? Use {command_guide}!",
@@ -319,5 +319,8 @@
     "rarity": "Rarity",
     "print": "Print",
     "show": "Show",
-    "search": "Search"
+    "search": "Search",
+    "discordStore": "Buy Gems on Discord",
+    "ourStore": "Buy Gems on our Store",
+    "gemsDisclaimer": "-# By making a purchase, you agree to our [Terms of Service]({config_urls_tos}).\n-# After buying gems, they will be automatically added to your account! If they don't show up, use the {command_redeem} command to redeem them."
 }

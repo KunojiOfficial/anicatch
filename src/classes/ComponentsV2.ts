@@ -80,7 +80,8 @@ export default class ComponentsV2 {
             ...data,
             emoji,
             style: data.style ? ButtonStyle[data.style] : ButtonStyle.Secondary,
-            custom_id: !data.url && !data.skuId ? customId.join(";") : undefined
+            custom_id: !data.url && !data.skuId ? customId.join(";") : undefined,
+            url: this.client.formatText(data.url, this.locale) || undefined,
         }
     }
 
