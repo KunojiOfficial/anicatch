@@ -43,7 +43,7 @@ export default new Interactable({
 
         //make ball buttons
         const ballButtons = balls.map( b => ({
-            component_id: b.itemId,
+            component_id: 3000+b.itemId,
             type: "Button",
             button_data: {
                 id: 1,

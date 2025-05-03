@@ -121,7 +121,7 @@ export default new Panel({
         }, 1000 * 15);
 
         const ballButtons = balls.map( b => ({
-            component_id: b.itemId,
+            component_id: 3000+b.itemId,
             type: "Button",
             button_data: {
                 id: 1,

@@ -163,7 +163,7 @@ export default class ComponentsV2 {
     }
 
     private separator(data: SeparatorData): object {
-        return { ...data }
+        return { ...data, id: undefined }
     }
 
     private container(data: ContainerData, components: Array<Component>, replace?: any): object {
