@@ -63,7 +63,7 @@ export default new Interactable({
             if (actionRow.id < 400) continue;
 
             for (let button of actionRow.components) {
-                if (button.id === ball.itemId) {
+                if (button.id-3000 === ball.itemId) {
                     button.data.style = captured ? ButtonStyle.Success : ButtonStyle.Danger;
                     button.data.label = (parseInt(button.data.label)-1).toString();
                 }

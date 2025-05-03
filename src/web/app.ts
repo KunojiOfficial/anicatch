@@ -13,6 +13,8 @@ import Formatter from '../classes/Formatter.ts';
 import copyEmojis from '../helpers/copyEmojis.ts';
 import setupEmojis from '../helpers/setupEmojis.ts';
 
+import entitlements from "../config/entitlements.json";
+
 const app = express();
 const server = createServer(app);
 
@@ -79,6 +81,51 @@ export default function startServer(manager: ClusterManager, db: PrismaClient, f
         } catch (e) {
             console.error(e)
             res.status(500).send("Error processing vote");
+        }
+    });
+
+    app.post("/store", async (req, res) => {
+        if (req.headers.authorization !== process.env.STORE_SECRET) return res.status(401).send("Unauthorized");
+        
+        try {
+            const skuId = req.body.id;
+            const discordId = req.body.discordId;
+    
+            const user = await db.user.findUnique({ where: { discordId }, include: { config: true } });
+            if (!user) return res.status(404).send("User not found");
+    
+            const entitlement = entitlements.find(e => e.id === skuId && e.type === "consumable");
+            if (!entitlement) return res.status(404).send("Entitlement not found");
+    
+            await db.$transaction(async tx => {
+                let update = {};
+                for (const reward of entitlement.rewards) {
+                    update[reward.type] = { increment: reward.amount };
+                }
+        
+                await tx.user.updateMany({ where: { id: user.id }, data: update });
+                await tx.log.create({ data: { userId: user.id, action: "consumable-purchase", description: `bought ${user.id}` } });
+            });
+    
+            res.status(200).send("Entitlement processed");
+        
+            let rewardsInfo = "";
+        
+            for (const reward of entitlement.rewards) {
+                rewardsInfo += `* {emoji_${reward.type}} **{number_${reward.amount}}**\n`;
+            }
+    
+            for (const [_, cluster] of manager.clusters) {
+                const answer = await cluster.request({ action: 'directMessage', user: user.discordId, content: {
+                    embeds: [{
+                        description: formatter.f(`### {locale_main_thanksForPurchase} ❤️\n{locale_main_successfullyAcquired}\n${rewardsInfo}\n{locale_main_hopeYouEnjoy}\n\n-# {locale_main_purchaseHelp}`, user.config.locale),
+                    }]
+                } });
+                if ((answer as any).found) break;
+            }
+        } catch (e) {
+            console.error(e)
+            res.status(500).send("Error processing store request");
         }
     });
 

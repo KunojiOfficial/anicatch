@@ -17,6 +17,8 @@
     {
         "id": "1297143579822657618",
         "type": "consumable",
+        "name": "20 Gems",
+        "price": 1.99,
         "rewards": [
             { "type": "gems", "amount": 20 }
         ]
@@ -24,6 +26,8 @@
     {
         "id": "1297143905728462848",
         "type": "consumable",
+        "name": "50 Gems (+10 Bonus)",
+        "price": 4.99,
         "rewards": [
             { "type": "gems", "amount": 60 }
         ]
@@ -31,6 +35,8 @@
     {
         "id": "1297144084414332958",
         "type": "consumable",
+        "name": "100 Gems (+25 Bonus)",
+        "price": 9.99,
         "rewards": [
             { "type": "gems", "amount": 125 }
         ]
@@ -38,6 +44,8 @@
     {
         "id": "1297144295114936392",
         "type": "consumable",
+        "name": "300 Gems (+80 Bonus)",
+        "price": 29.99,
         "rewards": [
             { "type": "gems", "amount": 380 }
         ]
@@ -45,6 +53,8 @@
     {
         "id": "1297144406591279115",
         "type": "consumable",
+        "name": "500 Gems (+140 Bonus)",
+        "price": 49.99,
         "rewards": [
             { "type": "gems", "amount": 640 }
         ]
@@ -52,6 +62,8 @@
     {
         "id": "1297145134604881952",
         "type": "consumable",
+        "name": "1,000 Gems (+350 Bonus)",
+        "price": 99.99,
         "rewards": [
             { "type": "gems", "amount": 1350 }
         ]

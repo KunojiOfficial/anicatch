@@ -80,7 +80,8 @@ export default class ComponentsV2 {
             ...data,
             emoji,
             style: data.style ? ButtonStyle[data.style] : ButtonStyle.Secondary,
-            custom_id: !data.url && !data.skuId ? customId.join(";") : undefined
+            custom_id: !data.url && !data.skuId ? customId.join(";") : undefined,
+            url: data.url ? this.client.formatText(data.url, this.locale) : undefined,
         }
     }
 
@@ -162,7 +163,7 @@ export default class ComponentsV2 {
     }
 
     private separator(data: SeparatorData): object {
-        return { ...data }
+        return { ...data, id: undefined }
     }
 
     private container(data: ContainerData, components: Array<Component>, replace?: any): object {

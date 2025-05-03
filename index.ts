@@ -59,6 +59,6 @@ manager.on('clusterCreate', async cluster => {
 	if (spawnedClusters === manager.totalClusters) {
 		//encounterRecharge(db, manager, formatter);
 		voteNotifications(db, manager, formatter);
-		redeemEntitlements(db, manager, formatter);
+		if (process.env.NODE_ENV !== "development") redeemEntitlements(db, manager, formatter);
 	}
 });
