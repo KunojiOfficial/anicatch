@@ -21,6 +21,10 @@
         "MOVES": {
             "name": "Moves",
             "description": "Teach your Animon new moves to make them stronger!"
+        },
+        "FRAGMENT": {
+            "name": "Crystals",
+            "description": "Mystical items brimming with arcane energy, used to elevate your Animons' ascension, unlocking hidden potential and untold evolution."
         }
     }
 }

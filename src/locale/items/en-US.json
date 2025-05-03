@@ -78,5 +78,25 @@
     "legendGrimoire": {
         "name": "Legendary Grimoire",
         "description": "A tome that contains a random legendary move."
+    },
+    "infernoFragment": {
+        "name": "Inferno Crystal",
+        "description": "A crystal that can be used to ascend Inferno type Animons."
+    },
+    "frostFragment": {
+        "name": "Frost Crystal",
+        "description": "A crystal that can be used to ascend Frost type Animons."
+    },
+    "natureFragment": {
+        "name": "Nature Crystal",
+        "description": "A crystal that can be used to ascend Nature type Animons."
+    },
+    "lightFragment": {
+        "name": "Light Crystal",
+        "description": "A crystal that can be used to ascend Light type Animons."
+    },
+    "voidFragment": {
+        "name": "Void Crystal",
+        "description": "A crystal that can be used to ascend Void type Animons."
     }
 }

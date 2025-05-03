@@ -14,6 +14,15 @@ const bannerImage = readFileSync(bannerImagePath);
 function formatRewards(rewards: any, player: Player, cards: Card[], battle: Battle): object {
     let text = "", variables = {};
 
+    const fragments = rewards.fragments;
+    if (fragments) {
+        const type = rewards.fragmentType;
+        
+        text += `{locale_battle_fragments}`;
+        variables["fragments"] = [`**{number_${fragments}} {emoji_${type.substring(0,3)}_frag} {locale_items_${type}Fragment_name}**`];
+        return {text, variables};
+    }
+
     const exp = rewards.exp;
     if (!exp) return {text, variables};
     
@@ -173,7 +182,8 @@ export default new Panel({
                         { type: "Button", button_data: { id: "22", label: "{locale_main_move}", emoji: "move", args: { action: "move", id: battle.id }, ...defaults } },
                         { type: "Button", button_data: { id: "22", label: "{locale_main_item}", emoji: "item", args: { action: "item", id: battle.id }, ...defaults } },
                         { type: "Button", button_data: { id: "22", label: "{locale_main_team}", emoji: "whBall", args: { action: "team", id: battle.id }, ...defaults } },
-                        { type: "Button", button_data: { id: "22", label: "{locale_main_forfeit}", emoji: "forfeit", args: { action: "forfeit", id: battle.id }, ...defaults } }
+                        { type: "Button", button_data: { id: "22", label: "{locale_main_forfeit}", emoji: "forfeit", args: { action: "forfeit", id: battle.id }, ...defaults } },
+                        battle.type === "PVE" ? { type: "Button", button_data: { disabled: !battleInstance.canSpare, id: "22", label: "{locale_main_spare}", emoji: "spare", args: { action: "spare", id: battle.id }, ...defaults } } : null
                     ] } : null
                 ]
             }], {

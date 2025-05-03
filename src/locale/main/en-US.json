@@ -261,7 +261,7 @@
     "usersOffer": "{custom_user}'s Offer",
     "reject": "Reject",
     "maxLevelTip": "The maximum level for this rarity is **{custom_maxLevel}**.",
-    "evolveTip": "Evolve your Animon to increase its level cap.",
+    "evolveTip": "Reach max level to ascend and evolve your Animon.",
     "level": "Level",
     "health": "Health",
     "editItems+offered": "Edit offered items",
@@ -319,5 +319,10 @@
     "rarity": "Rarity",
     "print": "Print",
     "show": "Show",
-    "search": "Search"
+    "search": "Search",
+    "spare": "Spare",
+    "ascension": "Ascension",
+    "ascensionNeedCrystals": "-# You have **{custom_current}** of **{custom_needed}** required **{custom_crystal}s**.\n-# Get more crystals by sparing wild Animons in battle!" ,
+    "ascend": "Ascend",
+    "ascensionReady": "-# Use **{custom_needed}** of your **{custom_crystal}s** to ascend.\n-# Ascension resets your Animon's level and attributes but permanently boosts attributes by **{custom_increase}**. After ascending **{custom_ascensionRequired}** times, your Animon will be able to evolve!"
 }

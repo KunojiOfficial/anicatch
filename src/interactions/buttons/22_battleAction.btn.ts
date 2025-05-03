@@ -85,6 +85,12 @@ export default new Interactable({
 
             const panel = await client.panels.get("battle")!.execute!(interaction, battle.id)
             return panel;
+        } else if (action === "spare") {
+            const battleInstance = new Battle(battle, player.data.id, client);
+            await battleInstance.selectAction("spare", {});
+
+            const panel = await client.panels.get("battle")!.execute!(interaction, battle.id);
+            return panel;
         }
 
         return {};

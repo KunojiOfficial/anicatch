@@ -7,7 +7,7 @@ import { DiscordClient, HistoryElement } from "../types.ts";
 import { numberWithCommas, parseColor } from "../helpers/utils.ts";
 
 import consumable from "../mechanics/consumable.ts";
-import { calculateAtk, calculateDmg, calculateDroppedCoins, calculateDroppedExp } from "../mechanics/statsCalculator.ts";
+import { calculateAtk, calculateDmg, calculateDroppedCoins, calculateDroppedExp, calculateDroppedFragments } from "../mechanics/statsCalculator.ts";
 
 import types from "../data/types.json";
 import locale from "../locale/items/en-US.json";
@@ -15,6 +15,7 @@ import locale from "../locale/items/en-US.json";
 import Card from "./Card.ts";
 import { drawCard, drawStats } from '../helpers/battleCanvas.ts';
 import Rarity from './Rarity.ts';
+import addItem from '../mechanics/addItem.ts';
 
 function rev(i: number) { return i === 0 ? 1 : 0; }
 
@@ -24,6 +25,7 @@ class Battle {
     battle: DbBattle;
     userIndex: number;
     isAi: boolean = false;
+    canSpare: boolean = false;
 
     activeCards: Card[] = [];
     movesOrdered: any[] = [];
@@ -58,6 +60,8 @@ class Battle {
         } else if (type === "switch") {
             const canUse = await this.validateSwitch(data.cardId, this.battle[`userId${this.userIndex+1}`]);
             if (!canUse) return await this.skip();
+        } else if (type === "spare") {
+            if (!this.canSpare) return await this.skip();
         }
 
         await this.client.db.battle.update({
@@ -99,6 +103,11 @@ class Battle {
             new Card({ card: card1, parent: card1.card, character: card1.card.character, moves: card1.moves }),
             new Card({ card: card2, parent: card2.card, character: card2.card.character, moves: card2.moves })
         ];
+
+        if (this.battle.type === "PVE" 
+            && this.activeCards[1].getStats().hp < this.activeCards[1].getMaxHealth() * 0.30
+            && this.activeCards[0].getStats().hp > this.activeCards[0].getMaxHealth() * 0.5
+        ) this.canSpare = true;
     }
 
     /**
@@ -146,8 +155,8 @@ class Battle {
         const move1 = this.battle.move1 as any;
         const move2 = this.battle.move2 as any;
 
-        if (move1.type === "switch" || move1.type === "item" || move1.type === "run") this.movesOrdered = [move1,move2];
-        else if (move2.type === "switch" || move2.type === "item" || move2.type === "run") this.movesOrdered = [move2,move1];
+        if (move1.type === "spare" || move1.type === "switch" || move1.type === "item" || move1.type === "run") this.movesOrdered = [move1,move2];
+        else if (move2.type === "spare" || move2.type === "switch" || move2.type === "item" || move2.type === "run") this.movesOrdered = [move2,move1];
         else if (move1.type === "move" && move2.type === "move") {
             //who goes first based on agi
             const stats1 = this.activeCards[0].getStats();
@@ -175,6 +184,8 @@ class Battle {
                 moveResult = await this.item(move.cardId, move.itemId, this.battle[`userId${move.userIndex+1}`]);
             } else if (move.type === "run") {
                 return await this.end(false, this.battle[`userId${rev(move.userIndex)+1}`]);
+            } else if (move.type === "spare") {
+                return await this.end(true, this.battle[`userId${move.userIndex+1}`], true);
             }
 
             history.push(moveResult);
@@ -402,19 +413,26 @@ class Battle {
         await this.selectAction("move", { type: "move", moveId: perfectMove.id, cardId: this.activeCards[this.userIndex].card.id });
     }
 
-    async end(isWin: boolean = true, winner?: number): Promise<boolean> {
+    async end(isWin: boolean = true, winner?: number, isSpare: boolean = false): Promise<boolean> {
         const user = await this.client.db.user.findFirst({ where: { id: winner }, include: { role: true } });
-        let exp = 0, coins = 0;
+        let exp = 0, coins = 0, fragments = 0, fragmentType;
 
         if (this.battle.type === "PVE") {
             exp = isWin ? calculateDroppedExp(this.activeCards[1].getLevel()) : 0;
             coins = isWin ? calculateDroppedCoins(this.battle.turn, new Rarity(this.activeCards[1].card.rarity).data.sellPrice) : 0;
+            
+            if (isSpare) {
+                fragments = calculateDroppedFragments(this.activeCards[1].card.rarity);
+                fragmentType = this.activeCards[1].type.name.toLowerCase();
+                exp = 0;
+                coins = 0;
+            }
         }
 
         await this.client.db.$transaction(async tx => {
             await tx.battle.update({
                 where: { id: this.battle.id },
-                data: { status: "ENDED", winnerId: winner, rewards: { exp, coins } }
+                data: { status: "ENDED", winnerId: winner, rewards: { exp, coins, fragments, fragmentType } }
             });
 
             await tx.cardInstance.updateMany({
@@ -453,6 +471,23 @@ class Battle {
                             data: { exp: { increment: sharedExp } }
                         });
                     }
+                }
+            }
+
+            if (fragments > 0) {
+                const fragment = await tx.item.findFirst({ 
+                    where: { 
+                        type: "FRAGMENT", 
+                        properties: { 
+                            path: ["type"], 
+                            equals: this.activeCards[1].type.name.toUpperCase()
+                        } 
+                    } 
+                });
+
+                if (fragment) {
+                    console.log("Adding fragments", fragment.id, fragments);
+                    await addItem(this.client.db, user.id, fragment.id, fragments);
                 }
             }
 

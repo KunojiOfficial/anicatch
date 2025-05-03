@@ -159,6 +159,42 @@ async function stats(interaction: DiscordInteraction, where: any, points: number
         } }
     })) as Component[];
 
+    const canAscend = card.canAscend && isOwner;
+    const variables = {
+        points: [`${card.getStatPoints()}`],
+        count: [`${keys.length}`],
+        maxLevel: [`${card.rarity?.maxLevel || 0}`] 
+    };
+
+    let ascendData: Component;
+    if (canAscend) {
+        const crystals = await client.db.inventory.findFirst({ where: { userId: player.data.id, item: { type: "FRAGMENT", properties: { path: ["type"], equals: card.type.name.toUpperCase() } } }, include: { item: true } });
+        const count = crystals?.count || 0;
+
+        if (count < card.rarity.ascendCost) { //not enough crystals to ascend
+            ascendData = { type: "Section", section_data: {
+                components: [
+                    { type: "TextDisplay", text_display_data: { content: `**{locale_main_ascension}** [${card.card.ascension+1}/${card.card.rarity}]\n{locale_main_ascensionNeedCrystals}{emoji_empty}` } }
+                ], accessory: { type: "Button", button_data: { disabled: true, id: "0", label: "{locale_main_ascend}", emoji: `${card.type.name.toLowerCase().substring(0,3)}_frag` as any } }
+            } }
+
+        } else {
+            ascendData = { type: "Section", section_data: {
+                components: [
+                    { type: "TextDisplay", text_display_data: { content: `**{locale_main_ascension}** [${card.card.ascension+1}/${card.card.rarity}]\n{locale_main_ascensionReady}` } }
+                ], accessory: { type: "Button", button_data: { id: "0", label: "{locale_main_ascend}", emoji: `${card.type.name.toLowerCase().substring(0,3)}_frag` as any, args: { path: "animon", id: card.numericId, userAccess: false, page: "evolve" } } }
+            } }
+
+            variables["ascensionRequired"] = [`**${card.card.rarity}**`];
+            variables["increase"] = [`5`];
+        }
+        
+        variables["needed"] = [`{number_${card.rarity?.ascendCost || 0}}`];
+        variables["current"] = crystals ? [`{number_${count}}`] : ["0"];
+        variables["crystal"] = [`{emoji_${card.type.name.toLowerCase().substring(0,3)}_frag} {locale_items_${card.type.name.toLowerCase()}Fragment_name}`]
+
+    }
+
     return [[
         { type: "Container", component_id: 690, container_data: { color: rarity.color }, components: [
             { type: "Separator", separator_data: { spacing: 2 } },
@@ -166,6 +202,8 @@ async function stats(interaction: DiscordInteraction, where: any, points: number
                 { type: "TextDisplay", text_display_data: { content: `**{locale_main_level} ${card.getLevel()}** (${card.getPercentage()}%)\n${card.getExpBar(player.config.isMobile ? 8 : 15)}{emoji_empty}{emoji_empty}\n-# {locale_main_maxLevelTip}\n-# {locale_main_evolveTip}\n\n**{locale_main_health}** (${hpPercentage}%) \n${card.getHealthBar(player.config.isMobile ? 8 : 15)}\n-# {number_${card.getCurrentHealth()}}/{number_${card.getMaxHealth()}}` } },
             ], accessory: { type: "Thumbnail", thumbnail_data: { media: { url: "attachment://card.jpg" } } } } },
             isOwner ? { type: "Separator", separator_data: { spacing: 2 } } : null,
+            canAscend ? ascendData : null,
+            canAscend ? { type: "Separator", separator_data: { spacing: 2 } } : null,
             isOwner ? { type: "TextDisplay", text_display_data: { content: `{locale_main_pointsText}` } } : null,
             { type: "Separator", separator_data: { spacing: 2 } },
             ...statComponents,
@@ -174,11 +212,7 @@ async function stats(interaction: DiscordInteraction, where: any, points: number
                 { type: "TextDisplay", text_display_data: { content: `\`   \`{emoji_empty}**{locale_main_pointsToSpend}**\n-# {emoji_empty}{emoji_empty}\u2800 {locale_main_pointsToSpendText}` } }
             ], accessory: { type: "Button", button_data: { id: "5", label: points.toString(), args: { min: 1, max: 50, index: 4, customId: `animon:${animon.id}:false:stats:${points}` } } } } } : null,
         ] },
-    ], card, {
-        points: [`${card.getStatPoints()}`],
-        count: [`${keys.length}`],
-        maxLevel: [`${card.rarity?.maxLevel || 0}`] 
-    }];
+    ], card, variables];
 }
 
 export default new Panel({

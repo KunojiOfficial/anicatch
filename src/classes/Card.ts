@@ -39,7 +39,7 @@ export default class Card {
 
         this.rarity = rarities[this.card.rarity.toString() as keyof typeof rarities];
         this.type = types[this.parent?.type.toString() as keyof typeof types];
-        this.rarityInstance = new Rarity(this.card.rarity);
+        this.rarityInstance = new Rarity(this.card.rarity, this.card.ascension);
     }
 
     canLevel() : boolean {
@@ -58,13 +58,13 @@ export default class Card {
 
     getStats() : Stats {
         return { 
-            hp: this.card.hp === -1 ? calculateHp(this.card.vit) : this.card.hp,
-            vit: this.card.vit,
-            def: this.card.def,
-            pow: this.card.pow,
-            agi: this.card.agi,
-            spi: this.card.spi,
-            res: this.card.res
+            hp: this.card.hp === -1 ? calculateHp(this.card.vit + (this.card.ascension*5)) : this.card.hp,
+            vit: this.card.vit + (this.card.ascension*5),
+            def: this.card.def + (this.card.ascension*5),
+            pow: this.card.pow + (this.card.ascension*5),
+            agi: this.card.agi + (this.card.ascension*5),
+            spi: this.card.spi + (this.card.ascension*5),
+            res: this.card.res + (this.card.ascension*5)
         } as Stats;
     }
 
@@ -168,7 +168,9 @@ export default class Card {
 
         if (!noRarity) {
             const starImage = await loadImage(`./src/assets/rarities/${this.card.rarity}.png`);
-            for (let i = 0; i < this.card.rarity; i++) ctx.drawImage(starImage, width - 40, 18 + (i * (40 * (width / 270))), 40 * (width / 270), 40 * (width / 270));
+            const ascendedStarImage = this.card.ascension > 0 ? await loadImage(`./src/assets/rarities/${this.card.rarity}a.png`) : null;
+
+            for (let i = 0; i < this.card.rarity; i++) ctx.drawImage(i < this.card.ascension ? ascendedStarImage : starImage, width - 40, 18 + (i * (40 * (width / 270))), 40 * (width / 270), 40 * (width / 270));
         }
 
         // if (!noType) {
@@ -223,6 +225,14 @@ export default class Card {
 
     public get id() {
         return `${base10ToBase26(this.card.cardId)}-${this.card.print}`;
+    }
+    
+    public get level() {
+        return this.getLevel();
+    }
+
+    public get canAscend() {
+        return this.card.ascension < this.card.rarity && this.level == this.rarity.maxLevel;
     }
 
 }

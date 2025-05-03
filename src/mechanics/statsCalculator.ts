@@ -13,7 +13,7 @@ function calculateHp(vit: number) {
 }
 
 function calculateAtk(powCard: number, powMove: number) {
-    return Math.floor(Math.pow(powCard, 1.45)*2 + Math.pow(powMove, 1.8)*4);
+    return Math.floor(Math.pow(powCard, 1.4)*2 + Math.pow(powMove, 1.8)*4);
 }
 
 function calculateDmg(atk: number, def: number, effectiveness: number, blocked: number) {
@@ -32,4 +32,8 @@ function calculateDroppedCoins(turns: number, coins: number) {
     else return maxCoins;
 }
 
-export { calculateLevelFromExp, calculateExpForLevel, calculateHp, calculateAtk, calculateDmg, calculateDroppedExp, calculateDroppedCoins };
+function calculateDroppedFragments(rarity: number) {
+    return rarity;
+}
+
+export { calculateLevelFromExp, calculateExpForLevel, calculateHp, calculateAtk, calculateDmg, calculateDroppedExp, calculateDroppedCoins, calculateDroppedFragments };

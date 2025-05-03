@@ -220,7 +220,7 @@ export default class ComponentsV2 {
      */
     public construct(components: Array<Component>, replace?: any): any {
         components = components.map(c => this.parseComponent(c, replace)).filter(c => c !== null);
-        // console.log(this.totalComponents)
+        console.log(this.totalComponents)
         if (!components.length) return null;
         return components;
     }

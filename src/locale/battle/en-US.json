@@ -15,5 +15,6 @@
     "exp": "{custom_animon} gained {custom_exp} EXP!",
     "expShare": "The rest of the team gained {custom_sharedExp} EXP!",
     "end": "The battle ended! {custom_winner} won!",
-    "coins": "You gained {custom_coins} coins!"
+    "coins": "You gained {custom_coins} coins!",
+    "fragments": "The battle was so one-sided that your foe, recognizing their defeat, retreated in humility. As a token of respect, the wild Animon left behind {custom_fragments}(s). These items have been added to your {command_inventory}."
 }

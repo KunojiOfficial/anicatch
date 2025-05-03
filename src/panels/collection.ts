@@ -75,7 +75,7 @@ export default new Panel({
         const sections: Component[] = [];
         for (const data of pageCards) {
             const card = new Card({ card: data, parent: data.card, character: data.card.character, ball: ballData.find(b => b.id === data.ballId) });
-            const rarity = card.rarityInstance.getShortEmoji();
+            const rarity = card.rarityInstance.getShortEmoji(card.card.rarity == card.card.ascension);
 
             sections.push({
                 type: "Section", section_data: { components: [

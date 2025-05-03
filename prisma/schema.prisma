@@ -166,6 +166,7 @@ model CardInstance {
   team          Int               @default(0)
 
   rarity        Int
+  ascension     Int               @default(0)
   print         Int               @default(0)
  
   exp           Int               @default(0)
@@ -197,6 +198,7 @@ enum ItemType {
   ENCOUNTER
   CONSUMABLE
   MOVE_BOX
+  FRAGMENT
 }
 
 model Item {

@@ -5,7 +5,8 @@
         "chance": 40,
         "multipier": 1,
         "maxLevel": 5,
-        "sellPrice": 11
+        "sellPrice": 11,
+        "ascendCost": 50
     },
     "2": {
         "name": "Uncommon",
@@ -13,7 +14,8 @@
         "chance": 30,
         "multipier": 1.05,
         "maxLevel": 10,
-        "sellPrice": 22
+        "sellPrice": 22,
+        "ascendCost": 100
     },
     "3": {
         "name": "Rare",
@@ -21,7 +23,8 @@
         "chance": 20,
         "multipier": 1.1,
         "maxLevel": 20,
-        "sellPrice": 44
+        "sellPrice": 44,
+        "ascendCost": 200
     },
     "4": {
         "name": "Epic",
@@ -29,7 +32,8 @@
         "chance": 8,
         "multipier": 1.15,
         "maxLevel": 40,
-        "sellPrice": 88
+        "sellPrice": 88,
+        "ascendCost": 400
     },
     "5": {
         "name": "Legendary",
@@ -37,7 +41,8 @@
         "chance": 1.94,
         "multipier": 1.2,
         "maxLevel": 50,
-        "sellPrice": 130
+        "sellPrice": 130,
+        "ascendCost": 1500
     },
     "6": {
         "name": "Mythic",
@@ -45,6 +50,7 @@
         "chance": 0.05,
         "multipier": 1.22,
         "maxLevel": 55,
-        "sellPrice": 355
+        "sellPrice": 355,
+        "ascendCost": 2000
     }
 }
