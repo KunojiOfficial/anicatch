@@ -23,7 +23,7 @@ export default async function(interaction: DiscordInteraction, itemId: number, c
     await client.db.$transaction(async tx => {
         switch (properties.effect) {
             case "LEVELUP":
-                if (cardData.getLevel()+(count*properties.value) > cardData.getRarity()!.maxLevel) throw 32;
+                if (cardData.getLevel()+(count*properties.value) > cardData.rarity.maxLevel) throw 32;
                 
                 const requiredExp = cardData.getExpForExactLevelUps(count*properties.value);
                 await tx.cardInstance.updateMany({ where: { id: card.id }, data: { exp: requiredExp } });
@@ -32,14 +32,14 @@ export default async function(interaction: DiscordInteraction, itemId: number, c
                 if (card.status !== "DEAD") throw 33;
                 count = 1;
 
-                const hp = Math.floor((cardData.getMaxHealth())*properties.value);
+                const hp = Math.floor((cardData.maxHealth)*properties.value);
                 await tx.cardInstance.update({ where: { id: card.id }, data: { status: inFight ? "FIGHT" : "IDLE", hp: hp } });
                 break;
             case "HEAL":
                 if (card.status === "DEAD") throw 34;
                 
-                let maxHp = cardData.getMaxHealth();
-                let currentHp = cardData.getCurrentHealth()!;
+                let maxHp = cardData.maxHealth;
+                let currentHp = cardData.currentHealth;
                 if (currentHp === maxHp) throw 36;
                 
                 let maxCount = 0;
@@ -52,7 +52,7 @@ export default async function(interaction: DiscordInteraction, itemId: number, c
                 
                 
                 count = Math.min(maxCount, count);
-                let newHp = Math.floor(Math.min(cardData.getMaxHealth(), cardData.getCurrentHealth()!+(count*healValue)));
+                let newHp = Math.floor(Math.min(cardData.maxHealth, cardData.currentHealth+(count*healValue)));
                 await tx.cardInstance.update({ where: { id: card.id }, data: { hp: newHp } });
 
                 break;

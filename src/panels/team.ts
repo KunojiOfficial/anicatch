@@ -27,7 +27,7 @@ export default new Panel({
             let card = new Card({ card: animon, parent: animon.card, character: animon.card.character });
             fields.push({
                 name: `${animon.ball?.emoji} ${animon.card.character.name}`,
-                value: `\`${card.getId().padEnd(7, " ")}\`\u2800{emoji_${card.type.name.toLowerCase()}}\n${card.rarityInstance.getLongEmoji()}`,
+                value: `\`${card.id.padEnd(7, " ")}\`\u2800{emoji_${card.type.name.toLowerCase()}}\n${card.rarityInstance.getLongEmoji()}`,
                 inline: true
             });
 

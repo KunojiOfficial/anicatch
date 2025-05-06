@@ -14,31 +14,58 @@ export default new Panel({
         const { user, player, client } = interaction;
 
         if (player.data.encounters < 1) {
-            const notice = {
-                embeds: [ interaction.components.embed({
-                    description: `-# Code #**6**\n{locale_errors_6}`,
-                    color: "#ff0000"
-                }, {
+
+            // const notice = {
+            //     embeds: [ interaction.components.embed({
+            //         description: `-# Code #**6**\n{locale_errors_6}`,
+            //         color: "#ff0000"
+            //     }, {
+            //         timestamp: [ client.getNextEncounterDate(player.data, player.role!) ],
+            //         bot: [`${client.user}`]
+            //     }) ],
+            //     components: [ interaction.components.buttons([{
+            //         id: "0F",
+            //         label: "\u2800{locale_main_visitStore}",
+            //         emoji: "coin",
+            //         args: { path: "store", page: "ENCOUNTER" }
+            //     }, {
+            //         id: "0F",
+            //         label: "\u2800{locale_main_vote}",
+            //         emoji: "sparkles",
+            //         args: { path: "vote" }
+            //     }, {
+            //         id: "0F",
+            //         label: "\u2800{locale_main_getPremium}",
+            //         emoji: "gem",
+            //         args: { path: "premium" }
+            //     }]) ]
+            // };
+
+            const notice: InteractionReplyOptions = {
+                flags: ["IsComponentsV2"],
+                components: interaction.componentsV2.construct([{
+                    type: "Container", container_data: { color: "#ff0000" }, components: [
+                        { type: "TextDisplay", text_display_data: { content: `-# ${user} - {command_catch}` } },
+                        { type: "Separator" },
+                        { type: "TextDisplay", text_display_data: { content: `{locale_main_limit1}` } },
+                        { type: "Separator" },
+                        { type: "Section", section_data: { components: [
+                            { type: "TextDisplay", text_display_data: { content: `{locale_main_limit2}` } },
+                        ], accessory: { type: "Button", button_data: { id: "0F", label: "\u2800 \u2800{locale_main_visitStore}!", emoji: "coin", args: { path: "store", page: "ENCOUNTER" } } } } },
+                        { type: "Separator", separator_data: { divider: false } },
+                        { type: "Section", section_data: { components: [
+                            { type: "TextDisplay", text_display_data: { content: `{locale_main_limit3}` } },
+                        ], accessory: { type: "Button", button_data: { id: "0F", label: "\u2800\u2800\u2800{locale_main_voteNowBtn}!", emoji: "stats", args: { path: "vote" } } } } },
+                        { type: "Separator", separator_data: { divider: false } },
+                        { type: "Section", section_data: { components: [
+                            { type: "TextDisplay", text_display_data: { content: `{locale_main_limit4}` } },
+                        ], accessory: { type: "Button", button_data: { id: "0F", label: "\u2800{locale_main_getPremium}!", emoji: "gem", args: { path: "premium" } } } } },
+                    ]
+                }], {
                     timestamp: [ client.getNextEncounterDate(player.data, player.role!) ],
                     bot: [`${client.user}`]
-                }) ],
-                components: [ interaction.components.buttons([{
-                    id: "0F",
-                    label: "\u2800{locale_main_visitStore}",
-                    emoji: "coin",
-                    args: { path: "store", page: "ENCOUNTER" }
-                }, {
-                    id: "0F",
-                    label: "\u2800{locale_main_vote}",
-                    emoji: "sparkles",
-                    args: { path: "vote" }
-                }, {
-                    id: "0F",
-                    label: "\u2800{locale_main_getPremium}",
-                    emoji: "gem",
-                    args: { path: "premium" }
-                }]) ]
-            };
+                })
+            }
 
             if (interaction.isButton()) {
                 await interaction.followUp(notice);
@@ -99,7 +126,7 @@ export default new Panel({
                 await followUp.edit({
                     components: interaction.componentsV2.construct([
                         { type: "Container", container_data: { color: data.rarity.color }, components: [
-                            { type: "TextDisplay", text_display_data: { content: `-# ${user} | ID: \`${card.getId()}\`` } },
+                            { type: "TextDisplay", text_display_data: { content: `-# ${user} | ID: \`${card.id}\`` } },
                             { type: "Separator" },
                             { type: "TextDisplay", text_display_data: { content: text } },
                             { type: "Separator" },
@@ -147,7 +174,7 @@ export default new Panel({
             files: [attachment!],
             components: interaction.componentsV2.construct([
                 { type: "Container", container_data: { color: data.rarity.color }, components: [
-                    { type: "TextDisplay", text_display_data: { content: `-# ${user} | ID: \`${card.getId()}\`` } },
+                    { type: "TextDisplay", text_display_data: { content: `-# ${user} | ID: \`${card.id}\`` } },
                     { type: "Separator" },
                     { type: "TextDisplay", text_display_data: { content: text } },
                     { type: "Separator" },

@@ -36,7 +36,7 @@ function formatRewards(rewards: any, player: Player, cards: Card[], battle: Batt
     
     variables["exp"] = [`**{number_${exp}}**`];
     variables["coins"] = [`**{number_${coins}}**`];
-    variables["animon"] = [`**${card.getName()}**`];
+    variables["animon"] = [`**${card.name}**`];
 
     if (player.role.expShare > 0) {
         text += "\n{locale_battle_expShare}";
@@ -53,11 +53,11 @@ async function formatHistory(client: DiscordClient, history: HistoryElement, car
 
     const card = cards.find(c => c.card.id === history.cardId);
     if (!card) return {text, variables};
-    variables["animon"] = [`**${card.getName()}**`, `**${card.getName()}**`,`**${card.getName()}**`];
+    variables["animon"] = [`**${card.name}**`, `**${card.name}**`,`**${card.name}**`];
 
     if (history.type === "move") {
         const move = card.moves.find(m => m.id === history.moveId);
-        text = `{emoji_move} **${card.getName()}** used **${move.name}**!`;
+        text = `{emoji_move} **${card.name}** used **${move.name}**!`;
         text = `{emoji_move} {locale_battle_move}`;
 
         variables["move"] = [`**${move.name}**`];

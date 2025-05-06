@@ -19,10 +19,10 @@ export default new Interactable({
             components: [ interaction.components.selectMenu({
                 id: 5,
                 options: cards.map(card => ({ 
-                    label: card.getName() + ` [Lv. ${card.getLevel()}]`,
-                    emoji: card.getType()!.name.toLowerCase(),
+                    label: card.name + ` [Lv. ${card.getLevel()}]`,
+                    emoji: card.type.name.toLowerCase(),
                     value: card.card.id.toString(),
-                    description: `{number_${card.getCurrentHealth()}} / {number_${card.getMaxHealth()}}`
+                    description: `{number_${card.currentHealth}} / {number_${card.maxHealth}}`
                 })),
                 placeholder: "{locale_main_selectCard}",
                 args: { action: "item", battleId: battleId, messageId: messageId, itemId: interaction.values[0] },

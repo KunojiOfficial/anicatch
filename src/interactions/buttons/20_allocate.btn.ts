@@ -16,7 +16,7 @@ export default new Interactable({
         if (animon.status !== "IDLE") throw 18;
 
         const card = new Card({ card: animon });
-        const availablePoints = card.getStatPoints();
+        const availablePoints = card.statPoints;
 
         if (points > availablePoints || points < 1) throw 60;
 

@@ -47,12 +47,12 @@ export default new Interactable({
         
         for (const card of team) {
             const cardObj = new Card({ card: card, parent: card.card, character: card.card.character });
-            team1 += cardObj.getShortLabel() + "\n";
+            team1 += cardObj.label.short + "\n";
         }
 
         for (const card of enemyTeam) {
             const cardObj = new Card({ card: card, parent: card.card, character: card.card.character });
-            team2 += cardObj.getShortLabel() + "\n";
+            team2 += cardObj.label.short + "\n";
         }
 
         const panel = await client.panels.get("battle").execute(interaction);

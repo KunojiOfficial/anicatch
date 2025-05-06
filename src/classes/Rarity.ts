@@ -10,6 +10,14 @@ export default class Rarity {
         this.data = rarities[rarity] || rarities[1];
         this.ascension = ascension;
     }
+    
+    public get color() {
+        return this.data.color;
+    }
+
+    public get label() {
+        return `${this.getShortEmoji()} **${this.data.name}**`
+    }
 
     getShortEmoji(ascended: boolean = false) {
         return `{emoji_r${this.id}${ascended ? "a" : ""}}`;
@@ -29,7 +37,4 @@ export default class Rarity {
         return this.data.sellPrice;
     }
 
-    public get color() {
-        return this.data.color;
-    }
 }

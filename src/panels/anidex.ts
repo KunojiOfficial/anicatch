@@ -63,7 +63,7 @@ export default new Panel({
                     { name: "\u2800", value: `-# {locale_main_totalCaught}: **${card.instances.length}**\n-# ` + [...new Set(card.instances.map(c => c.rarity))].map(r => `${(new Rarity(r as any)).getShortEmoji()} **${card.instances.filter((c:any) => c.rarity === r).length}**`).join(" ") + "\u2800" }
                 ],
                 image: "attachment://card.jpg",
-                color: cardC.getRarity()?.color
+                color: cardC.rarity.color
             }) ],
             files: [attachment!],
             components: [ interaction.components.buttons([{

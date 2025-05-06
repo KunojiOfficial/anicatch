@@ -327,5 +327,13 @@
     "ascensionReady": "-# Use **{custom_needed}** of your **{custom_crystal}s** to ascend.\n-# Ascension resets your Animon's level and attributes but permanently boosts attributes by **{custom_increase}**. After ascending **{custom_ascensionRequired}** times, your Animon will be able to evolve!",
     "discordStore": "Buy Gems on Discord",
     "ourStore": "Buy Gems on our Store",
-    "gemsDisclaimer": "-# By making a purchase, you agree to our [Terms of Service]({config_urls_tos}).\n-# After buying gems, they will be automatically added to your account! If they don't show up, use the {command_redeem} command to redeem them."
+    "gemsDisclaimer": "-# By making a purchase, you agree to our [Terms of Service]({config_urls_tos}).\n-# After buying gems, they will be automatically added to your account! If they don't show up, use the {command_redeem} command to redeem them.",
+    "limit1": "**You've used up all your Animon encounters!** 😟\nYour next encounter will be available **{custom_timestamp}**.",
+    "limit2": "Don't want to wait?\nVisit the {command_store} to **purchase more encounters** using **{emoji_smallCoin} coins**.",
+    "limit3": "You can also **vote for {custom_bot}** to earn free encounters!\nUse the {command_vote} command to get started.",
+    "limit4": "Need even more? **Upgrade to Premium** for higher daily encounter limits, faster recharge times, and other exclusive rewards. Use {command_premium} to learn more!",
+    "voteNowBtn": "Vote Now",
+    "evolution": "Evolution",
+    "evolutionReady": "-# Your Animon is ready to evolve!\n-# Evolving your Animon will increase its rarity. However, it will reset its level, attributes, and ascension level. To evolve your Animon, you must sacrifice another Animon of {custom_rarity} rarity.",
+    "evolve": "Evolve"
 }

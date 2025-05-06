@@ -15,7 +15,7 @@
     "15": "Please enter a valid number.",
     "16": "The number you provided is invalid.",
     "17": "This card belongs to another user.",
-    "18": "Your Animon must not be dead, in battle, or involved in a trade to perform this action.",
+    "18": "Your Animon must not be unconscious, in battle, or involved in a trade to perform this action.",
     "19": "You cannot sell favorite cards.",
     "20": "You cannot use buttons that belong to another user.",
     "21": "Status requirement not met: 'not fled'.",
@@ -72,5 +72,7 @@
     "72": "The promotion has ended.",
     "73": "This user's profile is private.",
     "74": "You cannot customize your profile! Become a **Premium** member to unlock this feature - {command_premium}.",
-    "75": "The color you provided is invalid. Please use a valid HEX color code - you can use [this tool](https://www.w3schools.com/colors/colors_picker.asp) to find one."
+    "75": "The color you provided is invalid. Please use a valid HEX color code - you can use [this tool](https://www.w3schools.com/colors/colors_picker.asp) to find one.",
+    "76": "You don't have enough crystals to ascend this Animon.",
+    "77": "The Animon you want to sacrifice doesn't meet the requirements. Make sure it is not in battle, in a trade, or unconscious. Also, check if it belongs to you and is not a favorite card. The rarity of the Animon you want to sacrifice must be higher than the rarity of the Animon you want to evolve."
 }

@@ -7,6 +7,7 @@ import { Component, StringSelectOption } from "../types/componentTypes.ts";
 import Player from "../classes/Player.ts";
 import Panel from "../classes/Panel.ts";
 import Card from "../classes/Card.ts";
+import Rarity from "../classes/Rarity.ts";
 
 function getDesc(card: CardInstance, player: Player) {
     if (card.userId !== player.data.id) return undefined;
@@ -101,7 +102,7 @@ async function main(interaction: DiscordInteraction, where: any, userAccess: boo
     if (!animon) throw 5;
 
     const card = new Card({card: animon, parent: animon.card, character: animon.card.character });
-    const rarity = card.getRarity()!;
+    const rarity = card.rarity;
 
     const isOwner = animon.userId === player.data.id;
     let isTeam = card.card.team>0;
@@ -140,10 +141,10 @@ async function stats(interaction: DiscordInteraction, where: any, points: number
     const isOwner = player.data.id === animon.userId;
 
     const card = new Card({card: animon, parent: animon.card });
-    const stats = card.getStats();
-    const rarity = card.getRarity()!;
+    const stats = card.stats;
+    const rarity = card.rarity;
     const keys = Object.keys(stats).filter(key => key !== "hp");
-    const hpPercentage = Math.floor(card.getCurrentHealth()!/card.getMaxHealth()*100);
+    const hpPercentage = Math.floor(card.currentHealth/card.maxHealth*100);
 
     const statComponents = keys.map(key => ({
         type: "Section",
@@ -155,18 +156,19 @@ async function stats(interaction: DiscordInteraction, where: any, points: number
             },
         }], accessory: {
             type: "Button",
-            button_data: { id: "20", emoji: "plus", disabled: card.getStatPoints() < 1 || !isOwner, args: { cardId: card.numericId, points: points, stat: key } }
+            button_data: { id: "20", emoji: "plus", disabled: card.statPoints < 1 || !isOwner, args: { cardId: card.numericId, points: points, stat: key } }
         } }
     })) as Component[];
 
     const canAscend = card.canAscend && isOwner;
+    const canEvolve = card.canEvolve && isOwner;
     const variables = {
-        points: [`${card.getStatPoints()}`],
+        points: [`${card.statPoints}`],
         count: [`${keys.length}`],
         maxLevel: [`${card.rarity?.maxLevel || 0}`] 
     };
 
-    let ascendData: Component;
+    let ascendData: Component, evolveData: Component;
     if (canAscend) {
         const crystals = await client.db.inventory.findFirst({ where: { userId: player.data.id, item: { type: "FRAGMENT", properties: { path: ["type"], equals: card.type.name.toUpperCase() } } }, include: { item: true } });
         const count = crystals?.count || 0;
@@ -182,7 +184,7 @@ async function stats(interaction: DiscordInteraction, where: any, points: number
             ascendData = { type: "Section", section_data: {
                 components: [
                     { type: "TextDisplay", text_display_data: { content: `**{locale_main_ascension}** [${card.card.ascension+1}/${card.card.rarity}]\n{locale_main_ascensionReady}` } }
-                ], accessory: { type: "Button", button_data: { id: "0", label: "{locale_main_ascend}", emoji: `${card.type.name.toLowerCase().substring(0,3)}_frag` as any, args: { path: "animon", id: card.numericId, userAccess: false, page: "evolve" } } }
+                ], accessory: { type: "Button", button_data: { id: "27", cooldown: { id: "ascend", time: 10 }, label: "{locale_main_ascend}", emoji: `${card.type.name.toLowerCase().substring(0,3)}_frag` as any, args: { id: card.numericId } } }
             } }
 
             variables["ascensionRequired"] = [`**${card.card.rarity}**`];
@@ -192,23 +194,31 @@ async function stats(interaction: DiscordInteraction, where: any, points: number
         variables["needed"] = [`{number_${card.rarity?.ascendCost || 0}}`];
         variables["current"] = crystals ? [`{number_${count}}`] : ["0"];
         variables["crystal"] = [`{emoji_${card.type.name.toLowerCase().substring(0,3)}_frag} {locale_items_${card.type.name.toLowerCase()}Fragment_name}`]
+    } else if (canEvolve) {
+        evolveData = { type: "Section", section_data: {
+            components: [
+                { type: "TextDisplay", text_display_data: { content: `**{locale_main_evolution}**\n{locale_main_evolutionReady}` } }
+            ], accessory: { type: "Button", button_data: { id: "28", cooldown: { id: "evolve", time: 10 }, label: "{locale_main_evolve}", emoji: `${card.type.name.toLowerCase().substring(0,3)}_frag` as any, args: { id: card.numericId } }
+        } } }
 
+        variables["rarity"] = [new Rarity(rarity.evolvesInto).label];
     }
 
     return [[
         { type: "Container", component_id: 690, container_data: { color: rarity.color }, components: [
             { type: "Separator", separator_data: { spacing: 2 } },
             { type: "Section", section_data: { components: [
-                { type: "TextDisplay", text_display_data: { content: `**{locale_main_level} ${card.getLevel()}** (${card.getPercentage()}%)\n${card.getExpBar(player.config.isMobile ? 8 : 15)}{emoji_empty}{emoji_empty}\n-# {locale_main_maxLevelTip}\n-# {locale_main_evolveTip}\n\n**{locale_main_health}** (${hpPercentage}%) \n${card.getHealthBar(player.config.isMobile ? 8 : 15)}\n-# {number_${card.getCurrentHealth()}}/{number_${card.getMaxHealth()}}` } },
+                { type: "TextDisplay", text_display_data: { content: `**{locale_main_level} ${card.getLevel()}** (${card.getPercentage()}%)\n${card.getExpBar(player.config.isMobile ? 8 : 15)}{emoji_empty}{emoji_empty}\n-# {locale_main_maxLevelTip}\n-# {locale_main_evolveTip}\n\n**{locale_main_health}** (${hpPercentage}%) \n${card.getHealthBar(player.config.isMobile ? 8 : 15)}\n-# {number_${card.currentHealth}}/{number_${card.maxHealth}}` } },
             ], accessory: { type: "Thumbnail", thumbnail_data: { media: { url: "attachment://card.jpg" } } } } },
             isOwner ? { type: "Separator", separator_data: { spacing: 2 } } : null,
             canAscend ? ascendData : null,
-            canAscend ? { type: "Separator", separator_data: { spacing: 2 } } : null,
+            canEvolve ? evolveData : null,
+            canAscend || canEvolve ? { type: "Separator", separator_data: { spacing: 2 } } : null,
             isOwner ? { type: "TextDisplay", text_display_data: { content: `{locale_main_pointsText}` } } : null,
             { type: "Separator", separator_data: { spacing: 2 } },
             ...statComponents,
             { type: "Separator", separator_data: { spacing: 2 } },
-            card.getStatPoints() > 1 && isOwner ? { type: "Section", section_data: { components: [
+            card.statPoints > 1 && isOwner ? { type: "Section", section_data: { components: [
                 { type: "TextDisplay", text_display_data: { content: `\`   \`{emoji_empty}**{locale_main_pointsToSpend}**\n-# {emoji_empty}{emoji_empty}\u2800 {locale_main_pointsToSpendText}` } }
             ], accessory: { type: "Button", button_data: { id: "5", label: points.toString(), args: { min: 1, max: 50, index: 4, customId: `animon:${animon.id}:false:stats:${points}` } } } } } : null,
         ] },
@@ -245,7 +255,7 @@ export default new Panel({
 
         components[0].components = [ navigation, ...components[0].components ];
         const message: any = interaction.message;
-        if (message && message.components && message.components[0].id === 690) {
+        if (message && message.components && message.components[0].id === 690 && additional !== "generateImage") {
             return {
                 flags: ["IsComponentsV2"],
                 components: interaction.componentsV2.construct(components, replace)

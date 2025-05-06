@@ -105,8 +105,8 @@ class Battle {
         ];
 
         if (this.battle.type === "PVE" 
-            && this.activeCards[1].getStats().hp < this.activeCards[1].getMaxHealth() * 0.30
-            && this.activeCards[0].getStats().hp > this.activeCards[0].getMaxHealth() * 0.5
+            && this.activeCards[1].stats.hp < this.activeCards[1].maxHealth * 0.30
+            && this.activeCards[0].stats.hp > this.activeCards[0].maxHealth * 0.5
         ) this.canSpare = true;
     }
 
@@ -159,8 +159,8 @@ class Battle {
         else if (move2.type === "spare" || move2.type === "switch" || move2.type === "item" || move2.type === "run") this.movesOrdered = [move2,move1];
         else if (move1.type === "move" && move2.type === "move") {
             //who goes first based on agi
-            const stats1 = this.activeCards[0].getStats();
-            const stats2 = this.activeCards[1].getStats();
+            const stats1 = this.activeCards[0].stats;
+            const stats2 = this.activeCards[1].stats;
 
             if (stats1.agi > stats2.agi) this.movesOrdered = [move1,move2];
             else if (stats1.agi === stats2.agi) this.movesOrdered = Math.random() < 0.5 ? [move1,move2] : [move2,move1];
@@ -310,8 +310,8 @@ class Battle {
         if (!move || card.card.status === "DEAD") return { userId: this.battle[`userId${userIndex+1}`], cardId: card.card.id, type: "fail" };
 
         const enemyCard = this.activeCards[rev(userIndex)];
-        const cardStats = card.getStats();
-        const enemyStats = enemyCard.getStats();
+        const cardStats = card.stats;
+        const enemyStats = enemyCard.stats;
         
         let data = {}, efectivness: 1 | 0.5 | 2 = 1, defended = 0, damage = 0, hp = -1, moveType, miss = false;
         if (move.moveType === "ATTACK" || move.moveType === "SPIRIT_ATTACK") {
@@ -441,7 +441,7 @@ class Battle {
             });
 
             if (exp > 0) {
-                const canLevel = this.activeCards[0].canLevel();
+                const canLevel = this.activeCards[0].canLevel;
                 
                 if (canLevel) {
                     await tx.cardInstance.updateMany({
@@ -463,7 +463,7 @@ class Battle {
 
                     for (const card of team.filter(c => c.id !== this.activeCards[0].card.id)) {
                         const cardObj = new Card({ card });
-                        if (!cardObj.canLevel()) continue;
+                        if (!cardObj.canLevel) continue;
 
                         const sharedExp = Math.floor(exp * user.role.expShare);
                         await tx.cardInstance.update({
@@ -586,8 +586,8 @@ class Battle {
         drawCard(ctx, card2, 732+49, 33, rarity2, card2Data.card.rarity);
 
         // Draw stats
-        drawStats(ctx, ball, 66, 430, type1, card1Data.character.name, card1Data.getLevel(), card1Data.getCurrentHealth()/card1Data.getMaxHealth(), this.aliveCards[0]);
-        drawStats(ctx, ball, 590+49, 430, type2, card2Data.character.name, card2Data.getLevel(), card2Data.getCurrentHealth()/card2Data.getMaxHealth(), this.battle.type === "PVE" ? 1 : this.aliveCards[1]);
+        drawStats(ctx, ball, 66, 430, type1, card1Data.character.name, card1Data.getLevel(), card1Data.currentHealth/card1Data.maxHealth, this.aliveCards[0]);
+        drawStats(ctx, ball, 590+49, 430, type2, card2Data.character.name, card2Data.getLevel(), card2Data.currentHealth/card2Data.maxHealth, this.battle.type === "PVE" ? 1 : this.aliveCards[1]);
 
         return canvas;
     }
