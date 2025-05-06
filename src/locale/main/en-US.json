@@ -335,5 +335,6 @@
     "voteNowBtn": "Vote Now",
     "evolution": "Evolution",
     "evolutionReady": "-# Your Animon is ready to evolve!\n-# Evolving your Animon will increase its rarity. However, it will reset its level, attributes, and ascension level. To evolve your Animon, you must sacrifice another Animon of {custom_rarity} rarity.",
-    "evolve": "Evolve"
+    "evolve": "Evolve",
+    "notEnoughGems": "You don't have enough **{emoji_gem} Gems** to unlock another chance!\nPurchase more **{emoji_gem} Gems** using the {command_gems} command or the button below."
 }

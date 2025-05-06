@@ -27,7 +27,7 @@ async function main(interaction: DiscordInteraction) {
 
     const fields = categories.map(c => ({ 
         name: `${items.find(i => i.item.type === c)?.item.emoji} {locale_store_categories_${c}_name}`, 
-        value: `{locale_store_categories_${c}_description}\n-# ${counts[c]} {locale_main_items}`,
+        value: `{locale_store_categories_${c}_description}\n-# {number_${counts[c]}} {locale_main_items}`,
         inline: true
     }));
     
@@ -41,7 +41,7 @@ async function main(interaction: DiscordInteraction) {
     if (moves.length) {
         fields.push({
             name: `{emoji_moveItem} {locale_store_categories_MOVES_name}`,
-            value: "{locale_store_categories_MOVES_description}\n-# " + `${counts["moves"]} {locale_main_items}`,
+            value: "{locale_store_categories_MOVES_description}\n-# " + `{number_${counts["moves"]}} {locale_main_items}`,
             inline: true
         });
 
@@ -95,7 +95,7 @@ async function category(interaction: DiscordInteraction, category: ItemType, ite
 
         fields.push({
             name: (itemId === item.item.id ? `{emoji_chevron_single_right} ` : ``) + `${item.item.emoji} ${itemData.name}`,
-            value: `${itemData.desc}\n-# x${item.count}\n\u2800`,
+            value: `${itemData.desc}\n-# x{number_${item.count}}\n\u2800`,
             inline: true
         })
     }

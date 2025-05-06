@@ -29,6 +29,10 @@ export default new Panel({
             if (sortOrderKeys[i] === "name") {
                 orderBy.push({ card: { character: { name: sortData[i] === 1 ? "desc" : "asc" } } });
                 continue;
+            } else if (sortOrderKeys[i] === "rarity") {
+                orderBy.push({ rarity: sortData[i] === 1 ? "desc" : "asc" });
+                orderBy.push({ ascension: sortData[i] === 1 ? "desc" : "asc" });
+                continue;
             }
 
             orderBy.push({ [sortOrderKeys[i]]: sortData[i] === 1 ? "desc" : "asc" });
@@ -75,11 +79,19 @@ export default new Panel({
         const sections: Component[] = [];
         for (const data of pageCards) {
             const card = new Card({ card: data, parent: data.card, character: data.card.character, ball: ballData.find(b => b.id === data.ballId) });
-            const rarity = card.rarityInstance.getShortEmoji(card.card.rarity == card.card.ascension);
+            
+            const level = `\`Lv. ${card.level.toString().padEnd(2, " ")}\``
+            const rarity = card.rarityInstance.getLongEmoji();
+            const type = `{emoji_${card.type.name.toLowerCase()}}`;
+            const favorite = card.card.favorite ? "{emoji_favorite}" : "";
 
             sections.push({
                 type: "Section", section_data: { components: [
-                    { type: "TextDisplay", text_display_data: { content: `\`${card.id.padEnd(7, " ")}\`\u2800${rarity}\u2800${card.ball.emoji} {emoji_${card.type.name.toLowerCase()}}\u2800 ${player.config.isMobile ? "\n" : ""}**\`Lv. ${card.getLevel().toString().padEnd(2, " ")}\`**\u2800**${card.name}** ${card.card.favorite ? "{emoji_favorite}" : ""}` } }
+                    { type: "TextDisplay", text_display_data: { 
+                        content: !player.config.isMobile ? 
+                              `${card.ball.emoji}\u2800\`${card.id.padEnd(7, " ")}\`\u2800${rarity}\u2800**${level}**\u2800${type}\u2800**${card.name}** ${favorite}`
+                            : `${card.ball.emoji}\u2800\`${card.id}\`\u2800**${card.name}** ${favorite}\n${type}\u2800${level} ${rarity}`
+                        } }
                 ], accessory: { type: "Button", button_data: {
                     id: "0F",
                     emoji: "links",

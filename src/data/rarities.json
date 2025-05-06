@@ -7,7 +7,8 @@
         "maxLevel": 5,
         "sellPrice": 11,
         "ascendCost": 50,
-        "evolvesInto": 2
+        "evolvesInto": 2,
+        "spareRange": [1, 2]
     },
     "2": {
         "name": "Uncommon",
@@ -17,7 +18,8 @@
         "maxLevel": 10,
         "sellPrice": 22,
         "ascendCost": 100,
-        "evolvesInto": 3
+        "evolvesInto": 3,
+        "spareRange": [2, 4]
     },
     "3": {
         "name": "Rare",
@@ -27,7 +29,8 @@
         "maxLevel": 20,
         "sellPrice": 44,
         "ascendCost": 200,
-        "evolvesInto": 4
+        "evolvesInto": 4,
+        "spareRange": [4, 8]
     },
     "4": {
         "name": "Epic",
@@ -37,7 +40,8 @@
         "maxLevel": 40,
         "sellPrice": 88,
         "ascendCost": 400,
-        "evolvesInto": 5
+        "evolvesInto": 5,
+        "spareRange": [8, 12]
     },
     "5": {
         "name": "Legendary",
@@ -46,8 +50,9 @@
         "multipier": 1.2,
         "maxLevel": 50,
         "sellPrice": 130,
-        "ascendCost": 1500,
-        "evolvesInto": 6
+        "ascendCost": 1000,
+        "evolvesInto": 6,
+        "spareRange": [12, 20]
     },
     "6": {
         "name": "Mythic",
@@ -56,7 +61,8 @@
         "multipier": 1.22,
         "maxLevel": 55,
         "sellPrice": 355,
-        "ascendCost": 2000,
-        "evolvesInto": null
+        "ascendCost": 1500,
+        "evolvesInto": null,
+        "spareRange": [20, 50]
     }
 }

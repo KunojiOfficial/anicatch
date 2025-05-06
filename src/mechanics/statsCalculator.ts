@@ -32,8 +32,11 @@ function calculateDroppedCoins(turns: number, coins: number) {
     else return maxCoins;
 }
 
-function calculateDroppedFragments(rarity: number) {
-    return rarity;
+function calculateDroppedFragments(spareRange: number[]) {
+    const [min, max] = spareRange;
+    const amount = Math.ceil(Math.random() * (max - min + 1)) + min;
+
+    return amount;
 }
 
 export { calculateLevelFromExp, calculateExpForLevel, calculateHp, calculateAtk, calculateDmg, calculateDroppedExp, calculateDroppedCoins, calculateDroppedFragments };

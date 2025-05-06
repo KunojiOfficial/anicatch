@@ -422,7 +422,7 @@ class Battle {
             coins = isWin ? calculateDroppedCoins(this.battle.turn, new Rarity(this.activeCards[1].card.rarity).data.sellPrice) : 0;
             
             if (isSpare) {
-                fragments = calculateDroppedFragments(this.activeCards[1].card.rarity);
+                fragments = calculateDroppedFragments(this.activeCards[1].rarity.spareRange);
                 fragmentType = this.activeCards[1].type.name.toLowerCase();
                 exp = 0;
                 coins = 0;
@@ -486,7 +486,6 @@ class Battle {
                 });
 
                 if (fragment) {
-                    console.log("Adding fragments", fragment.id, fragments);
                     await addItem(this.client.db, user.id, fragment.id, fragments);
                 }
             }
@@ -578,12 +577,16 @@ class Battle {
             loadImage('./src/assets/battle/aniball.png')
         ]);
 
+        let ascendedRarity1, ascendedRarity2;
+        if (card1Data.card.ascension > 0) ascendedRarity1 = await loadImage(`./src/assets/rarities/${card1Data.card.rarity}a.png`);
+        if (card2Data.card.ascension > 0) ascendedRarity2 = await loadImage(`./src/assets/rarities/${card2Data.card.rarity}a.png`);
+
         // Draw background
         ctx.drawImage(bg, 0,0, width, height);
 
         // Draw cards
-        drawCard(ctx, card1, 206, 33, rarity1, card1Data.card.rarity);
-        drawCard(ctx, card2, 732+49, 33, rarity2, card2Data.card.rarity);
+        drawCard(ctx, card1, 206, 33, rarity1, ascendedRarity1, card1Data.card.rarity, card1Data.card.ascension);
+        drawCard(ctx, card2, 732+49, 33, rarity2, ascendedRarity2, card2Data.card.rarity, card2Data.card.ascension);
 
         // Draw stats
         drawStats(ctx, ball, 66, 430, type1, card1Data.character.name, card1Data.getLevel(), card1Data.currentHealth/card1Data.maxHealth, this.aliveCards[0]);

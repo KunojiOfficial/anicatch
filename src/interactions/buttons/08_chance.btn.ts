@@ -17,16 +17,18 @@ export default new Interactable({
         if (animon.status !== "FLED") throw 21;
         if (player.data.gems < COST) { // not enough gems
             await interaction.followUp({
-                embeds: [ interaction.components.embed({
-                    description: `{locale_errors_22}`,
-                    color: "#ff0000"
-                }) ],
-                components: [ interaction.components.buttons([{
-                    id: "0F",
-                    label: "{locale_main_getMoreGems}",
-                    emoji: "getGems",
-                    args: { path: "gems" }
-                }]) ]
+                flags: [ "IsComponentsV2" ],
+                components: interaction.componentsV2.construct([{
+                    type: "Container", container_data: { color: "#a04bd3" }, components: [
+                        { type: "TextDisplay", text_display_data: { content: `${player.user}` } },
+                        { type: "Separator" },
+                        { type: "TextDisplay", text_display_data: { content: `{locale_main_notEnoughGems}` } },
+                        { type: "Separator", separator_data: { spacing: 2 } },
+                        { type: "ActionRow", components: [
+                            { type: "Button", button_data: { id: "0", label: "\u2800{locale_main_getMoreGems}", emoji: "gem", args: { path: "gems" } } }
+                        ] }
+                    ]
+                }])
             });
             return {};
         }

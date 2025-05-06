@@ -1,6 +1,6 @@
 import { CanvasRenderingContext2D, createCanvas, Image } from "canvas";
 
-function drawCard(ctx: CanvasRenderingContext2D, img: Image, x: number, y: number, rarity: Image, rarityCount: number) {
+function drawCard(ctx: CanvasRenderingContext2D, img: Image, x: number, y: number, rarity: Image, ascendedRarity: Image, rarityCount: number, ascension: number) {
     drawEllipse(ctx, x+(225/2), y+(320), 250, 75);
 
     ctx.save();
@@ -25,7 +25,7 @@ function drawCard(ctx: CanvasRenderingContext2D, img: Image, x: number, y: numbe
     rarityCtx.shadowOffsetX = 0;
     rarityCtx.shadowOffsetY = 0;
 
-    for (let i = 0; i < rarityCount; i++) rarityCtx.drawImage(rarity, i * 50, 0, 50, 50);
+    for (let i = 0; i < rarityCount; i++) rarityCtx.drawImage(i < ascension ? ascendedRarity : rarity, i * 50, 0, 50, 50);
 
     const rarityX = x + (215 - rarityCanvas.width) / 2;
     ctx.drawImage(rarityCanvas, rarityX, 340);
