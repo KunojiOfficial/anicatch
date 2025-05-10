@@ -1,5 +1,6 @@
 import { ApplicationIntegrationType, InteractionContextType, SlashCommandBuilder } from 'discord.js';
 import Command from '../../classes/Command.ts';
+import Battle from '../../classes/BattleNew.ts';
 
 export default new Command({
     emoji: "🏓",
@@ -12,6 +13,12 @@ export default new Command({
         .setIntegrationTypes(ApplicationIntegrationType.UserInstall, ApplicationIntegrationType.GuildInstall),
     async execute(interaction): Promise<void> {
         const message = await interaction.deferReply({ withResponse: true });
+
+        //testing
+        const battle = new Battle(interaction.client.db, interaction.player.data.id);
+        await battle.initialize(await interaction.client.db.fight.findFirst({ where: { id: 3 } }));
+
+        await battle.selectAction(536, { type: "Switch", data: { switchTo: 591 } });
 
         //db speed
         const now = new Date();

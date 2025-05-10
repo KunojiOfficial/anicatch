@@ -370,3 +370,16 @@ model Promo {
   @@id([userId, code])
   @@unique([userId, code])
 }
+
+
+model Fight {
+  id            Int               @unique @id @default(autoincrement())
+  teamSize      Int               @default(1)
+  timeLimit     Int               @default(0)
+
+  participants  Json[]
+  animons       Json[]
+  history       Json[]
+
+  status        BattleStatus      @default(ACTIVE)
+}

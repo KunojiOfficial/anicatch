@@ -54,8 +54,8 @@ export default new Interactable({
         }], {
             name: [`**${card.card.character.name}**`],
             ball: [`**${ball.item.emoji} ${client.formatText(`{locale_items_${ball.item.name}_name}`, interaction.locale)}**`],
-            roll: [`**${Math.floor(captureData.roll*100)}**`],
-            chance: [`**${Math.floor(captureData.chance*100)}**`]
+            roll: [`**${(captureData.roll*100).toFixed(3)}**`],
+            chance: [`**${(captureData.chance*100)}**`]
         })[0];
 
         //iterate throught the ball buttons
