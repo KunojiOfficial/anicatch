@@ -44,6 +44,11 @@ export default async function(interaction: DiscordInteraction) {
                 label: "\u2800{locale_main_tutorial}",
                 emoji: "📚",
                 args: { path: "guide" }
+            }, {
+                id: "3",
+                label: "\u2800{locale_main_enterReferralCode}",
+                emoji: "plus",
+                args: { modal: 9 }
             }]) ]
         });
 

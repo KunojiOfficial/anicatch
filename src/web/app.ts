@@ -103,6 +103,7 @@ export default function startServer(manager: ClusterManager, db: PrismaClient, f
                     update[reward.type] = { increment: reward.amount };
                 }
         
+                if (user.referredBy) await tx.user.update({ where: { id: user.referredBy }, data: { gems: { increment: Math.round((entitlement.rewards.find(d => d.type === "gems")?.amount || 0) * 0.1) || 0 } } });
                 await tx.user.updateMany({ where: { id: user.id }, data: update });
                 await tx.log.create({ data: { userId: user.id, action: "consumable-purchase", description: `bought ${user.id}` } });
             });

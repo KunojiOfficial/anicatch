@@ -32,7 +32,16 @@ model User {
   status        UserStatus        @default(NEW)
   
   encounters    Int               @default(15)
-  
+
+  //referral system
+  referralCode  String?           @unique
+  referredBy    Int?
+  referrer      User?             @relation("Referrer", fields: [referredBy], references: [id], onDelete: SetNull)
+  referrals     User[]            @relation("Referrer")
+  refClaimed    Boolean           @default(false)
+
+  version       String?           @default("0.0.0")
+
   config        Config?
   stats         UserStats?
   role          Role              @relation(fields: [roleId], references: [id])

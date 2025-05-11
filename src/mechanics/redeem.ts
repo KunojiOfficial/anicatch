@@ -31,6 +31,7 @@ export default async function redeem(entitlement: Entitlement) {
             update[reward.type] = { increment: reward.amount };
         }
 
+        if (player.data.referredBy) await tx.user.update({ where: { id: player.data.referredBy }, data: { gems: { increment: Math.round((data.rewards.find(d => d.type === "gems")?.amount || 0) * 0.1) || 0 } } });
         await tx.user.updateMany({ where: { id: player.data.id }, data: update });
         await tx.log.create({ data: { userId: player.data.id, action: "consumable-purchase", description: `bought ${data.id}` } });
         await entitlement.consume();
