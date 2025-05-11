@@ -1,0 +1,7 @@
+{
+    "rewards": [
+        { "who": "both", "type": "coins", "amount": 400, "update": { "coins": { "increment": 400 } } },
+        { "who": "both", "type": "gems", "amount": 5, "update": { "gems": { "increment": 5 } } },
+        { "who": "referrer", "type": "boughtGems", "value": 0.1 }
+    ]
+}

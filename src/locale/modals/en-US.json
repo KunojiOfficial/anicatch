@@ -76,5 +76,12 @@
             "label": "Animon to sacrifice",
             "placeholder": "The ID of the Animon you want to sacrifice."
         }]
+    },
+    "9": {
+        "title": "Enter Referral Code",
+        "inputs": [{
+            "label": "Referral Code",
+            "placeholder": "The code of the user you get the referral from."
+        }]
     }
 }
