@@ -2,20 +2,20 @@
     "categories": {
         "BALL": {
             "name": "AniBalls",
-            "description": "AniBalls boost your chances to capture any Animon, from basic to legendary!"
+            "description": "AniBalls boost your chances to capture any Animon,\nfrom basic to legendary!"
         },
         "ENCOUNTER": {
             "name": "Encounter Tokens",
-            "description": "These tokens grant you additional chances to encounter wild Animons."
+            "description": "These tokens grant you additional chances to\nencounter wild Animons."
         },
         "CONSUMABLE": {
             "name": "Sweets",
-            "description": "Give your Animon a treat! Use these items to boost their stats, heal them or unlock various effects!"
+            "description": "Give your Animon a treat! Use these items to boost\ntheir stats, heal them or unlock various effects!"
         },
         "MOVE": {
             "BOX": {
                 "name": "Spellbooks",
-                "description": "Spellbooks contain random moves that can be taught to your Animons!"
+                "description": "Spellbooks contain random moves that can be\ntaught to your Animons!"
             }
         },
         "MOVES": {
@@ -24,7 +24,7 @@
         },
         "FRAGMENT": {
             "name": "Crystals",
-            "description": "Mystical items brimming with arcane energy, used to elevate your Animons' ascension, unlocking hidden potential and untold evolution."
+            "description": "Mystical items brimming with arcane energy, used\nto elevate your Animons' ascension."
         }
     }
 }

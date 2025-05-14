@@ -38,7 +38,7 @@
     "viewDetails": "View Details",
     "sell": "Sell",
     "anotherChance": "Another Chance",
-    "getMoreGems": "Get More Gems",
+    "getMoreGems": "Get Gems",
     "next": "Next",
     "secondChance": "Second Chance",
     "moreActions": "+{custom_count} more actions...",
@@ -354,5 +354,10 @@
     "referredRemaining": "You have **{custom_remaining}** Animons left to capture to claim your rewards.",
     "referralClaimed": "You have already claimed your rewards!",
     "referralCanClaim": "You can claim your rewards now!",
-    "claimRewards": "Claim Rewards"
+    "claimRewards": "Claim Rewards",
+    "viewItems": "View Items",
+    "select": "Select",
+    "getMoreGemsText": "Buy **{emoji_smallGem} Gems** and enhance your experience! With gems, you can grab exclusive items in the {command_store}, unlock a second catch chance, and more!",
+    "itemsToAdd": "Items to add",
+    "itemsToAddText": "Select the item quantity to add to your cart."
 }

@@ -45,11 +45,11 @@
     },
     "cake": {
         "name": "Cake",
-        "description": "So delicious, it makes any Animon instantly gain a level after a single bite!"
+        "description": "So delicious, it makes any Animon instantly gain a level!"
     },
     "cupcake": {
         "name": "Cupcake",
-        "description": "So delightful, it brings any fainted Animon back to life with its sweetness!"
+        "description": "So delightful, it brings any fainted Animon back to life!"
     },
     "snowdriftDonut": {
         "name": "Snowdrift Donut",

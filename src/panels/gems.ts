@@ -15,7 +15,15 @@ export default new Panel({
             return {
                 type: "Section", section_data: { components: [
                     { type: "TextDisplay", text_display_data: { content: `{emoji_smallGem} **${gem.name}**` } }
-                ], accessory: { type: "Button", button_data: { label: `\u2800{locale_main_buy}\u2800$${gem.price.toString().padStart(5,"\u2800")}`, style: "Link", emoji: "smallGem", url: `https://gems.anicatch.com/buy/${index}` } } }
+                ], accessory: { type: "Button", button_data: player.config.isMobile ? { 
+                    label: `\u2800{locale_main_buy}\u2800$${gem.price.toString().padStart(5,"\u2800")}`, 
+                    style: "Link", 
+                    emoji: "smallGem", 
+                    url: `https://gems.anicatch.com/buy/${index}` 
+                } : {
+                    style: "Premium",
+                    skuId: gem.id
+                } } }
             };
         });
 
@@ -39,19 +47,5 @@ export default new Panel({
                 ]
             }])
         }
-
-        // return { 
-        //     embeds: [ interaction.components.embed({
-        //         author: { name: `{locale_main_gemStore} - ${user.displayName}`, iconUrl: user.displayAvatarURL() },
-        //         description: `{locale_main_gemStoreText}`,
-        //         thumbnail: client.getEmojiUrl("gem")
-        //     }) ],
-        //     components: player.config.isMobile ? [interaction.components.buttons([{
-        //         label: "\u2800{locale_main_browseStore}",
-        //         style: "link",
-        //         emoji: "smallGem",
-        //         url: "https://anicatch.com/store"
-        //     }])] : buttons.map(b => interaction.components.buttons(b))
-        // }
     }
 }); 
