@@ -21,14 +21,14 @@ client.cluster.on('message', async message => {
         case "directMessage":
             
             try {
-                return await msg.reply({ found: true });
-                // const user = await client.users.fetch(msg.user);
-                // if (!user) return await msg.reply({ found: false });
+                // return await msg.reply({ found: true });
+                const user = await client.users.fetch(msg.user);
+                if (!user) return await msg.reply({ found: false });
 
-                // const sent = await user.send(msg.content);
-                // if (sent) return await msg.reply({ found: true });
+                const sent = await user.send(msg.content);
+                if (sent) return await msg.reply({ found: true });
             } catch (err) {
-                // return await msg.reply({ found: false });
+                return await msg.reply({ found: false });
             }
             
             break;
