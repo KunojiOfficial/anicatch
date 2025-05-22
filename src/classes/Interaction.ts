@@ -171,8 +171,17 @@ export default class Interaction {
             variables = err.variables;
             err = err.id; 
         } else if (typeof err !== 'number'){ 
-            this.interaction.client.logger.error(err);
-            err = 3;
+
+            if (err.toString().includes("Unknown interaction")) {
+                this.interaction.client.logger.warn(`Client: Unknown interaction user: ${this.interaction.user.id}`);
+                return;
+            } else if(err.toString().includes("Missing Access")) {
+                this.interaction.client.logger.warn(`Client: Missing access for user: ${this.interaction.user.id}`);
+                return;
+            } else {
+                this.interaction.client.logger.error(err);
+                err = 3;
+            }
         }
 
         const message: InteractionReplyOptions = {

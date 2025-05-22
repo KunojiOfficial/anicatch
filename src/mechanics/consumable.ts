@@ -53,6 +53,8 @@ export default async function(interaction: DiscordInteraction, itemId: number, c
                 
                 count = Math.min(maxCount, count);
                 let newHp = Math.floor(Math.min(cardData.maxHealth, cardData.currentHealth+(count*healValue)));
+                if (newHp >= maxHp) newHp = -1;
+                
                 await tx.cardInstance.update({ where: { id: card.id }, data: { hp: newHp } });
 
                 break;

@@ -71,7 +71,7 @@ export default new Panel({
             else if (property.effect === "HEAL") page = "stats";
         }
         
-        const message:any = await client.panels.get("animon")!.execute!(interaction, cardId, false, page);
+        const message:any = await client.panels.get("animon")!.execute!(interaction, cardId, false, page, "minimal");
 
         if (!message || !message.components) return {};
 
