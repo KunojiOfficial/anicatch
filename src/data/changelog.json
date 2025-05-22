@@ -1,0 +1,9 @@
+{
+    "version": "0.1.4",
+    "content": [
+        {
+            "type": "TextDisplay",
+            "text_display_data": { "content": "## `📝` Changelog - v0.1.2\n*Updated on 2025/05/01*\n\n### `🚀` New Features\n- Added **1,540 new cards** featuring new characters.\n  View the full list [here](https://anicatch.com/list.txt).\n\n### `🛠️` Changes\n- Rewritten parts of the UI to support the latest Discord component standards.\n- The `/catch` command now uses the new Discord components.\n- The `/animon` command now uses the new Discord components.\n- The `/battle` command now uses the new Discord components.\n- The `/collection` command now uses the new Discord components.\n" }
+        }
+    ]
+}

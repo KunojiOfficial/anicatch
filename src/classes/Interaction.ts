@@ -67,6 +67,29 @@ export default class Interaction {
             if (this.interaction.isChatInputCommand()) await this.handleCommands();
             else await this.handleInteractables();
 
+            //changelog
+            if (this.interaction.player.data.version !== this.interaction.client.version) {
+                await this.interaction.client.db.user.update({
+                    where: { id: this.interaction.player.data.id },
+                    data: { version: this.interaction.client.version }
+                });
+
+                await this.interaction.followUp({
+                    flags: ["IsComponentsV2"],
+                    components: this.interaction.componentsV2.construct([{
+                        type: "Container", components: [
+                            { type: "TextDisplay", text_display_data: { content: `-# ${this.interaction.player.user}` } },
+                            { type: "Separator" },
+                            { type: "Section", section_data: { components: [
+                                { type: "TextDisplay", text_display_data: { content: "{locale_main_update}" } }
+                            ], accessory: { type: "Button", button_data: { id: "0", emoji: "tos", label: "{locale_main_changelog}", args: { path: "changelog" }  } }  } }
+                        ]
+                    }], {
+                        version: [this.interaction.client.version]
+                    })
+                });
+            }
+
         } catch (error) {
             this.error(error);
         }

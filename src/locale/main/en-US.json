@@ -354,5 +354,7 @@
     "referredRemaining": "You have **{custom_remaining}** Animons left to capture to claim your rewards.",
     "referralClaimed": "You have already claimed your rewards!",
     "referralCanClaim": "You can claim your rewards now!",
-    "claimRewards": "Claim Rewards"
+    "claimRewards": "Claim Rewards",
+    "update": "**The bot has been updated to version {custom_version}!**\nDiscover the latest features and improvements in the changelog using the {command_changelog} command.",
+    "changelog": "Changelog"
 }
