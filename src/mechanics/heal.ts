@@ -1,6 +1,6 @@
 import { PrismaClient, User } from "@prisma/client";
 
-const healCost = 5;
+const healCost = 10;
 
 async function getHealableCards(db: PrismaClient, userId: number) {
     return await db.cardInstance.count({

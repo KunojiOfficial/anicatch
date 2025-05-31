@@ -1,0 +1,9 @@
+{
+    "version": "0.1.4",
+    "content": [
+        {
+            "type": "TextDisplay",
+            "text_display_data": { "content": "## `📝` Changelog - v0.1.4\n*Updated on 2025/05/22*\n\n### `🚀` New Features\n- **Referral System** has been added.\n  - Use the `/referral` command to access the Referral Panel.\n  - Invite your friends to play the bot and have them use your referral code. \n  - Both of you will receive **200 coins** and **5 gems** for each friend who captures at least 5 Animons after using your code.\n  - Additionally, you'll earn **10%** of all gems purchased by your referred friends.\n- The `/changelog` command has been added.\n\n### `🐛` Bug Fixes\n\n- Fixed issues related to using items on Animons." }
+        }
+    ]
+}

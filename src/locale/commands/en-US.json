@@ -160,5 +160,13 @@
     "heal": {
         "name": "heal",
         "description": "Heal and revive your Animons!"
+    },
+    "referral": {
+        "name": "referral",
+        "description": "Invite your friends to earn rewards!"
+    },
+    "changelog": {
+        "name": "changelog",
+        "description": "View the latest updates and changes to the bot!"
     }
 }

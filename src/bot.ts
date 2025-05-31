@@ -21,6 +21,7 @@ client.cluster.on('message', async message => {
         case "directMessage":
             
             try {
+                // return await msg.reply({ found: true });
                 const user = await client.users.fetch(msg.user);
                 if (!user) return await msg.reply({ found: false });
 

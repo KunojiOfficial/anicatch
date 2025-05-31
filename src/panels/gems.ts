@@ -9,6 +9,7 @@ export default new Panel({
     name: "gems",
     async execute(interaction: DiscordInteraction): Promise<InteractionReplyOptions> {
         const { user, client, player } = interaction;
+        const isMobile = player.config.isMobile;
 
         const gems = entitlements.filter(e => e.type === "consumable" && e.rewards?.find(r => r.type === "gems"));
         const components: Component[] = gems.map((gem, index) => {

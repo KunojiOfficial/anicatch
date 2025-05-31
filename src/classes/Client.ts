@@ -16,6 +16,8 @@ import Formatter from "./Formatter.ts";
 
 import emoji from "../config/emoji.json";
 
+import changelogData from "../data/changelog.json";
+
 class Client extends DiscordClient {
     cluster: ClusterClient<DiscordClient> | undefined;
     db: PrismaClient;
@@ -30,6 +32,7 @@ class Client extends DiscordClient {
     formatter: Formatter;
     
     state: string = "loading"
+    version: string = changelogData.version;
 
     constructor(options: ClientOptions) {
         super(options)

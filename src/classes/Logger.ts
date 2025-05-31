@@ -47,6 +47,10 @@ export default class Logger {
         logger.info(`[${this.clusterId.toString().padStart(2,'0')}] ${message}`);
     }
 
+    warn(message: string) {
+        logger.warn(`[${this.clusterId.toString().padStart(2,'0')}] ${message}`);
+    }
+
     log(message: string) {
         this.webhooks.log.send({
             ...webhookDetails,

@@ -29,6 +29,7 @@ export default new Interactable({
             if (actionRow.id < 400) continue;
 
             for (let button of actionRow.components) {
+                if (!button.data) continue;
                 button.data.disabled = true;
             }
         }

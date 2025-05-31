@@ -81,6 +81,7 @@ export default class Player {
                 discordId: user.id, 
                 username: user.username,
                 lastDaily: new Date(new Date().getTime() - 2 * 24 * 60 * 60 * 1000),
+                version: client.version,
                 config: { create: { locale: locale, votes: false, encounters: false } },
                 stats: { create: {} },
                 items: { create: [{ itemId: 1, count: 15 }, { itemId: 2, count: 1 }, { itemId: 3, count: 1 }, { itemId: 4, count: 1 }] }
@@ -164,6 +165,7 @@ export default class Player {
     }
 
     public async getReferredBy(db: PrismaClient) {
+        if (!this.data.referredBy) return null;
         const referredBy = await db.user.findFirst({ where: { id: this.data.referredBy } });
         if (!referredBy) return null;
 

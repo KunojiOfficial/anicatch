@@ -131,6 +131,12 @@ async function main(interaction: DiscordInteraction, where: any, userAccess: boo
 async function stats(interaction: DiscordInteraction, where: any, points: number | string = 1): Promise<[Component[], Card, object]> {
     const { client, player } = interaction;
 
+    let minimum = false;
+    if (typeof points === "string" && points === "minimal") {
+        minimum = true;
+        points = 1;
+    }
+    
     if (typeof points === 'string') points = parseInt(points);
     if (points < 1) points = 1;
     if (points > 50) points = 50;
@@ -160,8 +166,8 @@ async function stats(interaction: DiscordInteraction, where: any, points: number
         } }
     })) as Component[];
 
-    const canAscend = card.canAscend && isOwner;
-    const canEvolve = card.canEvolve && isOwner;
+    const canAscend = card.canAscend && isOwner && !minimum;
+    const canEvolve = card.canEvolve && isOwner && !minimum;
     const variables = {
         points: [`${card.statPoints}`],
         count: [`${keys.length}`],
