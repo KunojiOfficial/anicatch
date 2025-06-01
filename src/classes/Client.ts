@@ -17,6 +17,7 @@ import Formatter from "./Formatter.ts";
 import emoji from "../config/emoji.json";
 
 import changelogData from "../data/changelog.json";
+import { DayTime, Weather } from "../types/weatherTypes.ts";
 
 class Client extends DiscordClient {
     cluster: ClusterClient<DiscordClient> | undefined;
@@ -33,6 +34,9 @@ class Client extends DiscordClient {
     
     state: string = "loading"
     version: string = changelogData.version;
+
+    weather: Weather = "Sunny";
+    dayTime: DayTime = "Day";
 
     constructor(options: ClientOptions) {
         super(options)
