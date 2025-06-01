@@ -40,6 +40,9 @@ model User {
   referrals     User[]            @relation("Referrer")
   refClaimed    Boolean           @default(false)
 
+  //charm
+  charm         Json?
+
   version       String?           @default("0.0.0")
 
   config        Config?
@@ -208,6 +211,7 @@ enum ItemType {
   CONSUMABLE
   MOVE_BOX
   FRAGMENT
+  CHARM
 }
 
 model Item {

@@ -98,5 +98,25 @@
     "voidFragment": {
         "name": "Void Crystal",
         "description": "A crystal that can be used to ascend Void type Animons."
+    },
+    "frostCharm": {
+        "name": "Frost Charm",
+        "description": "A frigid charm made from glacial crystal, it chills the air around it."
+    },
+    "infernoCharm": {
+        "name": "Inferno Charm",
+        "description": "A molten charm radiating warmth, forged in ancient fire."
+    },
+    "natureCharm": {
+        "name": "Nature Charm",
+        "description": "A charm braided with vines and glowing with forest energy."
+    },
+    "lightCharm": {
+        "name": "Light Charm",
+        "description": "A brilliant charm that gleams like the sun."
+    },
+    "voidCharm": {
+        "name": "Void Charm",
+        "description": "A dark charm that whispers with eldritch power. {item_count} chances."
     }
 }
