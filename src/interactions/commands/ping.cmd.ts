@@ -15,10 +15,10 @@ export default new Command({
         const message = await interaction.deferReply({ withResponse: true });
 
         //testing
-        const battle = new Battle(interaction.client.db, interaction.player.data.id);
-        await battle.initialize(await interaction.client.db.fight.findFirst({ where: { id: 3 } }));
+        // const battle = new Battle(interaction.client.db, interaction.player.data.id);
+        // await battle.initialize(await interaction.client.db.fight.findFirst({ where: { id: 3 } }));
 
-        await battle.selectAction(536, { type: "Switch", data: { switchTo: 591 } });
+        // await battle.selectAction(536, { type: "Switch", data: { switchTo: 591 } });
 
         //db speed
         const now = new Date();
