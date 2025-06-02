@@ -99,24 +99,67 @@
         "name": "Void Crystal",
         "description": "A crystal that can be used to ascend Void type Animons."
     },
-    "frostCharm": {
-        "name": "Frost Charm",
-        "description": "A frigid charm made from glacial crystal, it chills the air around it."
+    "frostCharm1": {
+        "name": "Frost Charm I",
+        "description": "A shimmering charm carved from glacial crystal.\n{item_count} uses, {percent_{item_chance}} chance to trigger its icy effect."
     },
-    "infernoCharm": {
-        "name": "Inferno Charm",
-        "description": "A molten charm radiating warmth, forged in ancient fire."
+    "infernoCharm1": {
+        "name": "Inferno Charm I",
+        "description": "A molten charm radiating warmth, forged in ancient fire.\n{item_count} uses, {percent_{item_chance}} chance to trigger its fiery effect."
     },
-    "natureCharm": {
-        "name": "Nature Charm",
-        "description": "A charm braided with vines and glowing with forest energy."
+    "natureCharm1": {
+        "name": "Nature Charm I",
+        "description": "A charm braided with vines and glowing with forest energy.\n{item_count} uses, {percent_{item_chance}} chance to trigger its rejuvenating effect."
     },
-    "lightCharm": {
-        "name": "Light Charm",
-        "description": "A brilliant charm that gleams like the sun."
+    "lightCharm1": {
+        "name": "Light Charm I",
+        "description": "A brilliant charm that gleams like the sun.\n{item_count} uses, {percent_{item_chance}} chance to trigger its radiant effect."
     },
-    "voidCharm": {
-        "name": "Void Charm",
-        "description": "A dark charm that whispers with eldritch power. {item_count} chances."
+    "voidCharm1": {
+        "name": "Void Charm I",
+        "description": "A dark charm that whispers with eldritch power.\n{item_count} uses, {percent_{item_chance}} chance to trigger its dark effect."
+    },
+    "move": {
+        "description": "Lv. {item_requiredLevel} **{locale_main_{item_moveType}}**\n-# {locale_main_power}: {item_power} {locale_main_accuracy}: {item_accuracy} {locale_main_limit}: {item_pp}"
+    },
+    "frostCharm2": {
+        "name": "Frost Charm II",
+        "description": "A rare charm, colder and sharper than before.\n{item_count} uses, {percent_{item_chance}} chance to trigger its icy effect."
+    },
+    "infernoCharm2": {
+        "name": "Inferno Charm II",
+        "description": "A blazing relic, pulsing with intense heat and energy.\n{item_count} uses, {percent_{item_chance}} chance to trigger its fiery effect."
+    },
+    "natureCharm2": {
+        "name": "Nature Charm II",
+        "description": "A lush charm, alive with vibrant, untamed growth.\n{item_count} uses, {percent_{item_chance}} chance to trigger its rejuvenating effect."
+    },
+    "lightCharm2": {
+        "name": "Light Charm II",
+        "description": "A radiant charm, shining with a dazzling, pure brilliance.\n{item_count} uses, {percent_{item_chance}} chance to trigger its radiant effect."
+    },
+    "voidCharm2": {
+        "name": "Void Charm II",
+        "description": "A mysterious charm, swirling with deeper, shadowy power.\n{item_count} uses, {percent_{item_chance}} chance to trigger its dark effect."
+    },
+    "frostCharm3": {
+        "name": "Frost Charm III",
+        "description": "An ancient charm, imbued with the essence of eternal winter.\n{item_count} uses, {percent_{item_chance}} chance to trigger its icy effect."
+    },
+    "infernoCharm3": {
+        "name": "Inferno Charm III",
+        "description": "A legendary charm, burning with the fury of a thousand suns.\n{item_count} uses, {percent_{item_chance}} chance to trigger its fiery effect."
+    },
+    "natureCharm3": {
+        "name": "Nature Charm III",
+        "description": "A mythical charm, pulsating with the raw power of nature itself.\n{item_count} uses, {percent_{item_chance}} chance to trigger its rejuvenating effect."
+    },
+    "lightCharm3": {
+        "name": "Light Charm III",
+        "description": "A divine charm, radiating with the brilliance of celestial light.\n{item_count} uses, {percent_{item_chance}} chance to trigger its radiant effect."
+    },
+    "voidCharm3": {
+        "name": "Void Charm III",
+        "description": "An eldritch charm, resonating with the whispers of the abyss.\n{item_count} uses, {percent_{item_chance}} chance to trigger its dark effect."
     }
 }

@@ -58,6 +58,13 @@ export default async function(interaction: DiscordInteraction, item: Inventory, 
                 })
 
                 break;
+
+            case "CHARM":
+                const charmData = itemData.properties as { type: string, count: number, chance: number, tier: number };
+                
+                await tx.user.updateMany({ where: { id: item.userId }, data: { charm: charmData } });
+
+            break;
         }
 
         await tx.log.create({ data: { userId: item.userId, action: "use", description: `uses ${item.itemId} x ${count}` } })

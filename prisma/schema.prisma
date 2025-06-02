@@ -220,6 +220,7 @@ model Item {
   type          ItemType
   emoji         String
   usable        Boolean           @default(false)
+  singleUse     Boolean           @default(false)
   properties    Json?
 
   priceCoin     Int?

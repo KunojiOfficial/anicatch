@@ -28,7 +28,7 @@
         },
         "CHARM": {
             "name": "Charms",
-            "description": "Special items that increase the chance of encountering specific types of Animons, making it easier to discover and collect your favorites."
+            "description": "Special items that increase the chance of\nencountering specific types of Animons."
         }
     }
 }

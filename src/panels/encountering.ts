@@ -14,33 +14,6 @@ export default new Panel({
         const { user, player, client } = interaction;
 
         if (player.data.encounters < 1) {
-
-            // const notice = {
-            //     embeds: [ interaction.components.embed({
-            //         description: `-# Code #**6**\n{locale_errors_6}`,
-            //         color: "#ff0000"
-            //     }, {
-            //         timestamp: [ client.getNextEncounterDate(player.data, player.role!) ],
-            //         bot: [`${client.user}`]
-            //     }) ],
-            //     components: [ interaction.components.buttons([{
-            //         id: "0F",
-            //         label: "\u2800{locale_main_visitStore}",
-            //         emoji: "coin",
-            //         args: { path: "store", page: "ENCOUNTER" }
-            //     }, {
-            //         id: "0F",
-            //         label: "\u2800{locale_main_vote}",
-            //         emoji: "sparkles",
-            //         args: { path: "vote" }
-            //     }, {
-            //         id: "0F",
-            //         label: "\u2800{locale_main_getPremium}",
-            //         emoji: "gem",
-            //         args: { path: "premium" }
-            //     }]) ]
-            // };
-
             const notice: InteractionReplyOptions = {
                 flags: ["IsComponentsV2"],
                 components: interaction.componentsV2.construct([{
@@ -169,6 +142,8 @@ export default new Panel({
             actionRows[j].components.push(button);
         }
 
+        const charm:any = player.data.charm;
+
         followUp = await interaction.followUp({
             flags: ["IsComponentsV2"],
             files: [attachment!],
@@ -179,6 +154,7 @@ export default new Panel({
                     { type: "TextDisplay", text_display_data: { content: text } },
                     { type: "Separator" },
                     { type: "MediaGallery", media_gallery_data: { items: [ { media: { url: "attachment://card.jpg" } } ] } },
+                    charm ? { type: "TextDisplay", text_display_data: { content: `-# {emoji_${charm.type.toLowerCase()}Charm${charm.tier}} {locale_items_${charm.type.toLowerCase()}Charm${charm.tier}_name} ({number_${charm.count-1}})` } } : null,
                     ...actionRows,
                 ] },
                 { type: "Container", component_id: 500, container_data: { color: data.rarity.color }, components: [

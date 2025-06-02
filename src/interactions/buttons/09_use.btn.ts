@@ -18,15 +18,17 @@ export default new Interactable({
         
         interaction.player = await itemUse(interaction, items, items.item, count);
 
-        const message = await client.panels.get("inventory")!.execute!(interaction, items.count-count > 0 ? items.item.type : "main", itemId, count);
+        const message = await client.panels.get("inventory")!.execute!(interaction, items.count-count > 0 ? items.item.type : "main", 0, itemId, count);
 
         if (items.item.type === "CONSUMABLE") return message;
 
         await interaction.editReply({
             ...message,
-            embeds: [ ...message.embeds!, interaction.components.embed({
-                description: `{locale_main_useSuccess}`
-            }, {
+            components: [ ...message.components, ...interaction.componentsV2.construct([{
+                type: "Container", container_data: { color: "#00ff00" }, components: [
+                    { type: "TextDisplay", text_display_data: { content: `{locale_main_useSuccess}` } }
+                ]
+            }], {
                 name: [`${items.item.emoji} **${client.formatText(`{locale_items_${items.item.name}_name}`, interaction.locale)}**`],
                 count: [`**${count}**`]
             }) ]

@@ -23,12 +23,30 @@ export default async function(interaction: DiscordInteraction) {
 
         if (player.data.encounters < 1) throw 6;
 
-        await tx.user.updateMany({ where: { id: player.data.id }, data: { encounters: { decrement: 1 } } });
-        
-        const rowCount = await tx.cardCatalog.count();
+        const filter: any = {}, update: any = { encounters: { decrement: 1 } };
+        if (player.data.charm) {
+            // Affect the encounter rate based on the charm
+            const { chance, type, count } = player.data.charm as any;
+
+            // Randomly determine if the encounter is affected by the charm
+            if (Math.random() < chance) {
+                filter.type = type;
+            }
+
+            // Determine if the charm is all used or just decrement
+            if (count <= 1) {
+                update.charm = null;
+            } else {
+                update.charm = { ...(player.data.charm as any), count: count-1 };
+            }
+        }
+
+        await tx.user.updateMany({ where: { id: player.data.id }, data: update });
+
+        const rowCount = await tx.cardCatalog.count({ where: filter });
         const randomOffset = Math.floor(Math.random() * rowCount);
 
-        const [result] = await tx.cardCatalog.findMany({ skip: randomOffset, take: 1, include: { character: { include: { series: { select: { english_title: true } } } } } });
+        const [result] = await tx.cardCatalog.findMany({ where: filter, skip: randomOffset, take: 1, include: { character: { include: { series: { select: { english_title: true } } } } } });
         // const [result] = await tx.cardCatalog.findMany({ where: { id: 1 }, include: { character: { include: { series: true } } } });
 
         let print, rarity;

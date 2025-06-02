@@ -361,5 +361,6 @@
     "select": "Select",
     "getMoreGemsText": "Buy **{emoji_smallGem} Gems** and enhance your experience! With gems, you can grab exclusive items in the {command_store}, unlock a second catch chance, and more!",
     "itemsToAdd": "Items to add",
-    "itemsToAddText": "Select the item quantity to add to your cart."
+    "itemsToAddText": "Select the item quantity to add to your cart.",
+    "price": "Price"
 }

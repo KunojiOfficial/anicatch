@@ -1,5 +1,6 @@
 import { InteractionReplyOptions, MessageManager } from "discord.js";
 import Interactable from "../../classes/Interactable.ts";
+import { Item } from "@prisma/client";
 
 export default new Interactable({
     id: 4,
@@ -12,7 +13,7 @@ export default new Interactable({
 
         if (count < 1) count = 1;
 
-        let item, cost:number = 0;
+        let item : Item, cost:number = 0;
         await client.db.$transaction(async tx => {
             const battle = await tx.battle.findFirst({ where: { OR: [{userId1: player.data.id}, {userId2:player.data.id}], status: "ACTIVE" } });
             if (battle) throw 70;
@@ -55,17 +56,20 @@ export default new Interactable({
             });
         });
 
-        const msg = await client.panels.get("store")!.execute!(interaction, item!.type, itemId, count);
+        const msg = await client.panels.get("store")!.execute!(interaction, item!.type, 0, itemId, count);
 
         return {
             ...msg,
-            embeds: [ ...msg.embeds!, interaction.components.embed({
-                color: "#00ff00",
-                description: `{emoji_yes}\u2800{locale_main_buySuccess}\n-# \u2800\u2800\u2800{locale_main_buySuccess2}`
-            }, {
+            components: [...msg.components, ...interaction.componentsV2.construct([{
+                type: "Container", container_data: { color: "#00ff00" }, components: [
+                    { type: "Section", section_data: { components: [
+                        { type: "TextDisplay", text_display_data: { content: `{emoji_yes}\u2800{locale_main_buySuccess}\n-# \u2800\u2800\u2800 {locale_main_buySuccess2}` } }
+                    ], accessory: { type: "Button", button_data: { emoji: "item", label: "\u2800{locale_main_inventory}", id: "0F", args: { path: "inventory", page: item.type } } } } }
+                ]
+            }], {
                 item: [`**${count}x ${item!.emoji} ${client.formatText(`{locale_items_${item!.name}_name}`, interaction.locale)}**`],
                 cost: [((currency === "gems" ? `{emoji_smallGem}` : `{emoji_smallCoin}`) + ` **{number_${cost}}**`)]
-            }) ]
+            })]
         }
     }
 })

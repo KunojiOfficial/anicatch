@@ -194,12 +194,15 @@ export default class Interaction {
             variables = err.variables;
             err = err.id; 
         } else if (typeof err !== 'number'){ 
-
-            if (err.toString().includes("Unknown interaction")) {
+            let stringed = err.toString();
+            if (stringed.includes("Unknown interaction")) {
                 this.interaction.client.logger.warn(`Client: Unknown interaction user: ${this.interaction.user.id}`);
                 return;
-            } else if(err.toString().includes("Missing Access")) {
+            } else if(stringed.includes("Missing Access")) {
                 this.interaction.client.logger.warn(`Client: Missing access for user: ${this.interaction.user.id}`);
+                return;
+            } else if(stringed.includes("Message nonce must")) {
+                this.interaction.client.logger.warn(`Client: Message nonce must be for user: ${this.interaction.user.id}`);
                 return;
             } else {
                 this.interaction.client.logger.error(err);
